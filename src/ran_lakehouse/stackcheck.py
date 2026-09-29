@@ -667,6 +667,7 @@ def tool_env(warehouse: str, workdir: Path) -> dict[str, str]:
         DBT_TARGET_PATH=str(workdir / "target"),
         DBT_LOG_PATH=str(workdir / "logs"),
         NO_COLOR="1",
+        DBT_SEND_ANONYMOUS_USAGE_STATS="false",
     )
 
 

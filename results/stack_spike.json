@@ -27,7 +27,7 @@
       "engine": "duckdb",
       "case": "create and write an Iceberg table",
       "ok": true,
-      "seconds": 0.071,
+      "seconds": 0.084,
       "detail": "134380 rows written in one INSERT",
       "error": ""
     },
@@ -35,7 +35,7 @@
       "engine": "duckdb",
       "case": "MERGE INTO for a late batch (rule D1)",
       "ok": true,
-      "seconds": 0.081,
+      "seconds": 0.075,
       "detail": "20 rows updated and 20 inserted; every late row applied; 134400 rows",
       "error": ""
     },
@@ -43,7 +43,7 @@
       "engine": "duckdb",
       "case": "time travel to the pre-merge snapshot (rule D7)",
       "ok": true,
-      "seconds": 0.005,
+      "seconds": 0.006,
       "detail": "AT (VERSION) and AT (TIMESTAMP) return the pre-merge table: 134380 rows, 20 rows with their pre-correction values",
       "error": ""
     },
@@ -51,7 +51,7 @@
       "engine": "duckdb",
       "case": "formula change and reprocess (rule D6)",
       "ok": true,
-      "seconds": 0.06,
+      "seconds": 0.062,
       "detail": "both formula versions stored side by side (2800 rows), each row joined to its formula text; reprocessing inserted version 2 for the full history",
       "error": ""
     },
@@ -59,7 +59,7 @@
       "engine": "pyiceberg",
       "case": "read the same tables (rule S1)",
       "ok": true,
-      "seconds": 0.088,
+      "seconds": 0.087,
       "detail": "read the merged table (134400 rows, delete files applied), the first snapshot (134380 rows) and both KPI formula versions",
       "error": ""
     },
@@ -67,7 +67,7 @@
       "engine": "dbt",
       "case": "incremental merge model, formula change (rule D6)",
       "ok": true,
-      "seconds": 4.926,
+      "seconds": 3.66,
       "detail": "version 1 then version 2 merged into one Iceberg table keyed by formula_version (2800 rows); both match the independent computation",
       "error": ""
     },
@@ -77,7 +77,7 @@
       "ok": false,
       "seconds": 0.0,
       "detail": "",
-      "error": "19:19:42    Runtime Error in model kpi_accessibility_day_table (models/kpi_accessibility_day_table.sql)\nCatalog Error: This table (kpi_accessibility_day_table__dbt_tmp) was modified already, can't be renamed!"
+      "error": "19:21:40    Runtime Error in model kpi_accessibility_day_table (models/kpi_accessibility_day_table.sql)\nCatalog Error: This table (kpi_accessibility_day_table__dbt_tmp) was modified already, can't be renamed!"
     },
     {
       "engine": "sqlmesh",

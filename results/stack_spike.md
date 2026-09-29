@@ -35,12 +35,12 @@ compose stack on 2026-09-29 UTC (rule S2). Rendered from `stack_spike.json`.
 
 | Engine | Case | Result | Seconds | Detail |
 |---|---|---|---|---|
-| duckdb | create and write an Iceberg table | pass | 0.071 | 134380 rows written in one INSERT |
-| duckdb | MERGE INTO for a late batch (rule D1) | pass | 0.081 | 20 rows updated and 20 inserted; every late row applied; 134400 rows |
-| duckdb | time travel to the pre-merge snapshot (rule D7) | pass | 0.005 | AT (VERSION) and AT (TIMESTAMP) return the pre-merge table: 134380 rows, 20 rows with their pre-correction values |
-| duckdb | formula change and reprocess (rule D6) | pass | 0.060 | both formula versions stored side by side (2800 rows), each row joined to its formula text; reprocessing inserted version 2 for the full history |
-| pyiceberg | read the same tables (rule S1) | pass | 0.088 | read the merged table (134400 rows, delete files applied), the first snapshot (134380 rows) and both KPI formula versions |
-| dbt | incremental merge model, formula change (rule D6) | pass | 4.926 | version 1 then version 2 merged into one Iceberg table keyed by formula_version (2800 rows); both match the independent computation |
+| duckdb | create and write an Iceberg table | pass | 0.084 | 134380 rows written in one INSERT |
+| duckdb | MERGE INTO for a late batch (rule D1) | pass | 0.075 | 20 rows updated and 20 inserted; every late row applied; 134400 rows |
+| duckdb | time travel to the pre-merge snapshot (rule D7) | pass | 0.006 | AT (VERSION) and AT (TIMESTAMP) return the pre-merge table: 134380 rows, 20 rows with their pre-correction values |
+| duckdb | formula change and reprocess (rule D6) | pass | 0.062 | both formula versions stored side by side (2800 rows), each row joined to its formula text; reprocessing inserted version 2 for the full history |
+| pyiceberg | read the same tables (rule S1) | pass | 0.087 | read the merged table (134400 rows, delete files applied), the first snapshot (134380 rows) and both KPI formula versions |
+| dbt | incremental merge model, formula change (rule D6) | pass | 3.660 | version 1 then version 2 merged into one Iceberg table keyed by formula_version (2800 rows); both match the independent computation |
 | dbt | table model rebuilt with a new formula (rule D6) | FAIL | - | see errors |
 | sqlmesh | plan into Iceberg, formula change and backfill (rule D6) | FAIL | - | see errors |
 
@@ -49,7 +49,7 @@ compose stack on 2026-09-29 UTC (rule S2). Rendered from `stack_spike.json`.
 dbt, table model rebuilt with a new formula (rule D6):
 
 ```
-19:19:42    Runtime Error in model kpi_accessibility_day_table (models/kpi_accessibility_day_table.sql)
+19:21:40    Runtime Error in model kpi_accessibility_day_table (models/kpi_accessibility_day_table.sql)
 Catalog Error: This table (kpi_accessibility_day_table__dbt_tmp) was modified already, can't be renamed!
 ```
 
