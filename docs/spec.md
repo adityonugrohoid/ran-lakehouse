@@ -147,7 +147,9 @@ measured scale test, rule E1).
 - P4 A second format: Nokia-style OMeS XML (PMSetup / PMMOResult / MO /
   numeric counter ids such as M8013C31), for the regions set to that
   dialect. Written from public descriptions; stated as "modelled on",
-  not a vendor copy.
+  not a vendor copy. One file per EMS per granularity period, UTC
+  timestamps (rule W5), named `OMeS_<EMS>_<UTC start>Z.xml.gz`
+  (ASSUMPTION: no public naming convention found).
 - P5 Two vendor dialects, covering both kinds of multi-vendor difference;
   each has a dictionary mapping to 3GPP names (LTE TS 32.425, GSM
   TS 52.402):

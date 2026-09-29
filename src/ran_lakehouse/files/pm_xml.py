@@ -188,7 +188,7 @@ def number(value: float) -> str:
         return "NIL"
     if float(value).is_integer():
         return str(int(value))
-    return f"{value:.6g}"
+    return f"{value:.10g}"
 
 
 def write_file(
