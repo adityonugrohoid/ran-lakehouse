@@ -6,7 +6,7 @@ Path loss:
   a(hm) of eq 4.4.2; stated validity 150-1000 MHz there (Hata 1980 gives
   150-1500 MHz), hb 30-200 m, hm 1-10 m, d 1-20 km.
 - COST-231 Hata, same section, eq 4.4.3, for 1500-2000 MHz, with Cm = 3 dB
-  in metropolitan centres and 0 dB elsewhere.
+  in metropolitan centres (the urban share of a point) and 0 dB elsewhere.
 - Suburban and open-area corrections as restated in Report ITU-R SM.2028-2
   (06/2017) section 6.1, with f clamped to 150-2000 MHz as there.
 - Above 2000 MHz (B1 2100, B40 2300): the COST-231 formula at 2000 MHz plus
@@ -54,6 +54,9 @@ CQI_EFFICIENCY = (
 # c * 16 Ts / 2 = 78.07 m (derived).
 TA_STEP_M = 299_792_458.0 * 16.0 / 30.72e6 / 2.0
 FREE_SPACE_MIN_KM = 0.02  # distance floor (ASSUMPTION)
+# COST-231 Hata metropolitan-centre correction, COST 231 Final Report
+# section 4.4.1: 3 dB, carried by the urban share of a point.
+METROPOLITAN_CM_DB = 3.0
 
 
 def mobile_correction(f_mhz: np.ndarray, hm_m: float) -> np.ndarray:
@@ -72,15 +75,25 @@ def mobile_correction(f_mhz: np.ndarray, hm_m: float) -> np.ndarray:
 
 
 def hata_path_loss_db(
-    f_mhz: float, d_km: np.ndarray, hb_m: np.ndarray, environment: np.ndarray
+    f_mhz: float,
+    d_km: np.ndarray,
+    hb_m: np.ndarray,
+    urban_weight: np.ndarray,
+    suburban_weight: np.ndarray,
 ) -> np.ndarray:
-    """Median path loss for an environment, with the free-space floor.
+    """Median path loss blended over environments, with the free-space floor.
+
+    The urban, suburban and open-area (rural) losses are mixed with the
+    given weights, the rural weight being what is left (ASSUMPTION: a
+    continuous blend avoids steps in received power at area-class edges).
 
     Args:
         f_mhz: Carrier frequency, MHz.
         d_km: Distance, km.
         hb_m: Base station antenna height, m (broadcast with d_km).
-        environment: "urban", "suburban" or "rural" per point (broadcast).
+        urban_weight: Weight of the urban loss per point, 0-1 (broadcast).
+        suburban_weight: Weight of the suburban loss per point, 0-1, with
+            urban_weight + suburban_weight <= 1 (broadcast).
 
     Returns:
         Path loss, dB.
@@ -92,18 +105,18 @@ def hata_path_loss_db(
     slope = (44.9 - 6.55 * log_hb) * np.log10(d)
     if f_mhz <= 1500.0:
         base = 69.55 + 26.16 * np.log10(f_formula)
-        cm: float | np.ndarray = 0.0
+        cm = 0.0
     else:
         base = 46.3 + 33.9 * np.log10(f_formula) + 10.0 * np.log10(f_mhz / f_formula)
-        cm = np.where(environment == "urban", 3.0, 0.0)
-    urban = base - 13.82 * log_hb - a_hm + slope + cm
+        cm = METROPOLITAN_CM_DB
+    medium_city = base - 13.82 * log_hb - a_hm + slope
     f_corr = min(max(150.0, f_mhz), 2000.0)
     log_fc = np.log10(f_corr)
-    suburban = urban - 2.0 * np.log10(f_corr / 28.0) ** 2 - 5.4
-    rural = urban - 4.78 * log_fc**2 + 18.33 * log_fc - 40.94
-    loss = np.where(
-        environment == "urban", urban, np.where(environment == "suburban", suburban, rural)
-    )
+    urban = medium_city + cm
+    suburban = medium_city - 2.0 * np.log10(f_corr / 28.0) ** 2 - 5.4
+    rural = medium_city - 4.78 * log_fc**2 + 18.33 * log_fc - 40.94
+    rural_weight = 1.0 - urban_weight - suburban_weight
+    loss = urban_weight * urban + suburban_weight * suburban + rural_weight * rural
     free_space = 32.45 + 20.0 * np.log10(f_mhz) + 20.0 * np.log10(d)
     result: np.ndarray = np.maximum(loss, free_space)
     return result

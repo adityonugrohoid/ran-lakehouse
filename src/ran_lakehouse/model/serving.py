@@ -20,6 +20,7 @@ from ran_lakehouse.model.coverage import (
     LayerCoverage,
 )
 from ran_lakehouse.model.radio import TA_STEP_M, cqi_index, spectral_efficiency
+from ran_lakehouse.world.network import AREA_CLASSES
 
 # Mobile data subscribers per person (ASSUMPTION).
 LTE_SUBSCRIBERS_PER_PERSON = 0.8
@@ -50,6 +51,8 @@ class Serving:
     Attributes:
         subscribers: LTE subscribers (LTE cells) or GSM voice users (GSM
             cells) whose best server this is.
+        subscribers_by_class: The same split by the area class of the point
+            they live at, shape (cells, 3) in AREA_CLASSES order.
         spectral_efficiency: User-weighted mean DL spectral efficiency,
             bit/s/Hz (LTE; 0 for GSM).
         edge_share: Share of served users at the cell edge.
@@ -62,6 +65,7 @@ class Serving:
     """
 
     subscribers: np.ndarray
+    subscribers_by_class: np.ndarray
     spectral_efficiency: np.ndarray
     edge_share: np.ndarray
     mean_sinr_db: np.ndarray
@@ -110,6 +114,8 @@ def build_serving(
     """
     n_cells = len(state.cell_names)
     subs = np.zeros(n_cells)
+    by_class = np.zeros((n_cells, len(AREA_CLASSES)))
+    class_column = np.array([AREA_CLASSES.index(str(c)) for c in grid.area_class])
     se_mass = np.zeros(n_cells)
     edge_mass = np.zeros(n_cells)
     sinr_mass = np.zeros(n_cells)
@@ -149,6 +155,7 @@ def build_serving(
         u = users[served]
         sinr = layer.sinr_db[served]
         subs += np.bincount(cell, u, n_cells)
+        np.add.at(by_class, (cell, class_column[served]), u)
         sinr_mass += np.bincount(cell, u * sinr, n_cells)
         if layer.technology == "LTE":
             se_mass += np.bincount(cell, u * spectral_efficiency(sinr), n_cells)
@@ -174,6 +181,7 @@ def build_serving(
     mass = np.bincount(inverse, wgt)
     return Serving(
         subscribers=subs,
+        subscribers_by_class=by_class,
         spectral_efficiency=se_mass / safe,
         edge_share=edge_mass / safe,
         mean_sinr_db=sinr_mass / safe,

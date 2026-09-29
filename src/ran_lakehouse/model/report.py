@@ -117,6 +117,7 @@ class Accumulator:
         self.violations: dict[str, int] = {}
         self.prb_sum = np.zeros((len(AREA_CLASSES), 7 * 96))
         self.prb_count = np.zeros((len(AREA_CLASSES), 7 * 96))
+        self.over80 = np.zeros((len(AREA_CLASSES), 7 * 96))
         self.cell_periods = 0
         self.periods = 0
 
@@ -148,6 +149,7 @@ class Accumulator:
         for k, area in enumerate(AREA_CLASSES):
             cols = state.area_class[lte_cells] == area
             self.prb_sum[k, offset : offset + 96] += prb[:, cols].sum(axis=1)
+            self.over80[k, offset : offset + 96] += (prb[:, cols] > 80).sum(axis=1)
             self.prb_count[k, offset : offset + 96] += cols.sum()
         self.cell_periods += prb.size + gsm["attTCHSeizures"].size
         self.periods += prb.shape[0]
@@ -160,6 +162,31 @@ class Accumulator:
             n: Violations found.
         """
         self.violations[name] = self.violations.get(name, 0) + n
+
+
+def peak_congestion(acc: Accumulator) -> dict[str, dict[str, Any]]:
+    """Share of cells above 80% PRB use at each class's busiest hour of week.
+
+    Args:
+        acc: The totals.
+
+    Returns:
+        Class to the busiest slot (by mean PRB use), its mean PRB use and the
+        share of cell-periods above 80% there, over the whole run.
+    """
+    days = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    out = {}
+    for k, area in enumerate(AREA_CLASSES):
+        mean = acc.prb_sum[k] / np.maximum(acc.prb_count[k], 1)
+        share = acc.over80[k] / np.maximum(acc.prb_count[k], 1)
+        slot = int(np.argmax(mean))
+        out[area] = {
+            "busiest_slot": f"{days[slot // 96]} {slot % 96 // 4:02d}:{slot % 4 * 15:02d}",
+            "mean_prb_pct": round(float(mean[slot]), 1),
+            "share_above_80_pct": round(float(share[slot]), 3),
+            "max_share_above_80_pct_any_slot": round(float(share.max()), 3),
+        }
+    return out
 
 
 def kpis(acc: Accumulator) -> dict[str, float]:
@@ -372,6 +399,17 @@ def build() -> tuple[dict[str, Any], NetworkModel, list[Any], Accumulator]:
             "neighbour_relations": int(demo.serving.relations[0].size),
             "coverage": coverage_summary(demo),
             "kpis": kpis(acc),
+            "peak_congestion_by_class": peak_congestion(acc),
+            "subscribers_per_lte_cell_by_class": {
+                a: round(
+                    float(
+                        demo.serving.subscribers[
+                            (state.area_class == a) & (state.technology == "LTE")
+                        ].mean()
+                    )
+                )
+                for a in AREA_CLASSES
+            },
             "invariant_violations": acc.violations,
             "relationship_checks": relationship_checks(demo, sample),
         },
@@ -621,6 +659,27 @@ def render_markdown(record: dict[str, Any]) -> str:
         "| KPI | Value |",
         "|---|---|",
         *[f"| {k} | {v} |" for k, v in demo["kpis"].items()],
+        "",
+        "## Peak congestion by area class",
+        "",
+        "At each class's busiest 15-minute slot of the week (by mean PRB use), over 12 weeks:",
+        "",
+        "| Class | Busiest slot | Mean PRB use, % | Cells above 80% PRB "
+        "| Highest share, any slot |",
+        "|---|---|---|---|---|",
+        *[
+            f"| {c} | {v['busiest_slot']} | {v['mean_prb_pct']} | {v['share_above_80_pct']} | "
+            f"{v['max_share_above_80_pct_any_slot']} |"
+            for c, v in demo["peak_congestion_by_class"].items()
+        ],
+        "",
+        "Per-cell load follows cell size. LTE subscribers per cell: "
+        + ", ".join(f"{a} {v}" for a, v in demo["subscribers_per_lte_cell_by_class"].items())
+        + ". The dense city grid is lightly loaded per cell, and the towns, sited on the "
+        "suburban lattice, are the network's hotspots; they are where capacity faults (rule "
+        "F1d) belong. Users at urban points follow a business-hours activity curve, so the "
+        "urban peak falls in the weekday daytime; suburban and rural points follow the "
+        "residential curve with its evening peak (both ASSUMPTION).",
         "",
         "## Counter invariants over every cell-period",
         "",

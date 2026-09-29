@@ -9,6 +9,7 @@ import pytest
 from ran_lakehouse.model import NetworkModel, build_model, default_model, simulate_days
 from ran_lakehouse.model import report as model_report
 from ran_lakehouse.model.counters import noise_block
+from ran_lakehouse.model.coverage import environment_weights
 from ran_lakehouse.model.erlang import erlang_b
 from ran_lakehouse.model.radio import (
     ANTENNA_GAIN_DBI,
@@ -38,10 +39,10 @@ def test_erlang_b_known_values() -> None:
 
 def test_path_loss_grows_with_distance_and_frequency() -> None:
     d = np.array([0.5, 1.0, 2.0, 5.0])
-    env = np.array(["urban"] * 4)
-    loss_900 = hata_path_loss_db(940.0, d, np.full(4, 30.0), env)
-    loss_1800 = hata_path_loss_db(1840.0, d, np.full(4, 30.0), env)
-    loss_2300 = hata_path_loss_db(2350.0, d, np.full(4, 30.0), env)
+    hb, urban, none = np.full(4, 30.0), np.ones(4), np.zeros(4)
+    loss_900 = hata_path_loss_db(940.0, d, hb, urban, none)
+    loss_1800 = hata_path_loss_db(1840.0, d, hb, urban, none)
+    loss_2300 = hata_path_loss_db(2350.0, d, hb, urban, none)
     assert np.all(np.diff(loss_900) > 0)
     assert np.all(loss_1800 > loss_900)
     assert np.all(loss_2300 > loss_1800)
@@ -49,8 +50,20 @@ def test_path_loss_grows_with_distance_and_frequency() -> None:
 
 def test_path_loss_orders_environments() -> None:
     d = np.full(3, 2.0)
-    loss = hata_path_loss_db(940.0, d, np.full(3, 30.0), np.array(["urban", "suburban", "rural"]))
+    loss = hata_path_loss_db(
+        940.0, d, np.full(3, 30.0), np.array([1.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0])
+    )
     assert loss[0] > loss[1] > loss[2]
+
+
+def test_environment_blend_is_continuous() -> None:
+    density = np.linspace(0.0, 4000.0, 4001)
+    urban, suburban = environment_weights(density)
+    loss = hata_path_loss_db(
+        940.0, np.full(density.size, 2.0), np.full(density.size, 30.0), urban, suburban
+    )
+    assert np.all(np.diff(loss) >= 0)
+    assert np.max(np.abs(np.diff(loss))) < 0.1
 
 
 def test_antenna_pattern() -> None:

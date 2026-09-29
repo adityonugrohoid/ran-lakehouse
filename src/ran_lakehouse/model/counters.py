@@ -175,7 +175,7 @@ def missing_neighbour_share(
 def lte_day(
     state: CellState,
     serving: Serving,
-    activity: np.ndarray,
+    class_load: np.ndarray,
     day: int,
     missing_share: np.ndarray,
     load_factor: np.ndarray,
@@ -185,7 +185,8 @@ def lte_day(
     Args:
         state: Cell parameters.
         serving: Who each cell serves.
-        activity: Activity factor per period of the day.
+        class_load: Activity times population shift per period for users
+            living at urban, suburban and rural points, shape (periods, 3).
         day: Day index (noise seeding).
         missing_share: Missing-neighbour share per cell (global order).
         load_factor: Extra load multiplier per period and cell (global
@@ -195,11 +196,11 @@ def lte_day(
         The day's LTE counters.
     """
     cells = np.flatnonzero(state.technology == "LTE")
-    periods = activity.size
+    periods = class_load.shape[0]
     z = noise_block(cells, day, periods)
-    subs = serving.subscribers[cells][None, :]
+    active = class_load @ serving.subscribers_by_class[cells].T
     load_noise = np.exp(LOAD_NOISE_SIGMA * z[0] - LOAD_NOISE_SIGMA**2 / 2.0)
-    conn = subs * CONNECTED_SHARE_AT_PEAK * activity[:, None] * load_noise * load_factor[:, cells]
+    conn = active * CONNECTED_SHARE_AT_PEAK * load_noise * load_factor[:, cells]
     dl_share = np.where(state.band[cells] == "B40", TDD_DL_SHARE, 1.0)
     capacity = state.n_rb[cells] * 180.0 * serving.spectral_efficiency[cells] * dl_share
     capacity = np.maximum(capacity, 1.0)[None, :]
@@ -266,7 +267,7 @@ def lte_day(
 def gsm_day(
     state: CellState,
     serving: Serving,
-    activity: np.ndarray,
+    class_load: np.ndarray,
     day: int,
     missing_share: np.ndarray,
     load_factor: np.ndarray,
@@ -276,7 +277,8 @@ def gsm_day(
     Args:
         state: Cell parameters.
         serving: Who each cell serves.
-        activity: Activity factor per period of the day.
+        class_load: Activity times population shift per period for users
+            living at urban, suburban and rural points, shape (periods, 3).
         day: Day index (noise seeding).
         missing_share: Missing-neighbour share per cell (global order).
         load_factor: Extra load multiplier per period and cell (global
@@ -286,11 +288,11 @@ def gsm_day(
         The day's GSM counters.
     """
     cells = np.flatnonzero(state.technology == "GSM")
-    periods = activity.size
+    periods = class_load.shape[0]
     z = noise_block(cells, day, periods)
-    users = serving.subscribers[cells][None, :]
+    active = class_load @ serving.subscribers_by_class[cells].T
     noise = np.exp(LOAD_NOISE_SIGMA * z[0] - LOAD_NOISE_SIGMA**2 / 2.0)
-    offered = users * ERLANG_PER_USER_AT_PEAK * activity[:, None] * noise * load_factor[:, cells]
+    offered = active * ERLANG_PER_USER_AT_PEAK * noise * load_factor[:, cells]
     n_tch, n_sdcch = gsm_channels(state.trx[cells])
     blocking = erlang_b(offered, np.broadcast_to(n_tch, offered.shape).astype(int))
     edge = serving.edge_share[cells][None, :]

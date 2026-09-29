@@ -7,48 +7,49 @@
     "weeks": 12,
     "cell_periods": 13837824,
     "gsm_trx": {
-      "1": 97,
-      "2": 91,
-      "3": 17,
-      "4": 20,
+      "1": 94,
+      "2": 88,
+      "3": 26,
+      "4": 16,
       "5": 17,
-      "6": 5,
+      "6": 7,
       "7": 9,
       "8": 2,
-      "10": 4,
-      "11": 2
+      "9": 2,
+      "10": 2,
+      "11": 1
     },
     "unserved_persons": 0,
-    "neighbour_relations": 5329,
+    "neighbour_relations": 5159,
     "coverage": {
       "B1": {
         "technology": "LTE",
         "cells": 336,
-        "population_covered_share": 0.959,
+        "population_covered_share": 0.938,
         "level_dbm_p10_p50_p90": [
-          -112.0,
-          -101.2,
-          -88.0
+          -114.5,
+          -103.6,
+          -91.8
         ],
         "sinr_db_p10_p50_p90": [
           -5.5,
-          0.7,
-          10.9
+          0.6,
+          10.7
         ]
       },
       "B28": {
         "technology": "LTE",
         "cells": 36,
-        "population_covered_share": 0.756,
+        "population_covered_share": 0.592,
         "level_dbm_p10_p50_p90": [
-          -114.4,
-          -93.5,
-          -76.2
+          -115.1,
+          -94.8,
+          -76.5
         ],
         "sinr_db_p10_p50_p90": [
-          -0.6,
-          4.6,
-          15.7
+          -0.5,
+          4.7,
+          16.0
         ]
       },
       "B3": {
@@ -56,9 +57,9 @@
         "cells": 828,
         "population_covered_share": 1.0,
         "level_dbm_p10_p50_p90": [
-          -94.8,
-          -84.9,
-          -73.1
+          -99.7,
+          -87.8,
+          -75.0
         ],
         "sinr_db_p10_p50_p90": [
           -1.2,
@@ -69,45 +70,45 @@
       "B40": {
         "technology": "LTE",
         "cells": 186,
-        "population_covered_share": 0.876,
+        "population_covered_share": 0.772,
         "level_dbm_p10_p50_p90": [
-          -116.3,
-          -104.9,
-          -91.1
+          -117.4,
+          -107.2,
+          -94.0
         ],
         "sinr_db_p10_p50_p90": [
-          -6.2,
-          0.2,
-          10.3
+          -6.0,
+          0.5,
+          10.5
         ]
       },
       "B8": {
         "technology": "LTE",
         "cells": 66,
-        "population_covered_share": 0.702,
+        "population_covered_share": 0.532,
         "level_dbm_p10_p50_p90": [
-          -113.1,
-          -90.2,
-          -72.7
+          -113.0,
+          -91.6,
+          -72.6
         ],
         "sinr_db_p10_p50_p90": [
-          -1.2,
-          4.3,
-          14.6
+          -0.8,
+          4.5,
+          14.9
         ]
       },
       "G1800": {
         "technology": "GSM",
         "cells": 90,
-        "population_covered_share": 0.799,
+        "population_covered_share": 0.706,
         "level_dbm_p10_p50_p90": [
-          -101.8,
-          -91.8,
-          -78.7
+          -102.1,
+          -93.5,
+          -82.2
         ],
         "sinr_db_p10_p50_p90": [
-          -1.2,
-          2.6,
+          -1.0,
+          2.8,
           10.3
         ]
       },
@@ -116,9 +117,9 @@
         "cells": 174,
         "population_covered_share": 1.0,
         "level_dbm_p10_p50_p90": [
-          -79.5,
-          -59.6,
-          -45.5
+          -83.5,
+          -62.0,
+          -46.4
         ],
         "sinr_db_p10_p50_p90": [
           6.5,
@@ -128,18 +129,43 @@
       }
     },
     "kpis": {
-      "LTE E-RAB accessibility, TS 32.450 6.1.1 (%)": 98.383,
-      "LTE RRC setup success rate, operator-defined (%)": 98.998,
-      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 0.9615,
-      "LTE E-RAB drop rate, operator-defined (%)": 0.543,
-      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 7291.5,
+      "LTE E-RAB accessibility, TS 32.450 6.1.1 (%)": 97.894,
+      "LTE RRC setup success rate, operator-defined (%)": 98.653,
+      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 1.1106,
+      "LTE E-RAB drop rate, operator-defined (%)": 0.63,
+      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 5888.2,
       "LTE cell availability, TS 32.450 6.4.1 (%)": 100.0,
-      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.711,
-      "LTE mean DL PRB use, operator-defined (%)": 20.21,
-      "GSM service access success, TS 32.410 7.4 (%)": 97.806,
-      "GSM TCH blocking, vendor-style (%)": 0.342,
-      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.284,
-      "GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%)": 2.511
+      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.674,
+      "LTE mean DL PRB use, operator-defined (%)": 19.34,
+      "GSM service access success, TS 32.410 7.4 (%)": 97.883,
+      "GSM TCH blocking, vendor-style (%)": 0.593,
+      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.354,
+      "GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%)": 2.433
+    },
+    "peak_congestion_by_class": {
+      "urban": {
+        "busiest_slot": "Tue 11:30",
+        "mean_prb_pct": 28.8,
+        "share_above_80_pct": 0.031,
+        "max_share_above_80_pct_any_slot": 0.04
+      },
+      "suburban": {
+        "busiest_slot": "Fri 20:30",
+        "mean_prb_pct": 50.1,
+        "share_above_80_pct": 0.2,
+        "max_share_above_80_pct_any_slot": 0.2
+      },
+      "rural": {
+        "busiest_slot": "Fri 20:30",
+        "mean_prb_pct": 37.1,
+        "share_above_80_pct": 0.124,
+        "max_share_above_80_pct_any_slot": 0.126
+      }
+    },
+    "subscribers_per_lte_cell_by_class": {
+      "urban": 407,
+      "suburban": 1144,
+      "rural": 596
     },
     "invariant_violations": {
       "RRC.ConnEstabSucc.sum > RRC.ConnEstabAtt.sum": 0,
@@ -157,28 +183,28 @@
       {
         "check": "IP throughput falls as PRB use rises",
         "statistic": "Spearman",
-        "value": -0.5996,
+        "value": -0.5634,
         "expected": "< 0",
         "pass": true
       },
       {
         "check": "RRC setup success lower at PRB >= 95% than below 80%",
         "statistic": "success rate below 80% minus at >= 95%",
-        "value": 0.0252,
+        "value": 0.0373,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "E-RAB drop rate rises with cell-edge share",
         "statistic": "Spearman",
-        "value": 0.855,
+        "value": 0.8413,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "Mean CQI rises with mean SINR",
         "statistic": "Spearman",
-        "value": 0.9947,
+        "value": 0.9951,
         "expected": "> 0",
         "pass": true
       },
@@ -186,9 +212,9 @@
         "check": "Median TA distance grows urban < suburban < rural",
         "statistic": "median mean TA step per class",
         "value": [
-          3.769,
-          11.495,
-          25.491
+          3.764,
+          11.32,
+          25.32
         ],
         "expected": "increasing",
         "pass": true
@@ -196,14 +222,14 @@
       {
         "check": "PRB use rises with connected users",
         "statistic": "Spearman",
-        "value": 0.9571,
+        "value": 0.9649,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "TCH blocking higher at TCH occupancy >= 0.8 than below 0.5",
         "statistic": "blocking share at >= 0.8 minus below 0.5",
-        "value": 0.0655,
+        "value": 0.0794,
         "expected": "> 0",
         "pass": true
       }
@@ -212,11 +238,11 @@
   "tiny": {
     "cells": 27,
     "days": 2,
-    "rrc_attempts": 2739826
+    "rrc_attempts": 2740066
   },
   "timing_s": {
-    "demo model build (coverage and serving)": 6.9,
-    "demo 12 weeks of counters": 7.6,
+    "demo model build (coverage and serving)": 7.0,
+    "demo 12 weeks of counters": 7.7,
     "tiny build and 2 days": 0.0
   }
 }

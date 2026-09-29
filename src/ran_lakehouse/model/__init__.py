@@ -29,7 +29,12 @@ from ran_lakehouse.model.counters import (
 )
 from ran_lakehouse.model.coverage import Grid, LayerCoverage, all_layers, build_grid
 from ran_lakehouse.model.erlang import erlang_b
-from ran_lakehouse.model.profile import PERIODS_PER_DAY, activity, period_starts
+from ran_lakehouse.model.profile import (
+    PERIODS_PER_DAY,
+    activity_by_class,
+    period_starts,
+    population_shift,
+)
 from ran_lakehouse.model.serving import Serving, build_serving
 from ran_lakehouse.world import World
 
@@ -146,12 +151,14 @@ def simulate_days(model: NetworkModel, first_day: int, n_days: int) -> Iterator[
     n_cells = len(model.state.cell_names)
     missing = missing_neighbour_share(model.serving, model.missing_neighbours, n_cells)
     load = np.ones((PERIODS_PER_DAY, n_cells))
+    lte = model.state.technology == "LTE"
+    class_totals = model.serving.subscribers_by_class[lte].sum(axis=0)
     for day in range(first_day, first_day + n_days):
         starts = period_starts(RUN_START + timedelta(days=day), PERIODS_PER_DAY)
-        act = activity(starts)
+        class_load = activity_by_class(starts) * population_shift(starts, class_totals)
         yield Day(
             index=day,
             starts=starts,
-            lte=lte_day(model.state, model.serving, act, day, missing, load),
-            gsm=gsm_day(model.state, model.serving, act, day, missing, load),
+            lte=lte_day(model.state, model.serving, class_load, day, missing, load),
+            gsm=gsm_day(model.state, model.serving, class_load, day, missing, load),
         )
