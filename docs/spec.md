@@ -184,6 +184,10 @@ measured scale test, rule E1).
 - C2 FM: an alarm log with X.733 fields (perceivedSeverity, eventType,
   probableCause, specificProblem), raise and clear times, per TS 32.111-2
   style for LTE and GSM.
+- C3 Exports: each EMS writes its CM snapshot, CM change log and FM log
+  per day as gzip JSON lines in its own DN style and time zone (rule W5),
+  with the cell name as userLabel for joining (ASSUMPTION: a project
+  format; 3GPP Bulk CM XML is not modelled).
 
 ## 7. Data quality proof cases (rule D)
 

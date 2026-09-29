@@ -1,0 +1,88 @@
+{
+  "days": 84,
+  "ems": {
+    "EMS-HW-01": {
+      "dn_style": "3GPP (TS 32.300)",
+      "time_zone": "+07:00 local",
+      "snapshot_objects_first_day_by_class": {
+        "EUtranCellFDD": 852,
+        "EUtranCellTDD": 150,
+        "EUtranRelation": 3365,
+        "GsmCell": 132,
+        "GsmRelation": 710
+      },
+      "snapshot_rows_per_day_min_max": [
+        5208,
+        5209
+      ],
+      "change_log_entries_by_attribute": {
+        "electricalTiltDeg": 13,
+        "relation": 4,
+        "txPowerDbm": 8
+      },
+      "alarm_notifications_by_type_and_cause": {
+        "notifyClearedAlarm: Degraded Signal": 3,
+        "notifyClearedAlarm: Transmitter Failure": 4,
+        "notifyNewAlarm: Degraded Signal": 3,
+        "notifyNewAlarm: Transmitter Failure": 4
+      },
+      "gzip_mb_over_the_run": {
+        "CM": 5.6,
+        "CMLOG": 0.01,
+        "FM": 0.0
+      },
+      "consistency": {
+        "change log entries, exported / implied by the schedule": [
+          25,
+          25
+        ],
+        "alarm notifications, exported / implied by the schedule": [
+          14,
+          14
+        ]
+      }
+    },
+    "EMS-NK-01": {
+      "dn_style": "Nokia-style",
+      "time_zone": "UTC",
+      "snapshot_objects_first_day_by_class": {
+        "EUtranCellFDD": 414,
+        "EUtranCellTDD": 36,
+        "EUtranRelation": 2134,
+        "GsmCell": 132,
+        "GsmRelation": 750
+      },
+      "snapshot_rows_per_day_min_max": [
+        3465,
+        3466
+      ],
+      "change_log_entries_by_attribute": {
+        "electricalTiltDeg": 2,
+        "relation": 4,
+        "txPowerDbm": 6
+      },
+      "alarm_notifications_by_type_and_cause": {
+        "notifyClearedAlarm: Transmitter Failure": 1,
+        "notifyNewAlarm: Transmitter Failure": 1
+      },
+      "gzip_mb_over_the_run": {
+        "CM": 3.36,
+        "CMLOG": 0.0,
+        "FM": 0.0
+      },
+      "consistency": {
+        "change log entries, exported / implied by the schedule": [
+          12,
+          12
+        ],
+        "alarm notifications, exported / implied by the schedule": [
+          2,
+          2
+        ]
+      }
+    }
+  },
+  "timing_s": {
+    "network, schedule and 12 weeks of exports": 52.2
+  }
+}
