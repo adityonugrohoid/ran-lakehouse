@@ -130,15 +130,15 @@
     "kpis": {
       "LTE E-RAB accessibility, TS 32.450 6.1.1 (%)": 98.383,
       "LTE RRC setup success rate, operator-defined (%)": 98.998,
-      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 0.9613,
+      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 0.9615,
       "LTE E-RAB drop rate, operator-defined (%)": 0.543,
-      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 7283.0,
+      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 7291.5,
       "LTE cell availability, TS 32.450 6.4.1 (%)": 100.0,
-      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.712,
+      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.711,
       "LTE mean DL PRB use, operator-defined (%)": 20.21,
       "GSM service access success, TS 32.410 7.4 (%)": 97.806,
       "GSM TCH blocking, vendor-style (%)": 0.342,
-      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.285,
+      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.284,
       "GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%)": 2.511
     },
     "invariant_violations": {
@@ -157,7 +157,7 @@
       {
         "check": "IP throughput falls as PRB use rises",
         "statistic": "Spearman",
-        "value": -0.6024,
+        "value": -0.5996,
         "expected": "< 0",
         "pass": true
       },
@@ -171,14 +171,14 @@
       {
         "check": "E-RAB drop rate rises with cell-edge share",
         "statistic": "Spearman",
-        "value": 0.8535,
+        "value": 0.855,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "Mean CQI rises with mean SINR",
         "statistic": "Spearman",
-        "value": 0.995,
+        "value": 0.9947,
         "expected": "> 0",
         "pass": true
       },
@@ -186,9 +186,9 @@
         "check": "Median TA distance grows urban < suburban < rural",
         "statistic": "median mean TA step per class",
         "value": [
-          3.771,
+          3.769,
           11.495,
-          25.378
+          25.491
         ],
         "expected": "increasing",
         "pass": true
@@ -196,7 +196,7 @@
       {
         "check": "PRB use rises with connected users",
         "statistic": "Spearman",
-        "value": 0.9514,
+        "value": 0.9571,
         "expected": "> 0",
         "pass": true
       },
@@ -212,11 +212,11 @@
   "tiny": {
     "cells": 27,
     "days": 2,
-    "rrc_attempts": 2739720
+    "rrc_attempts": 2739826
   },
   "timing_s": {
-    "demo model build (coverage and serving)": 6.2,
-    "demo 12 weeks of counters": 7.9,
+    "demo model build (coverage and serving)": 6.9,
+    "demo 12 weeks of counters": 7.6,
     "tiny build and 2 days": 0.0
   }
 }

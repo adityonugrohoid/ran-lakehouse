@@ -171,7 +171,9 @@ def layer_coverage(state: CellState, grid: Grid, band: str) -> LayerCoverage:
     for start in range(0, n, POINT_CHUNK):
         chunk = slice(start, min(start + POINT_CHUNK, n))
         level, d_km = received_dbm(state, cells, grid, chunk, band)
-        order = np.argsort(-level, axis=1)
+        # Stable sort: exact ties (co-sited sectors at the antenna floor) go to
+        # the lowest cell index on every CPU.
+        order = np.argsort(-level, axis=1, kind="stable")
         top = order[:, 0]
         rows = np.arange(level.shape[0])
         s_dbm = level[rows, top]

@@ -69,8 +69,8 @@ def spearman(a: np.ndarray, b: np.ndarray) -> float:
     Returns:
         The rank correlation.
     """
-    ra = np.argsort(np.argsort(a)).astype(float)
-    rb = np.argsort(np.argsort(b)).astype(float)
+    ra = np.argsort(np.argsort(a, kind="stable"), kind="stable").astype(float)
+    rb = np.argsort(np.argsort(b, kind="stable"), kind="stable").astype(float)
     return float(np.corrcoef(ra, rb)[0, 1])
 
 
