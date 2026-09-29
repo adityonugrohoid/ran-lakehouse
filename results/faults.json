@@ -1,0 +1,1080 @@
+{
+  "kinds": {
+    "F1a": {
+      "cause": "electrical tilt changed by mistake; the cell overshoots",
+      "change_in_model": "tilt set to 0 deg (urban cells)",
+      "duration_h": [
+        48,
+        144
+      ],
+      "right_answer": "restore tilt",
+      "primary_kpi": "E-RAB drop rate (%)",
+      "measured_over": "area"
+    },
+    "F1b": {
+      "cause": "neighbour relation deleted from the neighbour list",
+      "change_in_model": "strongest neighbour relation deleted",
+      "duration_h": [
+        48,
+        144
+      ],
+      "right_answer": "add neighbour",
+      "primary_kpi": "E-RAB drop rate (%)",
+      "measured_over": "cell"
+    },
+    "F1c": {
+      "cause": "transmit power reduced after maintenance",
+      "change_in_model": "power -6 dB",
+      "duration_h": [
+        48,
+        144
+      ],
+      "right_answer": "restore power",
+      "primary_kpi": "DL IP throughput (kbit/s)",
+      "measured_over": "area"
+    },
+    "F1d": {
+      "cause": "traffic surge in the cell's area",
+      "change_in_model": "persons x2.5 within 0.6 km (suburban cells)",
+      "duration_h": [
+        24,
+        72
+      ],
+      "right_answer": "load-balancing offset or capacity note",
+      "primary_kpi": "DL IP throughput (kbit/s)",
+      "measured_over": "cell"
+    },
+    "F1e": {
+      "cause": "external uplink interference source",
+      "change_in_model": "uplink source 15 dBm, 0.3-0.8 km along the azimuth",
+      "duration_h": [
+        48,
+        168
+      ],
+      "right_answer": "no parameter fix, field visit",
+      "primary_kpi": "RRC setup success (%)",
+      "measured_over": "cell"
+    },
+    "F1f": {
+      "cause": "cell out of service",
+      "change_in_model": "cell down",
+      "duration_h": [
+        3,
+        12
+      ],
+      "right_answer": "no parameter fix, alarm-driven",
+      "primary_kpi": "Cell availability (%)",
+      "measured_over": "cell"
+    }
+  },
+  "demonstrations": {
+    "F1a": {
+      "cell": "ENB0026_B3_1",
+      "area_class": "urban",
+      "vendor": "huawei",
+      "window": "2026-01-05T00:00:00 to 2026-01-12T00:00:00",
+      "primary_kpi": "E-RAB drop rate (%)",
+      "measured_over": "area",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 97.721,
+            "RRC setup success (%)": 98.505,
+            "E-RAB drop rate (%)": 1.118,
+            "DL IP throughput (kbit/s)": 22532.206,
+            "Handover success (%)": 98.355,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 11.394,
+            "RRC connections, mean": 2.722
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 90.777,
+            "RRC setup success (%)": 93.537,
+            "E-RAB drop rate (%)": 5.781,
+            "DL IP throughput (kbit/s)": 576.937,
+            "Handover success (%)": 97.029,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 73.967,
+            "RRC connections, mean": 11.003
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 97.721,
+            "RRC setup success (%)": 98.505,
+            "E-RAB drop rate (%)": 1.118,
+            "DL IP throughput (kbit/s)": 22532.206,
+            "Handover success (%)": 98.355,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 11.394,
+            "RRC connections, mean": 2.722
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 95.563,
+            "RRC setup success (%)": 97.012,
+            "E-RAB drop rate (%)": 1.285,
+            "DL IP throughput (kbit/s)": 2265.713,
+            "Handover success (%)": 98.18,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 32.475,
+            "RRC connections, mean": 126.307
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 95.666,
+            "RRC setup success (%)": 97.078,
+            "E-RAB drop rate (%)": 1.77,
+            "DL IP throughput (kbit/s)": 1985.245,
+            "Handover success (%)": 98.195,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.325,
+            "RRC connections, mean": 126.326
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 95.563,
+            "RRC setup success (%)": 97.012,
+            "E-RAB drop rate (%)": 1.285,
+            "DL IP throughput (kbit/s)": 2265.713,
+            "Handover success (%)": 98.18,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 32.475,
+            "RRC connections, mean": 126.307
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          324,
+          1171
+        ],
+        "cells touched": 13,
+        "share of users beyond 16 TA steps": [
+          0.0,
+          0.402
+        ]
+      },
+      "cm": [
+        {
+          "time": "2026-01-05T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=West,ManagedElement=ENB0026,ENBFunction=1,EUtranCellFDD=ENB0026_B3_1",
+          "attribute": "electricalTiltDeg",
+          "old": "8",
+          "new": "0"
+        },
+        {
+          "time": "2026-01-12T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=West,ManagedElement=ENB0026,ENBFunction=1,EUtranCellFDD=ENB0026_B3_1",
+          "attribute": "electricalTiltDeg",
+          "old": "0",
+          "new": "8"
+        }
+      ],
+      "fm": [],
+      "right_answer": "restore tilt",
+      "right_fix": [
+        {
+          "kind": "tilt",
+          "delta": 2.0,
+          "target": null
+        },
+        {
+          "kind": "tilt",
+          "delta": 2.0,
+          "target": null
+        },
+        {
+          "kind": "tilt",
+          "delta": 2.0,
+          "target": null
+        },
+        {
+          "kind": "tilt",
+          "delta": 2.0,
+          "target": null
+        }
+      ],
+      "recovery": 1.0,
+      "area_recovery": 1.0,
+      "wrong_fix": {
+        "change": "power +3 dB on the overshooting cell",
+        "E-RAB drop rate (%)": 2.464,
+        "recovery": -1.433
+      }
+    },
+    "F1b": {
+      "cell": "ENB0218_B3_3",
+      "area_class": "suburban",
+      "vendor": "nokia",
+      "window": "2026-01-05T00:00:00 to 2026-01-12T00:00:00",
+      "primary_kpi": "E-RAB drop rate (%)",
+      "measured_over": "cell",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 98.858,
+            "RRC setup success (%)": 99.325,
+            "E-RAB drop rate (%)": 0.525,
+            "DL IP throughput (kbit/s)": 24092.44,
+            "Handover success (%)": 98.699,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 22.938,
+            "RRC connections, mean": 9.713
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 98.858,
+            "RRC setup success (%)": 99.325,
+            "E-RAB drop rate (%)": 1.569,
+            "DL IP throughput (kbit/s)": 24092.44,
+            "Handover success (%)": 98.593,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 22.938,
+            "RRC connections, mean": 9.713
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 98.858,
+            "RRC setup success (%)": 99.325,
+            "E-RAB drop rate (%)": 0.525,
+            "DL IP throughput (kbit/s)": 24092.44,
+            "Handover success (%)": 98.699,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 22.938,
+            "RRC connections, mean": 9.713
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 98.957,
+            "RRC setup success (%)": 99.405,
+            "E-RAB drop rate (%)": 0.451,
+            "DL IP throughput (kbit/s)": 24725.091,
+            "Handover success (%)": 98.729,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 23.124,
+            "RRC connections, mean": 20.202
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 98.957,
+            "RRC setup success (%)": 99.405,
+            "E-RAB drop rate (%)": 0.953,
+            "DL IP throughput (kbit/s)": 24725.091,
+            "Handover success (%)": 98.707,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 23.124,
+            "RRC connections, mean": 20.202
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 98.957,
+            "RRC setup success (%)": 99.405,
+            "E-RAB drop rate (%)": 0.451,
+            "DL IP throughput (kbit/s)": 24725.091,
+            "Handover success (%)": 98.729,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 23.124,
+            "RRC connections, mean": 20.202
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          1024,
+          1024
+        ],
+        "cells touched": 2,
+        "HO.OutAttTarget.sum on the deleted relation, week": [
+          6024.0,
+          null
+        ]
+      },
+      "cm": [
+        {
+          "time": "2026-01-05T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=East,ManagedElement=ENB0218,ENBFunction=1,EUtranCellFDD=ENB0218_B3_3,EUtranRelation=ENB0212_B3_1",
+          "attribute": "EUtranRelation",
+          "old": "present",
+          "new": "deleted"
+        },
+        {
+          "time": "2026-01-12T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=East,ManagedElement=ENB0218,ENBFunction=1,EUtranCellFDD=ENB0218_B3_3,EUtranRelation=ENB0212_B3_1",
+          "attribute": "EUtranRelation",
+          "old": "deleted",
+          "new": "present"
+        }
+      ],
+      "fm": [],
+      "right_answer": "add neighbour",
+      "right_fix": [
+        {
+          "kind": "add_neighbour",
+          "delta": 0.0,
+          "target": "ENB0212_B3_1"
+        }
+      ],
+      "recovery": 1.0,
+      "area_recovery": 1.0
+    },
+    "F1c": {
+      "cell": "ENB0077_B3_2",
+      "area_class": "suburban",
+      "vendor": "huawei",
+      "window": "2026-01-05T00:00:00 to 2026-01-12T00:00:00",
+      "primary_kpi": "DL IP throughput (kbit/s)",
+      "measured_over": "area",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 96.251,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.009,
+            "DL IP throughput (kbit/s)": 8773.769,
+            "Handover success (%)": 97.818,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.167,
+            "RRC connections, mean": 9.711
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 98.786,
+            "RRC setup success (%)": 99.304,
+            "E-RAB drop rate (%)": 0.575,
+            "DL IP throughput (kbit/s)": 25154.001,
+            "Handover success (%)": 99.356,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 10.205,
+            "RRC connections, mean": 2.323
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 96.251,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.009,
+            "DL IP throughput (kbit/s)": 8773.769,
+            "Handover success (%)": 97.818,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.167,
+            "RRC connections, mean": 9.711
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 94.752,
+            "RRC setup success (%)": 96.438,
+            "E-RAB drop rate (%)": 1.53,
+            "DL IP throughput (kbit/s)": 2268.257,
+            "Handover success (%)": 98.174,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 36.847,
+            "RRC connections, mean": 130.341
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 94.804,
+            "RRC setup success (%)": 96.481,
+            "E-RAB drop rate (%)": 1.751,
+            "DL IP throughput (kbit/s)": 2169.509,
+            "Handover success (%)": 98.241,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.659,
+            "RRC connections, mean": 130.126
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 94.752,
+            "RRC setup success (%)": 96.438,
+            "E-RAB drop rate (%)": 1.53,
+            "DL IP throughput (kbit/s)": 2268.257,
+            "Handover success (%)": 98.174,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 36.847,
+            "RRC connections, mean": 130.341
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          1018,
+          242
+        ],
+        "cells touched": 10
+      },
+      "cm": [
+        {
+          "time": "2026-01-05T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=West,ManagedElement=ENB0077,ENBFunction=1,EUtranCellFDD=ENB0077_B3_2",
+          "attribute": "txPowerDbm",
+          "old": "49.0",
+          "new": "43.0"
+        },
+        {
+          "time": "2026-01-12T00:00:00",
+          "dn": "SubNetwork=RanLake,SubNetwork=West,ManagedElement=ENB0077,ENBFunction=1,EUtranCellFDD=ENB0077_B3_2",
+          "attribute": "txPowerDbm",
+          "old": "43.0",
+          "new": "49.0"
+        }
+      ],
+      "fm": [],
+      "right_answer": "restore power",
+      "right_fix": [
+        {
+          "kind": "power",
+          "delta": 3.0,
+          "target": null
+        },
+        {
+          "kind": "power",
+          "delta": 3.0,
+          "target": null
+        }
+      ],
+      "recovery": 1.0,
+      "area_recovery": 1.0
+    },
+    "F1d": {
+      "cell": "ENB0077_B3_2",
+      "area_class": "suburban",
+      "vendor": "huawei",
+      "window": "2026-01-05T00:00:00 to 2026-01-12T00:00:00",
+      "primary_kpi": "DL IP throughput (kbit/s)",
+      "measured_over": "cell",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 96.251,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.009,
+            "DL IP throughput (kbit/s)": 8773.769,
+            "Handover success (%)": 97.818,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.167,
+            "RRC connections, mean": 9.711
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 95.438,
+            "RRC setup success (%)": 96.907,
+            "E-RAB drop rate (%)": 1.851,
+            "DL IP throughput (kbit/s)": 2400.411,
+            "Handover success (%)": 98.027,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 58.946,
+            "RRC connections, mean": 18.341
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 99.332,
+            "RRC setup success (%)": 99.691,
+            "E-RAB drop rate (%)": 0.228,
+            "DL IP throughput (kbit/s)": 37705.302,
+            "Handover success (%)": null,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 11.637,
+            "RRC connections, mean": 4.473
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 97.467,
+            "RRC setup success (%)": 98.347,
+            "E-RAB drop rate (%)": 1.11,
+            "DL IP throughput (kbit/s)": 6159.046,
+            "Handover success (%)": 98.39,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 23.952,
+            "RRC connections, mean": 53.987
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 97.161,
+            "RRC setup success (%)": 98.138,
+            "E-RAB drop rate (%)": 1.074,
+            "DL IP throughput (kbit/s)": 4007.562,
+            "Handover success (%)": 98.415,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 30.25,
+            "RRC connections, mean": 71.19
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 95.976,
+            "RRC setup success (%)": 97.313,
+            "E-RAB drop rate (%)": 1.528,
+            "DL IP throughput (kbit/s)": 2951.067,
+            "Handover success (%)": 98.356,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 28.918,
+            "RRC connections, mean": 70.972
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          1018,
+          1928
+        ],
+        "cells touched": 10
+      },
+      "cm": [],
+      "fm": [],
+      "right_answer": "load-balancing offset or capacity note",
+      "right_fix": [
+        {
+          "kind": "cio",
+          "delta": -3.0,
+          "target": null
+        },
+        {
+          "kind": "cio",
+          "delta": -3.0,
+          "target": null
+        }
+      ],
+      "recovery": 5.539,
+      "area_recovery": -0.491
+    },
+    "F1e": {
+      "cell": "ENB0089_B3_3",
+      "area_class": "urban",
+      "vendor": "huawei",
+      "window": "2026-01-05T00:00:00 to 2026-01-12T00:00:00",
+      "primary_kpi": "RRC setup success (%)",
+      "measured_over": "cell",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 98.915,
+            "RRC setup success (%)": 99.377,
+            "E-RAB drop rate (%)": 0.503,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 68.717,
+            "RRC setup success (%)": 76.21,
+            "E-RAB drop rate (%)": 3.337,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 68.717,
+            "RRC setup success (%)": 76.21,
+            "E-RAB drop rate (%)": 3.337,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 98.915,
+            "RRC setup success (%)": 99.377,
+            "E-RAB drop rate (%)": 0.503,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 68.717,
+            "RRC setup success (%)": 76.21,
+            "E-RAB drop rate (%)": 3.337,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 68.717,
+            "RRC setup success (%)": 76.21,
+            "E-RAB drop rate (%)": 3.337,
+            "DL IP throughput (kbit/s)": 21727.49,
+            "Handover success (%)": 98.682,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 12.344,
+            "RRC connections, mean": 3.204
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          393,
+          393
+        ],
+        "cells touched": 1,
+        "uplink noise rise at the cell, dB": 16.2,
+        "UL interference per PRB, dBm (vendor-style), week mean": [
+          -116.2,
+          -100.0
+        ]
+      },
+      "cm": [],
+      "fm": [
+        {
+          "raised": "2026-01-05T00:00:00",
+          "cleared": "2026-01-12T00:00:00",
+          "eventType": "Communications Alarm",
+          "probableCause": "Degraded Signal",
+          "perceivedSeverity": "Major",
+          "specificProblem": "uplink interference detected"
+        }
+      ],
+      "right_answer": "no parameter fix, field visit",
+      "right_fix": [],
+      "recovery": 0.0,
+      "area_recovery": 0.0,
+      "parameter_tries": [
+        {
+          "change": "tilt +2",
+          "recovery": 0.014
+        },
+        {
+          "change": "tilt -2",
+          "recovery": -0.015
+        },
+        {
+          "change": "power +3",
+          "recovery": -0.003
+        },
+        {
+          "change": "power -3",
+          "recovery": -0.013
+        },
+        {
+          "change": "cio -3",
+          "recovery": 0.013
+        },
+        {
+          "change": "cio +3",
+          "recovery": -0.038
+        }
+      ]
+    },
+    "F1f": {
+      "cell": "ENB0077_B3_2",
+      "area_class": "suburban",
+      "vendor": "huawei",
+      "window": "2026-01-05T00:00:00 to 2026-01-05T06:00:00",
+      "primary_kpi": "Cell availability (%)",
+      "measured_over": "cell",
+      "kpis": {
+        "cell": {
+          "clean": {
+            "E-RAB accessibility (%)": 96.251,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.009,
+            "DL IP throughput (kbit/s)": 8773.769,
+            "Handover success (%)": 97.818,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 35.167,
+            "RRC connections, mean": 9.711
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 96.25,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.006,
+            "DL IP throughput (kbit/s)": 8725.871,
+            "Handover success (%)": 97.82,
+            "Cell availability (%)": 96.429,
+            "Mean DL PRB use (%)": 34.665,
+            "RRC connections, mean": 9.603
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 96.25,
+            "RRC setup success (%)": 97.458,
+            "E-RAB drop rate (%)": 2.006,
+            "DL IP throughput (kbit/s)": 8725.871,
+            "Handover success (%)": 97.82,
+            "Cell availability (%)": 96.429,
+            "Mean DL PRB use (%)": 34.665,
+            "RRC connections, mean": 9.603
+          }
+        },
+        "area": {
+          "clean": {
+            "E-RAB accessibility (%)": 94.785,
+            "RRC setup success (%)": 96.46,
+            "E-RAB drop rate (%)": 1.506,
+            "DL IP throughput (kbit/s)": 2216.948,
+            "Handover success (%)": 98.194,
+            "Cell availability (%)": 100.0,
+            "Mean DL PRB use (%)": 39.769,
+            "RRC connections, mean": 158.101
+          },
+          "faulty": {
+            "E-RAB accessibility (%)": 94.787,
+            "RRC setup success (%)": 96.462,
+            "E-RAB drop rate (%)": 1.508,
+            "DL IP throughput (kbit/s)": 2217.174,
+            "Handover success (%)": 98.198,
+            "Cell availability (%)": 99.675,
+            "Mean DL PRB use (%)": 39.733,
+            "RRC connections, mean": 158.097
+          },
+          "fixed": {
+            "E-RAB accessibility (%)": 94.787,
+            "RRC setup success (%)": 96.462,
+            "E-RAB drop rate (%)": 1.508,
+            "DL IP throughput (kbit/s)": 2217.174,
+            "Handover success (%)": 98.198,
+            "Cell availability (%)": 99.675,
+            "Mean DL PRB use (%)": 39.733,
+            "RRC connections, mean": 158.097
+          }
+        }
+      },
+      "pm_fingerprint": {
+        "subscribers served by the cell": [
+          1018,
+          0
+        ],
+        "cells touched": 11
+      },
+      "cm": [],
+      "fm": [
+        {
+          "raised": "2026-01-05T00:00:00",
+          "cleared": "2026-01-05T06:00:00",
+          "eventType": "Equipment Alarm",
+          "probableCause": "Transmitter Failure",
+          "perceivedSeverity": "Critical",
+          "specificProblem": "cell out of service"
+        }
+      ],
+      "right_answer": "no parameter fix, alarm-driven",
+      "right_fix": [],
+      "recovery": 0.0,
+      "area_recovery": 0.0
+    }
+  },
+  "schedule": {
+    "faults": 33,
+    "by_kind": {
+      "F1a": 8,
+      "F1b": 4,
+      "F1c": 7,
+      "F1d": 3,
+      "F1e": 6,
+      "F1f": 5
+    },
+    "per_week": {
+      "1": 0,
+      "2": 5,
+      "3": 3,
+      "4": 3,
+      "5": 3,
+      "6": 0,
+      "7": 0,
+      "8": 3,
+      "9": 4,
+      "10": 3,
+      "11": 6,
+      "12": 3
+    },
+    "quiet_weeks": [
+      1,
+      6,
+      7
+    ],
+    "overlapping_pairs": 47
+  },
+  "schedule_recovery": {
+    "F1a": {
+      "evaluated": 8,
+      "recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "area_recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "F1b": {
+      "evaluated": 4,
+      "recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "area_recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "F1c": {
+      "evaluated": 7,
+      "recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "area_recovery_min_median_max": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "F1d": {
+      "evaluated": 2,
+      "recovery_min_median_max": [
+        1.071,
+        2.138,
+        3.205
+      ],
+      "area_recovery_min_median_max": [
+        -0.414,
+        -0.223,
+        0.053
+      ]
+    },
+    "F1e": {
+      "evaluated": 6,
+      "recovery_min_median_max": [
+        0.001,
+        0.009,
+        0.029
+      ],
+      "area_recovery_min_median_max": null
+    },
+    "F1f": {
+      "evaluated": 4,
+      "recovery_min_median_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "area_recovery_min_median_max": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "twelve_weeks": {
+    "clean": {
+      "E-RAB accessibility (%)": 97.888,
+      "RRC setup success (%)": 98.651,
+      "E-RAB drop rate (%)": 0.622,
+      "DL IP throughput (kbit/s)": 6036.952,
+      "Handover success (%)": 98.684,
+      "Cell availability (%)": 100.0,
+      "Mean DL PRB use (%)": 18.53,
+      "RRC connections, mean": 8834.189
+    },
+    "with_faults": {
+      "E-RAB accessibility (%)": 97.744,
+      "RRC setup success (%)": 98.543,
+      "E-RAB drop rate (%)": 0.633,
+      "DL IP throughput (kbit/s)": 6033.981,
+      "Handover success (%)": 98.684,
+      "Cell availability (%)": 99.999,
+      "Mean DL PRB use (%)": 18.532,
+      "RRC connections, mean": 8836.198
+    }
+  },
+  "daily_series": {
+    "F1a": {
+      "kpi": "E-RAB drop rate (%)",
+      "clean": [
+        1.285,
+        1.257,
+        1.307,
+        1.305,
+        1.289,
+        1.265,
+        1.28
+      ],
+      "faulty": [
+        1.729,
+        1.71,
+        1.772,
+        1.766,
+        1.751,
+        1.829,
+        1.855
+      ],
+      "fixed": [
+        1.285,
+        1.257,
+        1.307,
+        1.305,
+        1.289,
+        1.265,
+        1.28
+      ],
+      "wrong": [
+        2.403,
+        2.383,
+        2.453,
+        2.435,
+        2.438,
+        2.568,
+        2.612
+      ]
+    },
+    "F1b": {
+      "kpi": "E-RAB drop rate (%)",
+      "clean": [
+        0.501,
+        0.502,
+        0.508,
+        0.51,
+        0.569,
+        0.592,
+        0.486
+      ],
+      "faulty": [
+        1.551,
+        1.554,
+        1.545,
+        1.561,
+        1.616,
+        1.631,
+        1.523
+      ],
+      "fixed": [
+        0.501,
+        0.502,
+        0.508,
+        0.51,
+        0.569,
+        0.592,
+        0.486
+      ]
+    },
+    "F1c": {
+      "kpi": "DL IP throughput (kbit/s)",
+      "clean": [
+        2282.559,
+        2213.068,
+        2299.317,
+        2218.535,
+        2271.604,
+        2288.034,
+        2308.881
+      ],
+      "faulty": [
+        2228.424,
+        2133.874,
+        2214.226,
+        2152.205,
+        2169.977,
+        2138.293,
+        2153.987
+      ],
+      "fixed": [
+        2282.559,
+        2213.068,
+        2299.317,
+        2218.535,
+        2271.604,
+        2288.034,
+        2308.881
+      ]
+    },
+    "F1d": {
+      "kpi": "DL IP throughput (kbit/s)",
+      "clean": [
+        7995.108,
+        9109.812,
+        10340.498,
+        6305.514,
+        9887.553,
+        9819.074,
+        9665.976
+      ],
+      "faulty": [
+        2556.065,
+        2680.033,
+        2520.939,
+        2536.285,
+        2440.75,
+        2232.422,
+        2003.634
+      ],
+      "fixed": [
+        37707.169,
+        37784.141,
+        37880.805,
+        37343.869,
+        37825.633,
+        37754.376,
+        37663.727
+      ]
+    },
+    "F1e": {
+      "kpi": "RRC setup success (%)",
+      "clean": [
+        99.411,
+        99.369,
+        99.382,
+        99.323,
+        99.404,
+        99.382,
+        99.368
+      ],
+      "faulty": [
+        76.314,
+        76.053,
+        76.321,
+        75.87,
+        76.381,
+        76.395,
+        76.375
+      ],
+      "fixed": [
+        76.314,
+        76.053,
+        76.321,
+        75.87,
+        76.381,
+        76.395,
+        76.375
+      ]
+    },
+    "F1f": {
+      "kpi": "Cell availability (%)",
+      "clean": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ],
+      "faulty": [
+        75.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ],
+      "fixed": [
+        75.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    }
+  },
+  "timing_s": {
+    "demo network and fault plan": 25.6,
+    "six demonstrations": 85.5,
+    "recovery of every planted fault": 187.7,
+    "12 weeks of counters with faults": 70.4
+  },
+  "resources": {
+    "wall time of the whole report, s": 380.7,
+    "peak resident set, MB": 1276
+  }
+}

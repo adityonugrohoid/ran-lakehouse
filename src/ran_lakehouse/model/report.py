@@ -139,8 +139,10 @@ class Accumulator:
             self.count(f"{succ} > {att}", int((gsm[succ] > gsm[att]).sum()))
         prb = lte["RRU.PrbTotDl"]
         self.count("RRU.PrbTotDl outside 0-100", int(((prb < 0) | (prb > 100)).sum()))
-        negative = sum(int((v < 0).sum()) for v in (*lte.values(), *gsm.values()))
-        self.count("negative counter values", negative)
+        # Levels in dBm are negative by nature; every other value counts.
+        counts = [v for k, v in (*lte.items(), *gsm.items()) if "dBm" not in k]
+        negative = sum(int((v < 0).sum()) for v in counts)
+        self.count("negative counter values (levels in dBm excluded)", negative)
         timeless = (lte["DRB.IPVolDl.sum"] > 0) & (lte["DRB.IPTimeDl.sum"] <= 0)
         self.count("DRB.IPVolDl > 0 with DRB.IPTimeDl = 0", int(timeless.sum()))
         state = self.model.state
@@ -622,6 +624,10 @@ def render_markdown(record: dict[str, Any]) -> str:
         "profile, generated in memory. Stated simplifications (rule M7): no terrain in the served",
         "region, no scheduler, fading or mobility traces; interference at a 50% reference load.",
         "Written by `python -m ran_lakehouse.model.report` from `model.json`.",
+        "",
+        "Model settings: coverage on a 125 m grid (each 250 m population cell split into four",
+        "points, so the smallest urban sectors span several points); default downtilts 8, 6 and",
+        "4 degrees for urban, suburban and rural sites (ASSUMPTION, typical macro tilts).",
         "",
         f"Demo: {demo['cells']['LTE']} LTE and {demo['cells']['GSM']} GSM cells, "
         f"{demo['weeks']} weeks, {demo['cell_periods']:,} cell-periods; "

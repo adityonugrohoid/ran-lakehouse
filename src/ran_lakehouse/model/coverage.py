@@ -38,6 +38,14 @@ GSM_MIN_RXLEV_DBM = -104.0
 # (ASSUMPTION).
 NEIGHBOUR_MARGIN_DB = 6.0
 POINT_CHUNK = 4096
+# Coverage points per population raster cell side: 2 gives a 125 m grid
+# from the 250 m population raster (ASSUMPTION: fine enough that the
+# smallest urban sectors span several points).
+COVERAGE_SPLIT = 2
+# A parameter change is recomputed within this distance of the changed
+# cells; beyond it their signal is too weak to move best server or SINR
+# (ASSUMPTION).
+LOCAL_RADIUS_KM = 6.0
 
 
 @dataclass(frozen=True)
@@ -111,7 +119,11 @@ def environment_weights(density: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 def build_grid(world: World) -> Grid:
-    """Points of the served region with their persons and area class.
+    """Coverage points of the served region with persons and area class.
+
+    Each population raster cell (rule W4) is split into COVERAGE_SPLIT x
+    COVERAGE_SPLIT points sharing its persons, area class and smoothed
+    density, so that the smallest (urban) cells span several points.
 
     Args:
         world: The world.
@@ -122,30 +134,34 @@ def build_grid(world: World) -> Grid:
     pop = world.population
     ny = pop.persons.shape[0]
     cols = round(world.profile.served_width_km / pop.raster_km)
-    row_grid, col_grid = np.meshgrid(np.arange(ny), np.arange(cols), indexing="ij")
-    rows, cs = row_grid.ravel(), col_grid.ravel()
-    urban_w, suburban_w = environment_weights(pop.class_density[rows, cs])
+    split = COVERAGE_SPLIT
+    step = pop.raster_km / split
+    row_grid, col_grid = np.meshgrid(np.arange(ny * split), np.arange(cols * split), indexing="ij")
+    fine_rows, fine_cols = row_grid.ravel(), col_grid.ravel()
+    rows, cs = fine_rows // split, fine_cols // split
+    density = pop.class_density[rows, cs]
+    urban_w, suburban_w = environment_weights(density)
     return Grid(
-        x_km=(cs + 0.5) * pop.raster_km,
-        y_km=(rows + 0.5) * pop.raster_km,
-        persons=pop.persons[rows, cs],
-        area_class=area_class_of(pop.class_density[rows, cs]),
+        x_km=(fine_cols + 0.5) * step,
+        y_km=(fine_rows + 0.5) * step,
+        persons=pop.persons[rows, cs] / split**2,
+        area_class=area_class_of(density),
         urban_weight=urban_w,
         suburban_weight=suburban_w,
-        raster_index=(rows, cs),
+        raster_index=(fine_rows, fine_cols),
     )
 
 
 def received_dbm(
-    state: CellState, cells: np.ndarray, grid: Grid, points: slice, band: str
+    state: CellState, cells: np.ndarray, grid: Grid, points: np.ndarray, band: str
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Received level from a set of cells at a chunk of points.
+    """Received level from a set of cells at a set of points.
 
     Args:
         state: Cell parameters.
         cells: Global indices of the cells.
         grid: The grid.
-        points: Chunk of grid points.
+        points: Indices of grid points.
         band: Band of the cells.
 
     Returns:
@@ -179,37 +195,66 @@ def received_dbm(
     return power + gain - loss, d_km
 
 
-def layer_coverage(state: CellState, grid: Grid, band: str) -> LayerCoverage:
-    """Best server and SINR of one band at every grid point.
+def empty_layer(band: str, technology: str, n: int) -> LayerCoverage:
+    """A layer with no point computed yet.
 
     Args:
-        state: Cell parameters.
-        grid: The grid.
-        band: The band.
+        band: Band.
+        technology: Technology.
+        n: Number of grid points.
 
     Returns:
-        The layer coverage.
+        The empty layer.
+    """
+    return LayerCoverage(
+        band=band,
+        technology=technology,
+        best=np.full(n, -1),
+        best_level_dbm=np.full(n, -np.inf),
+        second=np.full(n, -1),
+        second_level_dbm=np.full(n, -np.inf),
+        sinr_db=np.full(n, -np.inf),
+        distance_km=np.full(n, np.nan),
+    )
+
+
+def fill_points(
+    layer: LayerCoverage, state: CellState, grid: Grid, points: np.ndarray
+) -> LayerCoverage:
+    """Compute a layer at some points, keeping the others as they are.
+
+    Args:
+        layer: The layer to start from (not changed).
+        state: Cell parameters.
+        grid: The grid.
+        points: Indices of the grid points to compute.
+
+    Returns:
+        The updated layer.
 
     Raises:
         ValueError: If the band has no cell in service.
     """
+    band = layer.band
     cells = np.flatnonzero((state.band == band) & ~state.down)
     if cells.size == 0:
         raise ValueError(f"band {band} has no cell in service")
     technology = str(state.technology[cells[0]])
-    n = grid.x_km.size
-    best = np.full(n, -1)
-    second = np.full(n, -1)
-    best_level = np.full(n, -np.inf)
-    second_level = np.full(n, -np.inf)
-    sinr = np.full(n, -np.inf)
-    distance = np.full(n, np.nan)
-    for start in range(0, n, POINT_CHUNK):
-        chunk = slice(start, min(start + POINT_CHUNK, n))
+    best = layer.best.copy()
+    second = layer.second.copy()
+    best_level = layer.best_level_dbm.copy()
+    second_level = layer.second_level_dbm.copy()
+    sinr = layer.sinr_db.copy()
+    distance = layer.distance_km.copy()
+    for start in range(0, points.size, POINT_CHUNK):
+        chunk = points[start : start + POINT_CHUNK]
         level, d_km = received_dbm(state, cells, grid, chunk, band)
-        # Stable sort: exact ties (co-sited sectors at the antenna floor) go to
-        # the lowest cell index on every CPU.
-        order = np.argsort(-level, axis=1, kind="stable")
+        # Servers rank by level plus the cell individual offset (the
+        # load-balancing offset, rule M6); SINR uses the true level. Stable
+        # sort: exact ties (co-sited sectors at the antenna floor) go to the
+        # lowest cell index on every CPU.
+        ranked = level + state.cio_db[cells][None, :]
+        order = np.argsort(-ranked, axis=1, kind="stable")
         top = order[:, 0]
         rows = np.arange(level.shape[0])
         s_dbm = level[rows, top]
@@ -232,27 +277,40 @@ def layer_coverage(state: CellState, grid: Grid, band: str) -> LayerCoverage:
             runner = order[:, 1]
             second[chunk] = np.where(covered, cells[runner], -1)
             second_level[chunk] = level[rows, runner]
-    return LayerCoverage(
-        band=band,
-        technology=technology,
-        best=best,
-        best_level_dbm=best_level,
-        second=second,
-        second_level_dbm=second_level,
-        sinr_db=sinr,
-        distance_km=distance,
-    )
+        else:
+            second[chunk] = -1
+            second_level[chunk] = -np.inf
+    return LayerCoverage(band, technology, best, best_level, second, second_level, sinr, distance)
 
 
-def all_layers(state: CellState, grid: Grid) -> dict[str, LayerCoverage]:
-    """Coverage of every band that has cells in service.
+def layer_coverage(state: CellState, grid: Grid, band: str) -> LayerCoverage:
+    """Best server and SINR of one band at every grid point.
 
     Args:
         state: Cell parameters.
         grid: The grid.
+        band: The band.
 
     Returns:
-        Band to layer coverage.
+        The layer coverage.
     """
-    bands = sorted({str(b) for b, down in zip(state.band, state.down, strict=True) if not down})
-    return {b: layer_coverage(state, grid, b) for b in bands}
+    technology = str(state.technology[np.flatnonzero(state.band == band)[0]])
+    empty = empty_layer(band, technology, grid.x_km.size)
+    return fill_points(empty, state, grid, np.arange(grid.x_km.size))
+
+
+def points_near(grid: Grid, state: CellState, cells: np.ndarray) -> np.ndarray:
+    """Grid points within LOCAL_RADIUS_KM of any of some cells.
+
+    Args:
+        grid: The grid.
+        state: Cell parameters.
+        cells: Global cell indices.
+
+    Returns:
+        Point indices, ascending.
+    """
+    near = np.zeros(grid.x_km.size, dtype=bool)
+    for c in cells:
+        near |= np.hypot(grid.x_km - state.x_km[c], grid.y_km - state.y_km[c]) <= LOCAL_RADIUS_KM
+    return np.flatnonzero(near)

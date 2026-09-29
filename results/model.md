@@ -5,7 +5,11 @@ profile, generated in memory. Stated simplifications (rule M7): no terrain in th
 region, no scheduler, fading or mobility traces; interference at a 50% reference load.
 Written by `python -m ran_lakehouse.model.report` from `model.json`.
 
-Demo: 1452 LTE and 264 GSM cells, 12 weeks, 13,837,824 cell-periods; 5159 neighbour relations; 0 persons without LTE coverage.
+Model settings: coverage on a 125 m grid (each 250 m population cell split into four
+points, so the smallest urban sectors span several points); default downtilts 8, 6 and
+4 degrees for urban, suburban and rural sites (ASSUMPTION, typical macro tilts).
+
+Demo: 1452 LTE and 264 GSM cells, 12 weeks, 13,837,824 cell-periods; 6959 neighbour relations; 0 persons without LTE coverage.
 
 ![Best-server RSRP](model_best_server.png)
 
@@ -23,13 +27,13 @@ The blocking figure shows the three commonest TCH counts, one week of cell-perio
 
 | Band | Cells | Population covered | Level p10 / p50 / p90, dBm | SINR p10 / p50 / p90, dB |
 |---|---|---|---|---|
-| B1 | 336 | 0.938 | -114.5 / -103.6 / -91.8 | -5.5 / 0.6 / 10.7 |
-| B28 | 36 | 0.592 | -115.1 / -94.8 / -76.5 | -0.5 / 4.7 / 16.0 |
-| B3 | 828 | 1.0 | -99.7 / -87.8 / -75.0 | -1.2 / 4.5 / 14.9 |
-| B40 | 186 | 0.772 | -117.4 / -107.2 / -94.0 | -6.0 / 0.5 / 10.5 |
-| B8 | 66 | 0.532 | -113.0 / -91.6 / -72.6 | -0.8 / 4.5 / 14.9 |
-| G1800 | 90 | 0.706 | -102.1 / -93.5 / -82.2 | -1.0 / 2.8 / 10.3 |
-| G900 | 174 | 1.0 | -83.5 / -62.0 / -46.4 | 6.5 / 12.2 / 22.7 |
+| B1 | 336 | 0.895 | -115.8 / -105.4 / -93.4 | -4.9 / 1.0 / 11.1 |
+| B28 | 36 | 0.532 | -114.9 / -95.5 / -77.1 | -0.4 / 4.9 / 16.1 |
+| B3 | 828 | 1.0 | -101.3 / -89.0 / -75.3 | -1.0 / 4.9 / 15.7 |
+| B40 | 186 | 0.696 | -117.6 / -108.2 / -95.3 | -5.3 / 1.2 / 11.2 |
+| B8 | 66 | 0.496 | -113.1 / -92.4 / -73.2 | -0.7 / 4.6 / 15.2 |
+| G1800 | 90 | 0.641 | -101.7 / -95.2 / -84.5 | -0.7 / 3.3 / 10.7 |
+| G900 | 174 | 1.0 | -85.4 / -63.5 / -47.0 | 6.4 / 12.3 / 23.0 |
 
 Level is RSRP for LTE and RxLev for GSM; GSM SINR is carrier to interference plus noise.
 
@@ -37,18 +41,18 @@ Level is RSRP for LTE and RxLev for GSM; GSM SINR is carrier to interference plu
 
 | KPI | Value |
 |---|---|
-| LTE E-RAB accessibility, TS 32.450 6.1.1 (%) | 97.894 |
-| LTE RRC setup success rate, operator-defined (%) | 98.653 |
-| LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour) | 1.1106 |
-| LTE E-RAB drop rate, operator-defined (%) | 0.63 |
-| LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s) | 5888.2 |
+| LTE E-RAB accessibility, TS 32.450 6.1.1 (%) | 97.888 |
+| LTE RRC setup success rate, operator-defined (%) | 98.651 |
+| LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour) | 1.0958 |
+| LTE E-RAB drop rate, operator-defined (%) | 0.622 |
+| LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s) | 6037.0 |
 | LTE cell availability, TS 32.450 6.4.1 (%) | 100.0 |
-| LTE intra-frequency handover success, HO.IntraFreqOut* (%) | 98.674 |
-| LTE mean DL PRB use, operator-defined (%) | 19.34 |
-| GSM service access success, TS 32.410 7.4 (%) | 97.883 |
-| GSM TCH blocking, vendor-style (%) | 0.593 |
-| GSM handover success per cell, TS 32.410 9.5 (%) | 96.354 |
-| GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%) | 2.433 |
+| LTE intra-frequency handover success, HO.IntraFreqOut* (%) | 98.684 |
+| LTE mean DL PRB use, operator-defined (%) | 18.53 |
+| GSM service access success, TS 32.410 7.4 (%) | 97.907 |
+| GSM TCH blocking, vendor-style (%) | 0.601 |
+| GSM handover success per cell, TS 32.410 9.5 (%) | 96.107 |
+| GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%) | 2.612 |
 
 ## Peak congestion by area class
 
@@ -56,11 +60,11 @@ At each class's busiest 15-minute slot of the week (by mean PRB use), over 12 we
 
 | Class | Busiest slot | Mean PRB use, % | Cells above 80% PRB | Highest share, any slot |
 |---|---|---|---|---|
-| urban | Tue 11:30 | 28.8 | 0.031 | 0.04 |
-| suburban | Fri 20:30 | 50.1 | 0.2 | 0.2 |
-| rural | Fri 20:30 | 37.1 | 0.124 | 0.126 |
+| urban | Tue 11:30 | 25.8 | 0.027 | 0.036 |
+| suburban | Fri 20:30 | 48.7 | 0.194 | 0.194 |
+| rural | Fri 20:30 | 37.3 | 0.127 | 0.128 |
 
-Per-cell load follows cell size. LTE subscribers per cell: urban 407, suburban 1144, rural 596. The dense city grid is lightly loaded per cell, and the towns, sited on the suburban lattice, are the network's hotspots; they are where capacity faults (rule F1d) belong. Users at urban points follow a business-hours activity curve, so the urban peak falls in the weekday daytime; suburban and rural points follow the residential curve with its evening peak (both ASSUMPTION).
+Per-cell load follows cell size. LTE subscribers per cell: urban 400, suburban 1148, rural 615. The dense city grid is lightly loaded per cell, and the towns, sited on the suburban lattice, are the network's hotspots; they are where capacity faults (rule F1d) belong. Users at urban points follow a business-hours activity curve, so the urban peak falls in the weekday daytime; suburban and rural points follow the residential curve with its evening peak (both ASSUMPTION).
 
 ## Counter invariants over every cell-period
 
@@ -74,20 +78,20 @@ Per-cell load follows cell size. LTE subscribers per cell: urban 407, suburban 1
 | succImmediateAssingProcs > attImmediateAssingProcs | 0 |
 | succOutgoingInternalInterCellHDOs > attOutgoingInternalInterCellHDOs | 0 |
 | RRU.PrbTotDl outside 0-100 | 0 |
-| negative counter values | 0 |
+| negative counter values (levels in dBm excluded) | 0 |
 | DRB.IPVolDl > 0 with DRB.IPTimeDl = 0 | 0 |
 
 ## Counter relationships, first week
 
 | Check | Statistic | Value | Expected | Result |
 |---|---|---|---|---|
-| IP throughput falls as PRB use rises | Spearman | -0.5634 | < 0 | pass |
-| RRC setup success lower at PRB >= 95% than below 80% | success rate below 80% minus at >= 95% | 0.0373 | > 0 | pass |
-| E-RAB drop rate rises with cell-edge share | Spearman | 0.8413 | > 0 | pass |
-| Mean CQI rises with mean SINR | Spearman | 0.9951 | > 0 | pass |
-| Median TA distance grows urban < suburban < rural | median mean TA step per class | [3.764, 11.32, 25.32] | increasing | pass |
-| PRB use rises with connected users | Spearman | 0.9649 | > 0 | pass |
-| TCH blocking higher at TCH occupancy >= 0.8 than below 0.5 | blocking share at >= 0.8 minus below 0.5 | 0.0794 | > 0 | pass |
+| IP throughput falls as PRB use rises | Spearman | -0.5943 | < 0 | pass |
+| RRC setup success lower at PRB >= 95% than below 80% | success rate below 80% minus at >= 95% | 0.0369 | > 0 | pass |
+| E-RAB drop rate rises with cell-edge share | Spearman | 0.9183 | > 0 | pass |
+| Mean CQI rises with mean SINR | Spearman | 0.9962 | > 0 | pass |
+| Median TA distance grows urban < suburban < rural | median mean TA step per class | [3.702, 11.138, 25.889] | increasing | pass |
+| PRB use rises with connected users | Spearman | 0.9691 | > 0 | pass |
+| TCH blocking higher at TCH occupancy >= 0.8 than below 0.5 | blocking share at >= 0.8 minus below 0.5 | 0.0819 | > 0 | pass |
 
 ## GSM transceivers
 
@@ -95,15 +99,15 @@ Dimensioned per cell for 2% blocking at the busy hour (Erlang B), 1 to 12 TRX:
 
 | TRX | Cells |
 |---|---|
-| 1 | 94 |
-| 2 | 88 |
-| 3 | 26 |
-| 4 | 16 |
-| 5 | 17 |
-| 6 | 7 |
-| 7 | 9 |
-| 8 | 2 |
-| 9 | 2 |
+| 1 | 89 |
+| 2 | 92 |
+| 3 | 27 |
+| 4 | 17 |
+| 5 | 14 |
+| 6 | 12 |
+| 7 | 6 |
+| 8 | 3 |
+| 9 | 1 |
 | 10 | 2 |
 | 11 | 1 |
 
@@ -113,8 +117,8 @@ Measured on the build machine; varies run to run.
 
 | Step | Seconds |
 |---|---|
-| demo model build (coverage and serving) | 7.0 |
-| demo 12 weeks of counters | 7.7 |
+| demo model build (coverage and serving) | 26.2 |
+| demo 12 weeks of counters | 12.5 |
 | tiny build and 2 days | 0.0 |
 
-Tiny profile: 27 cells, 2 days, 2740066 RRC setup attempts.
+Tiny profile: 27 cells, 2 days, 2739741 RRC setup attempts.
