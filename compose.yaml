@@ -1,0 +1,84 @@
+# Local lakehouse stack (rule S3): Lakekeeper REST catalog, its Postgres,
+# and SeaweedFS as the S3-compatible warehouse store. Lakekeeper supports no
+# filesystem warehouse, so object storage is required.
+#
+# Local development only: the keys below and in compose/seaweedfs-iam.json
+# are placeholders, auth is off (allowall), and nothing is exposed beyond
+# localhost. The catalog is on host port 18181.
+#
+# Lakekeeper shares the SeaweedFS network namespace so that one S3 endpoint,
+# http://localhost:8333, is valid both for Lakekeeper and for clients on the
+# host. Lakekeeper hands that endpoint to every client in the table config,
+# so it must resolve the same way everywhere.
+
+x-lakekeeper-env: &lakekeeper-env
+  LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://postgres:postgres@db:5432/postgres
+  LAKEKEEPER__PG_ENCRYPTION_KEY: local-dev-encryption-key-not-a-secret
+  LAKEKEEPER__AUTHZ_BACKEND: allowall
+
+services:
+  db:
+    image: postgres:17.11
+    environment:
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 2s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  migrate:
+    image: quay.io/lakekeeper/catalog:v0.13.6
+    environment: *lakekeeper-env
+    command: ["migrate"]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.48
+    # `mini`: single-process master, volume, filer and S3 gateway; creates
+    # the warehouse bucket on start.
+    command:
+      - mini
+      - -dir=/data
+      - -bucket=warehouse
+      - -s3.config=/etc/seaweedfs/iam.json
+      - -s3.iam.config=/etc/seaweedfs/iam.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8333/status"]
+      interval: 2s
+      timeout: 10s
+      retries: 15
+    volumes:
+      - ./compose/seaweedfs-iam.json:/etc/seaweedfs/iam.json:ro
+      - s3data:/data
+    ports:
+      - "127.0.0.1:8333:8333"
+      - "127.0.0.1:18181:8282"
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:v0.13.6
+    command: ["serve"]
+    # SeaweedFS mini already listens on 8181 in the shared namespace.
+    environment:
+      <<: *lakekeeper-env
+      LAKEKEEPER__LISTEN_PORT: "8282"
+    network_mode: "service:seaweedfs"
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 2s
+      timeout: 10s
+      retries: 15
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      seaweedfs:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  s3data:

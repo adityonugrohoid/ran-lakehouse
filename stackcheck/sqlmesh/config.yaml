@@ -1,0 +1,31 @@
+# Local stack only (rule S3). The warehouse name and the local DuckDB file
+# are set per run by ran_lakehouse.stackcheck.
+gateways:
+  local:
+    connection:
+      type: duckdb
+      register_comments: false
+      extensions: [httpfs, iceberg]
+      # SQLMesh's catalogs mapping has no ENDPOINT or AUTHORIZATION_TYPE
+      # field; an ICEBERG secret carries the endpoint instead.
+      secrets:
+        - type: iceberg
+          endpoint: "http://127.0.0.1:18181/catalog"
+          token: "unused-auth-is-off"
+      catalogs:
+        # First entry is the default catalog: SQLMesh state and the
+        # virtual-layer views stay in local DuckDB, since DuckDB cannot
+        # create views in an Iceberg catalog.
+        local: "{{ env_var('STACKCHECK_DUCKDB_PATH') }}"
+        lk:
+          type: iceberg
+          path: "{{ env_var('STACKCHECK_WAREHOUSE') }}"
+
+default_gateway: local
+
+environment_catalog_mapping:
+  '.*': local
+
+model_defaults:
+  dialect: duckdb
+  start: '2026-01-05'

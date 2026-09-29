@@ -272,8 +272,11 @@ the property breaks:
   If DuckDB-Iceberg MERGE or time travel fails, bronze and silver merge in
   plain Parquet and Iceberg holds gold only; D7 then uses the Iceberg gold
   history.
-- S3 docker compose with at most three services: the lakehouse (generator,
-  collector, pipeline, API), Lakekeeper, Postgres.
+- S3 docker compose with four long-running services: the lakehouse app
+  (generator, collector, pipeline, API), Lakekeeper, Postgres, SeaweedFS
+  (S3-compatible object storage for the Iceberg warehouse; Lakekeeper
+  supports no filesystem warehouse), plus Lakekeeper's one-shot migrate
+  container.
 - S4 A `ranlake` CLI: generate, run (cadence or accelerated), backfill,
   reprocess, scale-test, export-sample, serve.
 - S5 Conventions: uv, ruff, strict mypy, pinned CI actions and a scoped

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: ran
+    database: lk
+    schema: ran
+    tables:
+      - name: counters
