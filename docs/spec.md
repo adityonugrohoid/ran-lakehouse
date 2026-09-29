@@ -129,12 +129,18 @@ measured scale test, rule E1).
 - P1 3GPP PM XML per TS 32.435 (Rel-19 V19.0.0) and the 5G-era copy in
   TS 28.532 clause 12.3.2: measCollecFile, fileHeader (fileFormatVersion,
   vendorName, dnPrefix, fileSender, measCollec beginTime), measData
-  (managedElement; measInfo with job, granPeriod PT900S, repPeriod,
+  (managedElement; measInfo with job, granPeriod, repPeriod,
   measTypes, measValue measObjLdn, measResults), fileFooter. Validate
   against the XSD in tests. The XSD is not vendored (3GPP asks permission
   to redistribute code from its specifications): CI checks the structure
   of TS 32.435 clause 4.2.2, and an optional test validates against the
-  schema fetched from the 3GPP archive.
+  schema fetched from the 3GPP archive. Distribution measurements (the
+  CQI and timing-advance histograms) report at 60-minute granularity:
+  their measInfo carries granPeriod and repPeriod PT3600S, ending with
+  the hour, in the file of the hour's last 15-minute period; every other
+  measInfo stays at PT900S (TS 32.435 gives each measInfo its own
+  granPeriod). ASSUMPTION: the histograms are most of the values, and
+  collecting them hourly keeps a 12-week backfill within a laptop budget.
 - P2 File names per TS 32.432 clause 5.1.2 with UTC offsets, type B: one
   file per EMS per granularity period carrying every network element, for
   example `B20260105.1500+0700-1515+0700_EMS-HW-01.xml.gz`, gzip. Reason:
@@ -149,7 +155,10 @@ measured scale test, rule E1).
   dialect. Written from public descriptions; stated as "modelled on",
   not a vendor copy. One file per EMS per granularity period, UTC
   timestamps (rule W5), named `OMeS_<EMS>_<UTC start>Z.xml.gz`
-  (ASSUMPTION: no public naming convention found).
+  (ASSUMPTION: no public naming convention found). As in P1, the
+  distribution measurements (LTE_Quality_DL, LTE_Timing_Advance) report
+  at 60-minute intervals, in a second PMSetup with interval 60 in the
+  file of the hour's last period (ASSUMPTION, same reason).
 - P5 Two vendor dialects, covering both kinds of multi-vendor difference;
   each has a dictionary mapping to 3GPP names (LTE TS 32.425, GSM
   TS 52.402):

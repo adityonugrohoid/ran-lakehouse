@@ -1,0 +1,84 @@
+{
+  "profile": "demo",
+  "weeks": 12,
+  "clock": "none: as fast as possible",
+  "files_rendered": 16128,
+  "collector": {
+    "deliveries": 16680,
+    "loaded": 16632,
+    "skipped_same_file": 48,
+    "pm_rows": 457253306
+  },
+  "file_arrivals": {
+    "CM loaded": 168,
+    "CMLOG loaded": 168,
+    "FM loaded": 168,
+    "PM loaded": 16128,
+    "PM skipped, same file": 48
+  },
+  "rows": {
+    "bronze.pm_values": 457253306,
+    "bronze.file_arrivals": 16680,
+    "bronze.cm_records": 728723,
+    "bronze.fm_records": 16,
+    "evaluation.delivery_anomalies": 284
+  },
+  "pm_rows_by_granularity": {
+    "15 min": 366554126,
+    "60 min": 90699180
+  },
+  "pm_rows_by_dictionary_release": {
+    "HW-R1": 228442949,
+    "HW-R2": 75710677,
+    "none declared (OMeS)": 153099680
+  },
+  "delivery_anomalies_planted": {
+    "D1": 72,
+    "D2_conflict": 24,
+    "D2_same": 48,
+    "D3": 24,
+    "D4": 24,
+    "D5": 92
+  },
+  "storage": {
+    "bronze.pm_values": {
+      "data_files": 527,
+      "bytes": 1904795530
+    },
+    "bronze.file_arrivals": {
+      "data_files": 449,
+      "bytes": 2549205
+    },
+    "bronze.cm_records": {
+      "data_files": 87,
+      "bytes": 21013105
+    },
+    "bronze.fm_records": {
+      "data_files": 12,
+      "bytes": 33471
+    },
+    "evaluation.delivery_anomalies": {
+      "data_files": 1,
+      "bytes": 4498
+    }
+  },
+  "landing_at_end": {
+    "retention_days": 3,
+    "files": 599,
+    "bytes": 43865584
+  },
+  "timing_s": {
+    "simulate": 92.2,
+    "render": 818.5,
+    "collect": 1909.4,
+    "total": 2847.2
+  },
+  "peak_rss_mb": 2784,
+  "machine": {
+    "cpus": 16,
+    "python": "3.12.3",
+    "duckdb": "1.5.6",
+    "pyiceberg": "0.12.0",
+    "duckdb_memory_limit": "1GB"
+  }
+}

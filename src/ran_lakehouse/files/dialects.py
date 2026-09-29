@@ -95,6 +95,12 @@ def bins(prefix: str, canonical: str, count: int, attestation: str) -> list[Entr
     return [Entry(f"{prefix}{i}", "bin", (canonical,), 1.0, i, attestation) for i in range(count)]
 
 
+# Distribution measurements report every 60 minutes, the rest every 15
+# (ASSUMPTION, rules P1 and P4: distributions are the bulk of the values
+# and vendors commonly collect them at a coarser granularity).
+HOURLY_GROUPS = frozenset({"LTE.CQI", "LTE.TA", "LTE_Quality_DL", "LTE_Timing_Advance"})
+
+
 @dataclass(frozen=True)
 class MeasGroup:
     """One measInfo of a dialect: a measured object class and its counters.
@@ -110,6 +116,15 @@ class MeasGroup:
     technology: str
     objects: str
     entries: tuple[Entry, ...]
+
+    @property
+    def granularity_min(self) -> int:
+        """Reporting granularity of the group, minutes.
+
+        Returns:
+            60 for distribution measurements, else 15.
+        """
+        return 60 if self.meas_info_id in HOURLY_GROUPS else 15
 
 
 @dataclass(frozen=True)
@@ -411,3 +426,57 @@ NOKIA_R1 = Dialect(
         ),
     ),
 )
+
+
+# Huawei-style release HW-R2 (rule D5): a software upgrade renames a few
+# counters; the meaning and the values stay the same. The new names are
+# ASSUMPTION, in the dialect's style.
+HW_R2_RENAMES = {
+    "L.Thrp.bits.DL": "L.Thrp.bits.DL.Total",
+    "L.E-RAB.AbnormRel": "L.E-RAB.AbnormRel.Sum",
+    "L.Traffic.User.Avg": "L.Traffic.ActiveUser.Avg",
+}
+
+
+def renamed(dialect: Dialect, release: str, renames: dict[str, str]) -> Dialect:
+    """A later release of a dialect with some counters renamed.
+
+    Args:
+        dialect: The earlier release.
+        release: The new release label.
+        renames: Old name to new name.
+
+    Returns:
+        The new release.
+
+    Raises:
+        ValueError: If a name to rename is not in the dialect.
+    """
+    names = {e.name for g in dialect.groups for e in g.entries}
+    missing = set(renames) - names
+    if missing:
+        raise ValueError(f"cannot rename counters not in {dialect.release}: {sorted(missing)}")
+    groups = tuple(
+        MeasGroup(
+            g.meas_info_id,
+            g.technology,
+            g.objects,
+            tuple(
+                Entry(
+                    renames.get(e.name, e.name),
+                    e.rule,
+                    e.canonical,
+                    e.scale,
+                    e.bin_index,
+                    ASSUMED if e.name in renames else e.attestation,
+                )
+                for e in g.entries
+            ),
+        )
+        for g in dialect.groups
+    )
+    return Dialect(dialect.vendor, release, groups)
+
+
+HUAWEI_R2 = renamed(HUAWEI_R1, "HW-R2", HW_R2_RENAMES)
+RELEASES = {d.release: d for d in (HUAWEI_R1, HUAWEI_R2, NOKIA_R1)}

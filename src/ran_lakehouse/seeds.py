@@ -27,6 +27,7 @@ class Purpose(IntEnum):
     SITE_LAYERS = 22
     SECTOR_AZIMUTH = 23
     MODEL_NOISE = 30
+    DELIVERY = 50
     FAULT_PLAN = 40
     FAULT_DETAIL = 41
 

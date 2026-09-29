@@ -48,8 +48,11 @@ files = ["src", "tests"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["-ra", "--strict-markers", "-m", "not network"]
-markers = ["network: fetches from the internet (run with `pytest -m network`)"]
+addopts = ["-ra", "--strict-markers", "-m", "not network and not lake"]
+markers = [
+    "network: fetches from the internet (run with `pytest -m network`)",
+    "lake: needs the local compose stack (run with `pytest -m lake`)",
+]
 
 [[tool.mypy.overrides]]
 # pyarrow and lxml ship no type information.

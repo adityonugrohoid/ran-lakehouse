@@ -15,9 +15,21 @@ git clone https://github.com/adityonugrohoid/ran-lakehouse.git
 cd ran-lakehouse
 ```
 
-The repo is being built. The generator, the pipeline and the API land in
-the next pull requests, and this section will then carry the commands
-that run them.
+The repo is being built. What runs today: start the local lake stack,
+then load the synthetic history into bronze, or run days on a clock.
+
+```bash
+uv sync
+docker compose up -d --wait
+# 12 weeks of history, delivered and collected as fast as the machine allows
+uv run ranlake backfill --profile demo --warehouse demo --weeks 12 --run-weeks 13
+# then day 84 on a clock 96 times faster than real time (labelled accelerated)
+uv run ranlake run --profile demo --warehouse demo --weeks 13 --first-day 84 --days 1 --speedup 96
+```
+
+`--speedup 1` is the real 15-minute cadence. A live run writes its clock
+label and progress to `runs/<warehouse>/status.json`. The silver and gold
+layers and the API land in the next pull requests.
 
 ## License
 
