@@ -124,4 +124,6 @@ def pyiceberg(warehouse: str) -> Any:
     Returns:
         The catalog.
     """
-    return load_catalog(CATALOG_ALIAS, type="rest", uri=f"{CATALOG_URL}/catalog", warehouse=warehouse)
+    return load_catalog(
+        CATALOG_ALIAS, type="rest", uri=f"{CATALOG_URL}/catalog", warehouse=warehouse
+    )
