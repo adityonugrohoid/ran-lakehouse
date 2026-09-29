@@ -26,6 +26,7 @@ class Purpose(IntEnum):
     SITE_TECHNOLOGY = 21
     SITE_LAYERS = 22
     SECTOR_AZIMUTH = 23
+    MODEL_NOISE = 30
 
 
 def rng(purpose: Purpose, entity_id: int) -> np.random.Generator:
