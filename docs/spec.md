@@ -131,10 +131,16 @@ measured scale test, rule E1).
   vendorName, dnPrefix, fileSender, measCollec beginTime), measData
   (managedElement; measInfo with job, granPeriod PT900S, repPeriod,
   measTypes, measValue measObjLdn, measResults), fileFooter. Validate
-  against the XSD in tests.
-- P2 File names per TS 32.432 clause 5.1.2 with UTC offsets, type A per
-  network element per granularity period, for example
-  `A20260105.1500+0700-1515+0700_ENB0142.xml`; gzip allowed.
+  against the XSD in tests. The XSD is not vendored (3GPP asks permission
+  to redistribute code from its specifications): CI checks the structure
+  of TS 32.435 clause 4.2.2, and an optional test validates against the
+  schema fetched from the 3GPP archive.
+- P2 File names per TS 32.432 clause 5.1.2 with UTC offsets, type B: one
+  file per EMS per granularity period carrying every network element, for
+  example `B20260105.1500+0700-1515+0700_EMS-HW-01.xml.gz`, gzip. Reason:
+  12 weeks at one file per network element per 15 minutes would be about
+  2.3 million files, too many for a laptop-scale lake. The parser still
+  accepts type A (one network element per file).
 - P3 Suspect flag: `<suspect>true</suspect>` on measValue where a
   collection was interrupted (TS 32.401) or a planted case needs it;
   default omitted.
