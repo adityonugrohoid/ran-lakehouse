@@ -32,7 +32,10 @@ measured scale test, rule E1).
   `np.random.default_rng([BASE_SEED, purpose_id, entity_id])`. No clock, no
   global random state. Same seed, same world, byte for byte.
 - W2 Coordinates are a local grid in km, origin at the south-west corner.
-  No real place, operator, city or network is named or implied.
+  The network is modelled on public facts about Indonesian networks
+  (bands, technology mix, WIB and WIT time zones; rules W5, W6). No real
+  operator, network, site, city or person is named, and no real
+  coordinates are used.
 - W3 One world, two areas on the same map: the served region (existing
   network, optimization) and an uncovered 3T expansion area next to it
   (planning, rule G).
@@ -298,8 +301,8 @@ the property breaks:
 ## 13. Honesty
 
 - Synthetic data, stated on every surface. The model is simplified and
-  says where (rule M7). "Modelled on" for vendor dialects. No operator,
-  client, place or person named. Numbers in the README come from reports.
+  says where (rule M7). "Modelled on" for vendor dialects. No real
+  operator, network, site, city, client or person named (rule W2). Numbers in the README come from reports.
 
 ## 14. Done means
 

@@ -8,8 +8,11 @@ A mini telecom lakehouse and data generator for a synthetic 4G (LTE) and
 ## Rules for this repo
 
 1. The network, its traffic and its faults are synthetic, generated from
-   seeds. Every result says so. No real place, operator, network, client
-   or person is named or implied; coordinates are a local km grid.
+   seeds. Every result says so. The network is modelled on public facts
+   about Indonesian networks (bands, technology mix, WIB and WIT time
+   zones). No real operator, network, site, city, client or person is
+   named, and no real coordinates are used: coordinates are a local km
+   grid.
 2. `docs/spec.md` is authoritative. A change to a rule is its own pull
    request that edits the spec first.
 3. Standards are cited by document, release or edition, and clause
