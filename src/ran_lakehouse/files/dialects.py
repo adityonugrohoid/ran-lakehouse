@@ -254,3 +254,160 @@ HUAWEI_R1 = Dialect(
         ),
     ),
 )
+
+
+# Nokia-style ids are modelled on public third-party copies of vendor
+# training material (M<measurement>C<counter> ids: M8006 EPS bearer, M8010
+# DL quality, M8011 cell resources, M8013 signalling, M8020 availability,
+# M8015 per-neighbour handover) and on public BSS formula decks (numeric
+# BSS counter ids such as 1026 tch_call_req). Where no public id was found
+# the id is an ASSUMPTION in the same style.
+SAMPLES_PER_PERIOD = 90  # availability samples per 15 min, one per 10 s (ASSUMPTION)
+
+NOKIA_R1 = Dialect(
+    vendor="nokia",
+    release="NK-R1",
+    groups=(
+        MeasGroup(
+            "LTE_Signalling",
+            "LTE",
+            "cell",
+            (
+                copy("M8013C17", "RRC.ConnEstabAtt.sum", WEAK),
+                copy("M8013C5", "RRC.ConnEstabSucc.sum", WEAK),
+                copy("M8013C43", "S1SIG.ConnEstabAtt", ATTESTED),
+                copy("M8013C44", "S1SIG.ConnEstabSucc", ATTESTED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_EPS_Bearer",
+            "LTE",
+            "cell",
+            (
+                copy("M8006C0", "ERAB.EstabInitAttNbr.sum", ATTESTED),
+                copy("M8006C1", "ERAB.EstabInitSuccNbr.sum", ATTESTED),
+                copy("M8006C176", "ERAB.RelActNbr.sum", ASSUMED),
+                copy("M8006C181", "ERAB.SessionTimeUE", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_Cell_Throughput",
+            "LTE",
+            "cell",
+            (
+                # kbit (TS 32.425) to kByte.
+                copy("M8012C20", "DRB.IPVolDl.sum", WEAK, scale=1.0 / 8.0),
+                copy("M8012C92", "DRB.IPTimeDl.sum", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_Cell_Resource",
+            "LTE",
+            "cell",
+            (copy("M8011C37", "RRU.PrbTotDl", ATTESTED),),
+        ),
+        MeasGroup(
+            "LTE_Cell_Load",
+            "LTE",
+            "cell",
+            (
+                copy("M8001C199", "RRC.ConnMean", ASSUMED),
+                copy("M8001C200", "RRC.ConnMax", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_Cell_Avail",
+            "LTE",
+            "cell",
+            (
+                rule("M8020C3", "availability_samples", ("RRU.CellUnavailableTime.sum",), ATTESTED),
+                rule("M8020C6", "samples_total", (), ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_Intra_Freq_HO",
+            "LTE",
+            "cell",
+            (
+                copy("M8014C19", "HO.IntraFreqOutAtt", ASSUMED),
+                copy("M8014C20", "HO.IntraFreqOutSucc", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "LTE_Power_Quality_UL",
+            "LTE",
+            "cell",
+            (copy("M8005C306", "UL interference per PRB, dBm (vendor-style)", ASSUMED),),
+        ),
+        MeasGroup(
+            "LTE_Quality_DL",
+            "LTE",
+            "cell",
+            # M8010C36-C51: the CQI 0-15 histogram.
+            tuple(
+                Entry(f"M8010C{36 + i}", "bin", ("CARR.WBCQIDist.Bin",), 1.0, i, ATTESTED)
+                for i in range(CQI_BINS)
+            ),
+        ),
+        MeasGroup(
+            "LTE_Timing_Advance",
+            "LTE",
+            "cell",
+            tuple(
+                Entry(f"M8029C{i}", "bin", ("TA distance bins (vendor-style)",), 1.0, i, ASSUMED)
+                for i in range(TA_BINS)
+            ),
+        ),
+        MeasGroup(
+            "LTE_Neighb_Cell_HO",
+            "LTE",
+            "relation",
+            (
+                copy("M8015C9", "HO.OutAttTarget.sum", ASSUMED),
+                copy("M8015C10", "HO.OutSuccTarget.sum", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "BSC_Traffic",
+            "GSM",
+            "cell",
+            (
+                # tch_call_req counts requests, including the blocked ones.
+                rule(
+                    "c1026",
+                    "sum",
+                    ("attTCHSeizures", "attTCHSeizuresMeetingTCHBlockedState"),
+                    ATTESTED,
+                ),
+                copy("c1009", "succTCHSeizures", ATTESTED),
+                copy("c1010", "attTCHSeizuresMeetingTCHBlockedState", ASSUMED),
+                copy("c1000", "attImmediateAssingProcs", ATTESTED),
+                copy("c1001", "attSDCCHSeizuresMeetingSDCCHBlockedState", ATTESTED),
+                copy("c57021", "succImmediateAssingProcs", ATTESTED),
+                copy("c1003", "nbrOfLostRadioLinksSDCCH", ATTESTED),
+                copy("c1013", "nbrOfLostRadioLinksTCH", ASSUMED),
+                copy("c1120", "nbrOfAvailableTCHs", ASSUMED),
+                copy("c1121", "meanNbrOfBusyTCHs", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "BSC_Handover",
+            "GSM",
+            "cell",
+            (
+                copy("c4000", "attOutgoingInternalInterCellHDOs", ASSUMED),
+                copy("c4004", "succOutgoingInternalInterCellHDOs", ASSUMED),
+                copy("c4010", "succIncomingInternalInterCellHDOs", ASSUMED),
+            ),
+        ),
+        MeasGroup(
+            "BSC_Adjacent_HO",
+            "GSM",
+            "relation",
+            (
+                copy("c4100", "attOutgoingInternalInterCellHDOsPerTargetCell", ASSUMED),
+                copy("c4104", "succOutgoingInternalInterCellHDOsPerTargetCell", ASSUMED),
+            ),
+        ),
+    ),
+)
