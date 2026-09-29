@@ -92,7 +92,8 @@ measured scale test, rule E1).
   handover counters from neighbour relations.
 - M6 What-if: apply a bounded change (tilt within +/-2 degrees, power
   within +/-3 dB per change, add or remove a neighbour, handover offset
-  within a stated range) and replay the next week with the same random
+  (cell individual offset) within +/-6 dB and moved at most 3 dB per
+  change, ASSUMPTION) and replay the next week with the same random
   noise (common random numbers), for the changed cell and every cell whose
   load or interference it touches. Output: next week's counters and KPIs
   for those cells, before and after.

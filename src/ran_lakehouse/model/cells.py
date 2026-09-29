@@ -15,9 +15,9 @@ from ran_lakehouse.world.network import BANDS
 
 # Antenna height per area class, m (ASSUMPTION; kept inside Hata's 30-200 m).
 ANTENNA_HEIGHT_M = {"urban": 30.0, "suburban": 32.0, "rural": 40.0}
-# Electrical tilt per area class, degrees (ASSUMPTION; TR 36.814 V9.2.0 uses
-# 6 deg for its 1732 m calibration case).
-ELECTRICAL_TILT_DEG = {"urban": 6.0, "suburban": 4.0, "rural": 2.0}
+# Downtilt per area class, degrees (ASSUMPTION: typical macro tilts, deeper
+# for smaller cells; TR 36.814 V9.2.0 uses 6 deg for its 1732 m case).
+ELECTRICAL_TILT_DEG = {"urban": 8.0, "suburban": 6.0, "rural": 4.0}
 # Channel bandwidth per LTE band, MHz (ASSUMPTION for this synthetic
 # operator's spectrum holdings).
 BANDWIDTH_MHZ = {"B28": 10.0, "B8": 10.0, "B3": 20.0, "B1": 15.0, "B40": 20.0}

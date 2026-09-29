@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from ran_lakehouse.model import NetworkModel, build_model, default_model, simulate_days
+from ran_lakehouse.model import NetworkModel, default_model, derive, simulate_days
 from ran_lakehouse.model import report as model_report
 from ran_lakehouse.model.counters import noise_block
 from ran_lakehouse.model.coverage import environment_weights
@@ -107,26 +107,57 @@ def test_cell_down_reports_unavailable(tiny: NetworkModel) -> None:
     down = tiny.state.down.copy()
     target = int(np.flatnonzero(tiny.state.technology == "LTE")[0])
     down[target] = True
-    changed = build_model(tiny.world, tiny.state.with_values(down=down), frozenset())
+    changed = derive(
+        tiny, tiny.state.with_values(down=down), tiny.neighbours, tiny.persons, tiny.ul_rise_db
+    )
     day = next(simulate_days(changed, 0, 1))
     column = int(np.flatnonzero(day.lte.cells == target)[0])
     assert np.all(day.lte.values["RRU.CellUnavailableTime.sum"][:, column] == 900.0)
     assert np.all(day.lte.values["RRC.ConnEstabAtt.sum"][:, column] == 0)
 
 
-def test_missing_neighbours_raise_drops(tiny: NetworkModel) -> None:
-    src, tgt, _ = tiny.serving.relations
-    lte = tiny.state.technology[src] == "LTE"
-    cell = int(src[lte][0])
-    removed = frozenset((int(s), int(t)) for s, t in zip(src, tgt, strict=True) if int(s) == cell)
-    changed = build_model(tiny.world, tiny.state, removed)
+def test_missing_neighbour_moves_demand_to_drops(tiny: NetworkModel) -> None:
+    src, tgt, mass = tiny.serving.relations
+    lte = np.flatnonzero(tiny.state.technology[src] == "LTE")
+    strongest = lte[np.argmax(mass[lte])]
+    pair = (int(src[strongest]), int(tgt[strongest]))
+    changed = derive(tiny, tiny.state, tiny.neighbours - {pair}, tiny.persons, tiny.ul_rise_db)
     base = next(simulate_days(tiny, 0, 1)).lte
     worse = next(simulate_days(changed, 0, 1)).lte
-    column = int(np.flatnonzero(base.cells == cell)[0])
+    column = int(np.flatnonzero(base.cells == pair[0])[0])
     drops = "ERAB.RelActNbr.sum"
     assert worse.values[drops][:, column].sum() > base.values[drops][:, column].sum()
-    ho = "HO.IntraFreqOutSucc"
-    assert worse.values[ho][:, column].sum() < base.values[ho][:, column].sum()
+    attempts = "HO.IntraFreqOutAtt"
+    assert worse.values[attempts][:, column].sum() < base.values[attempts][:, column].sum()
+    assert pair in base.relations and pair not in worse.relations
+
+
+def test_relation_counters_sum_to_cell_counters(tiny: NetworkModel) -> None:
+    day = next(simulate_days(tiny, 0, 1))
+    for counters, rel_att, cell_att in (
+        (day.lte, "HO.OutAttTarget.sum", "HO.IntraFreqOutAtt"),
+        (
+            day.gsm,
+            "attOutgoingInternalInterCellHDOsPerTargetCell",
+            "attOutgoingInternalInterCellHDOs",
+        ),
+    ):
+        per_cell = np.zeros_like(counters.values[cell_att])
+        column = {int(c): i for i, c in enumerate(counters.cells)}
+        for r, (source, _) in enumerate(counters.relations):
+            per_cell[:, column[source]] += np.nan_to_num(counters.relation_values[rel_att][:, r])
+        assert np.array_equal(per_cell, counters.values[cell_att])
+
+
+def test_offset_moves_users(tiny: NetworkModel) -> None:
+    lte = np.flatnonzero(tiny.state.technology == "LTE")
+    busiest = int(lte[np.argmax(tiny.serving.subscribers[lte])])
+    cio = tiny.state.cio_db.copy()
+    cio[busiest] = -6.0
+    changed = derive(
+        tiny, tiny.state.with_values(cio_db=cio), tiny.neighbours, tiny.persons, tiny.ul_rise_db
+    )
+    assert changed.serving.subscribers[busiest] < tiny.serving.subscribers[busiest]
 
 
 def test_report_markdown_matches_record() -> None:
