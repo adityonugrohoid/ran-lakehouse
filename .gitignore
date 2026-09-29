@@ -1,0 +1,45 @@
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated data, lake storage and run outputs: never committed
+data/
+runs/
+lake/
+landing/
+*.parquet
+*.duckdb
+*.duckdb.wal
+
+# Real-data cross-check downloads (CC BY 4.0 dataset, fetched by script)
+external/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# dbt / SQLMesh
+transform/target/
+transform/logs/
+transform/dbt_packages/
+.cache/
+
+# Node (console builds, if any)
+node_modules/
+
+# Editor and OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
+.playwright-mcp/
