@@ -89,6 +89,7 @@ def test_type_a_file_parses() -> None:
         objects=["ENBFunction=1,EUtranCellFDD=X_1"],
         values=np.array([[12.0]]),
         suspect=np.array([True]),
+        duration_s=900,
     )
     element = ElementData("ManagedElement=ENB0001", "R1", [info])
     content = write_file("SubNetwork=RanLake", "ENB0001", "test", begin, end, [element])
@@ -173,10 +174,37 @@ def test_nokia_files_are_utc(tiny_nokia: tuple[NetworkModel, Day, list[tuple[str
     _, day, files = tiny_nokia
     name, content = files[40]
     assert name == "OMeS_EMS-NK-01_20260105T0300Z.xml.gz"
-    parsed = omes.parse_file(content)
-    assert parsed["begin"].utcoffset() == timedelta(0)
-    assert parsed["begin"] == day.starts[40].replace(tzinfo=WIB)
-    assert parsed["interval_min"] == 15
+    setups = omes.parse_file(content)["setups"]
+    assert len(setups) == 1
+    assert setups[0]["begin"].utcoffset() == timedelta(0)
+    assert setups[0]["begin"] == day.starts[40].replace(tzinfo=WIB)
+    assert setups[0]["interval_min"] == 15
+
+
+def test_nokia_distributions_report_hourly(
+    tiny_nokia: tuple[NetworkModel, Day, list[tuple[str, bytes]]],
+) -> None:
+    model, day, files = tiny_nokia
+    assert "LTE_Quality_DL" not in omes.parse_file(files[42][1])["columns"]["measurement_type"]
+    parsed = omes.parse_file(files[43][1])
+    assert [s["interval_min"] for s in parsed["setups"]] == [15, 60]
+    assert parsed["setups"][1]["begin"] == day.starts[40].replace(tzinfo=WIB)
+    cols = parsed["columns"]
+    cell = int(
+        np.flatnonzero((model.state.technology == "LTE") & (model.state.vendor == "nokia"))[0]
+    )
+    dn = nokia_dn(model, cell)
+    column = int(np.flatnonzero(day.lte.cells == cell)[0])
+    got = {
+        c: (v, m)
+        for d, c, v, m in zip(
+            cols["dn"], cols["counter"], cols["value"], cols["interval_min"], strict=True
+        )
+        if d == dn
+    }
+    bins = day.lte.values["CARR.WBCQIDist.Bin"][40:44, column]
+    assert got["M8010C45"] == (float(bins[:, 9].sum()), 60)
+    assert got["M8013C17"][1] == 15
 
 
 def test_nokia_values_round_trip(

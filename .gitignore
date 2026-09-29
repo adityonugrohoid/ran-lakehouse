@@ -6,10 +6,10 @@
 *.key
 
 # Generated data, lake storage and run outputs: never committed
-data/
-runs/
-lake/
-landing/
+/data/
+/runs/
+/lake/
+/landing/
 *.parquet
 *.duckdb
 *.duckdb.wal

@@ -330,7 +330,7 @@ def jsonl(records: list[dict[str, Any]]) -> bytes:
         Compressed bytes.
     """
     text = "".join(json.dumps(r, sort_keys=True) + "\n" for r in records)
-    return gzip.compress(text.encode("utf-8"), compresslevel=6)
+    return gzip.compress(text.encode("utf-8"), compresslevel=6, mtime=0)
 
 
 def day_exports(

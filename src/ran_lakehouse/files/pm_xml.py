@@ -29,7 +29,6 @@ NAMESPACE = "http://www.3gpp.org/ftp/specs/archive/32_series/32.435#measCollec"
 # TS 32.432 V19.0.0 Table 4.1: the abridged number and version of TS 32.435
 # V19.0.0 (derived by the rule stated there).
 FILE_FORMAT_VERSION = "32.435 V19.0"
-GRANULARITY = "PT900S"  # TS 32.435 truncated representation PTnS
 # TS 32.435 V19.0.0 clause 4.2.3: header of every measurement file.
 HEADER = (
     '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -56,6 +55,8 @@ class MeasInfo:
             element.
         values: Values, shape (objects, counters); NaN is written as NIL.
         suspect: Suspect flag per object.
+        duration_s: granPeriod duration in seconds (900 or 3600); its
+            endTime is the file's end.
     """
 
     meas_info_id: str
@@ -63,6 +64,7 @@ class MeasInfo:
     objects: list[str]
     values: np.ndarray
     suspect: np.ndarray
+    duration_s: int
 
 
 @dataclass(frozen=True)
@@ -191,6 +193,30 @@ def number(value: float) -> str:
     return f"{value:.10g}"
 
 
+def format_matrix(values: np.ndarray) -> list[list[str]]:
+    """Format a block of values as measResults items, vectorized.
+
+    Whole numbers are written as integers, NaN as NIL, other values with 10
+    significant digits (the same text as number()).
+
+    Args:
+        values: Values, shape (rows, columns).
+
+    Returns:
+        Text per row and column.
+    """
+    out = np.empty(values.shape, dtype=object)
+    nan = np.isnan(values)
+    whole = ~nan & (values == np.floor(values)) & (np.abs(values) < 2.0**53)
+    out[whole] = values[whole].astype(np.int64).astype(str)
+    rest = ~nan & ~whole
+    if rest.any():
+        out[rest] = [f"{v:.10g}" for v in values[rest]]
+    out[nan] = "NIL"
+    rows: list[list[str]] = out.tolist()
+    return rows
+
+
 def write_file(
     sender_dn_prefix: str,
     sender_ldn: str,
@@ -231,12 +257,13 @@ def write_file(
                 continue
             parts.append(
                 f'<measInfo measInfoId="{info.meas_info_id}">\n'
-                f'<granPeriod duration="{GRANULARITY}" endTime="{iso(end)}"/>\n'
-                f'<repPeriod duration="{GRANULARITY}"/>\n'
+                f'<granPeriod duration="PT{info.duration_s}S" endTime="{iso(end)}"/>\n'
+                f'<repPeriod duration="PT{info.duration_s}S"/>\n'
                 f"<measTypes>{' '.join(info.counters)}</measTypes>\n"
             )
-            for obj, row, suspect in zip(info.objects, info.values, info.suspect, strict=True):
-                results = " ".join(number(v) for v in row)
+            texts = format_matrix(np.asarray(info.values, dtype=float))
+            for obj, row, suspect in zip(info.objects, texts, info.suspect, strict=True):
+                results = " ".join(row)
                 flag = "<suspect>true</suspect>" if suspect else ""
                 parts.append(
                     f'<measValue measObjLdn="{obj}"><measResults>{results}</measResults>'
@@ -246,7 +273,7 @@ def write_file(
         parts.append("</measData>\n")
     parts.append(f'<fileFooter>\n<measCollec endTime="{iso(end)}"/>\n</fileFooter>\n')
     parts.append("</measCollecFile>\n")
-    return gzip.compress("".join(parts).encode("utf-8"), compresslevel=6)
+    return gzip.compress("".join(parts).encode("utf-8"), compresslevel=6, mtime=0)
 
 
 def child(parent: Any, tag: str) -> Any:
@@ -371,6 +398,134 @@ def check_meas_info(info: Any) -> None:
             raise ValueError("positional measValue may hold only r elements")
 
 
+@dataclass(frozen=True)
+class Block:
+    """One measInfo of one managed element, parsed.
+
+    Attributes:
+        element: managedElement localDn.
+        sw_version: managedElement swVersion (None if absent).
+        meas_info_id: measInfoId.
+        counters: measTypes names.
+        objects: measObjLdn per measValue.
+        values: Values, shape (objects, counters); NaN for NIL.
+        suspect: Suspect flag per measValue.
+        period_end: granPeriod endTime (aware).
+        duration_s: granPeriod duration in seconds.
+    """
+
+    element: str
+    sw_version: str | None
+    meas_info_id: str
+    counters: list[str]
+    objects: list[str]
+    values: np.ndarray
+    suspect: np.ndarray
+    period_end: datetime
+    duration_s: int
+
+
+def duration_seconds(text: str | None) -> int:
+    """Seconds of a PTnS duration (TS 32.435 truncated form).
+
+    Args:
+        text: The duration attribute.
+
+    Returns:
+        Seconds.
+
+    Raises:
+        ValueError: If it is not PTnS.
+    """
+    match = re.fullmatch(r"PT(\d+)S", text or "")
+    if match is None:
+        raise ValueError(f"duration {text!r} is not PTnS")
+    return int(match[1])
+
+
+def parse_blocks(content: bytes) -> dict[str, Any]:
+    """Parse a measCollecFile (plain or gzip) block by block, vectorized.
+
+    Accepts the list form and the positional form (measType p / r p). It
+    checks what it reads (root, header, footer, result counts, object
+    names); check_structure is the full clause 4.2.2 structure check.
+
+    Args:
+        content: File bytes.
+
+    Returns:
+        Header fields (file_format_version, vendor_name, dn_prefix, begin,
+        end) and blocks.
+
+    Raises:
+        ValueError: If the structure check fails or a block is malformed.
+    """
+    if content[:2] == b"\x1f\x8b":
+        content = gzip.decompress(content)
+    root = etree.fromstring(content, parser=etree.XMLParser(resolve_entities=False))
+    if root.tag != q("measCollecFile"):
+        raise ValueError(f"root is {root.tag}, not measCollecFile")
+    header = child(root, "fileHeader")
+    if header.get("fileFormatVersion") is None:
+        raise ValueError("fileHeader needs fileFormatVersion")
+    begin = datetime.fromisoformat(child(header, "measCollec").get("beginTime"))
+    end = datetime.fromisoformat(child(child(root, "fileFooter"), "measCollec").get("endTime"))
+    blocks: list[Block] = []
+    for data in root.iterfind(q("measData")):
+        element = child(data, "managedElement")
+        ne = element.get("localDn")
+        sw_version = element.get("swVersion")
+        for info in data.iterfind(q("measInfo")):
+            meas_values = info.findall(q("measValue"))
+            period = child(info, "granPeriod")
+            types = info.find(q("measTypes"))
+            if types is not None:
+                names = (types.text or "").split()
+                texts = [mv.findtext(q("measResults")) or "" for mv in meas_values]
+                flat = " ".join(texts).replace("NIL", "nan").split()
+                if len(flat) != len(names) * len(meas_values):
+                    raise ValueError(f"measInfo {info.get('measInfoId')}: result count mismatch")
+                values = np.array(flat, dtype=float).reshape(len(meas_values), len(names))
+            else:
+                ordered = sorted(info.iterfind(q("measType")), key=lambda e: int(e.get("p", "0")))
+                names = [e.text or "" for e in ordered]
+                values = np.full((len(meas_values), len(names)), np.nan)
+                for row, mv in enumerate(meas_values):
+                    for r in mv.iterfind(q("r")):
+                        text = r.text or "NIL"
+                        values[row, int(r.get("p", "0")) - 1] = (
+                            np.nan if text == "NIL" else float(text)
+                        )
+            objects = [mv.get("measObjLdn") for mv in meas_values]
+            if any(o is None for o in objects):
+                raise ValueError("measValue needs measObjLdn")
+            suspect = np.array(
+                [(mv.findtext(q("suspect")) or "").strip() == "true" for mv in meas_values],
+                dtype=bool,
+            )
+            blocks.append(
+                Block(
+                    element=ne,
+                    sw_version=sw_version,
+                    meas_info_id=info.get("measInfoId"),
+                    counters=names,
+                    objects=objects,
+                    values=values,
+                    suspect=suspect,
+                    period_end=datetime.fromisoformat(period.get("endTime")),
+                    duration_s=duration_seconds(period.get("duration")),
+                )
+            )
+    return {
+        "file_format_version": header.get("fileFormatVersion"),
+        "vendor_name": header.get("vendorName"),
+        "dn_prefix": header.get("dnPrefix"),
+        "begin": begin,
+        "end": end,
+        "blocks": blocks,
+    }
+
+
 def parse_file(content: bytes) -> dict[str, Any]:
     """Parse a measCollecFile (plain or gzip) into long-format columns.
 
@@ -380,53 +535,38 @@ def parse_file(content: bytes) -> dict[str, Any]:
         content: File bytes.
 
     Returns:
-        Header fields and columns: managed_element, meas_info_id,
-        meas_obj_ldn, counter, value (NaN for NIL), suspect.
+        Header fields and columns: managed_element, sw_version,
+        meas_info_id, meas_obj_ldn, counter, value (NaN for NIL), suspect,
+        duration_s (the block's granPeriod).
 
     Raises:
         ValueError: If the structure check fails.
     """
-    if content[:2] == b"\x1f\x8b":
-        content = gzip.decompress(content)
-    root = etree.fromstring(content, parser=etree.XMLParser(resolve_entities=False))
-    check_structure(root)
-    header = child(root, "fileHeader")
-    begin = datetime.fromisoformat(child(header, "measCollec").get("beginTime"))
-    end = datetime.fromisoformat(child(child(root, "fileFooter"), "measCollec").get("endTime"))
+    parsed = parse_blocks(content)
     columns: dict[str, list[Any]] = {
         k: []
-        for k in ("managed_element", "meas_info_id", "meas_obj_ldn", "counter", "value", "suspect")
+        for k in (
+            "managed_element",
+            "sw_version",
+            "meas_info_id",
+            "meas_obj_ldn",
+            "counter",
+            "value",
+            "suspect",
+            "duration_s",
+        )
     }
-    for data in root.iterfind(q("measData")):
-        ne = child(data, "managedElement").get("localDn")
-        for info in data.iterfind(q("measInfo")):
-            types = info.find(q("measTypes"))
-            if types is not None:
-                names = (types.text or "").split()
-            else:
-                ordered = sorted(info.iterfind(q("measType")), key=lambda e: int(e.get("p", "0")))
-                names = [e.text or "" for e in ordered]
-            for value in info.iterfind(q("measValue")):
-                suspect_el = value.find(q("suspect"))
-                suspect = suspect_el is not None and (suspect_el.text or "").strip() == "true"
-                results = value.find(q("measResults"))
-                if results is not None:
-                    items = (results.text or "").split()
-                else:
-                    by_p = {int(r.get("p", "0")): r.text or "" for r in value.iterfind(q("r"))}
-                    items = [by_p.get(i + 1, "NIL") for i in range(len(names))]
-                for name, item in zip(names, items, strict=True):
-                    columns["managed_element"].append(ne)
-                    columns["meas_info_id"].append(info.get("measInfoId"))
-                    columns["meas_obj_ldn"].append(value.get("measObjLdn"))
-                    columns["counter"].append(name)
-                    columns["value"].append(float("nan") if item == "NIL" else float(item))
-                    columns["suspect"].append(suspect)
-    return {
-        "file_format_version": header.get("fileFormatVersion"),
-        "vendor_name": header.get("vendorName"),
-        "dn_prefix": header.get("dnPrefix"),
-        "begin": begin,
-        "end": end,
-        "columns": columns,
-    }
+    for b in parsed["blocks"]:
+        for row, obj in enumerate(b.objects):
+            for col, name in enumerate(b.counters):
+                columns["managed_element"].append(b.element)
+                columns["sw_version"].append(b.sw_version)
+                columns["meas_info_id"].append(b.meas_info_id)
+                columns["meas_obj_ldn"].append(obj)
+                columns["counter"].append(name)
+                columns["value"].append(float(b.values[row, col]))
+                columns["suspect"].append(bool(b.suspect[row]))
+                columns["duration_s"].append(b.duration_s)
+    blocks = parsed.pop("blocks")
+    del blocks
+    return parsed | {"columns": columns}

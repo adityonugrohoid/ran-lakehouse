@@ -6,18 +6,18 @@
       "files_per_day": 96,
       "network_elements_or_objects_per_file": 184,
       "cells_in_region": 1134,
-      "values_per_day": 5857728,
+      "values_per_day": 3621264,
       "size_mb": {
-        "gzip, total per day": 10.26,
-        "gzip, mean per file": 0.107,
-        "xml, total per day": 127.74,
-        "gzip ratio": 12.5
+        "gzip, total per day": 7.17,
+        "gzip, mean per file": 0.075,
+        "xml, total per day": 96.05,
+        "gzip ratio": 13.4
       },
       "speed": {
-        "write, s per day": 8.2,
-        "write, values per s": 710820,
-        "parse and check, s per day": 12.3,
-        "parse, values per s": 474683
+        "write, s per day": 3.8,
+        "write, values per s": 958996,
+        "parse and check, s per day": 6.0,
+        "parse, values per s": 600579
       },
       "dictionary": {
         "release": "HW-R1",
@@ -43,18 +43,18 @@
       "files_per_day": 96,
       "network_elements_or_objects_per_file": 3424,
       "cells_in_region": 582,
-      "values_per_day": 2827200,
+      "values_per_day": 1822800,
       "size_mb": {
-        "gzip, total per day": 10.05,
-        "gzip, mean per file": 0.105,
-        "xml, total per day": 158.05,
-        "gzip ratio": 15.7
+        "gzip, total per day": 6.87,
+        "gzip, mean per file": 0.072,
+        "xml, total per day": 127.97,
+        "gzip ratio": 18.6
       },
       "speed": {
-        "write, s per day": 8.5,
-        "write, values per s": 334192,
-        "parse and check, s per day": 7.2,
-        "parse, values per s": 394392
+        "write, s per day": 5.1,
+        "write, values per s": 357779,
+        "parse and check, s per day": 6.4,
+        "parse, values per s": 285745
       },
       "dictionary": {
         "release": "NK-R1",
