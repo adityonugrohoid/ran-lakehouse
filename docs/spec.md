@@ -33,7 +33,7 @@ measured scale test, rule E1).
   global random state. Same seed, same world, byte for byte.
 - W2 Coordinates are a local grid in km, origin at the south-west corner.
   The network is modelled on public facts about Indonesian networks
-  (bands, technology mix, WIB and WIT time zones; rules W5, W6). No real
+  (bands, technology mix, the WIB time zone; rules W5, W6). No real
   operator, network, site, city or person is named, and no real
   coordinates are used.
 - W3 One world, two areas on the same map: the served region (existing
@@ -43,12 +43,17 @@ measured scale test, rule E1).
   clustered settlements plus sparse rural density. It drives cell traffic
   (rule M3) and village population (rule G2). ASSUMPTION distributions,
   judged by eye and by the real-data cross-check (rule E2).
-- W5 Time zones: the served region in WIB (UTC+07:00), the expansion area
-  in WIT (UTC+09:00) (ASSUMPTION, reflects Indonesia's zones); file names
-  and XML carry the offset (rule P2).
+- W5 Time zones: both areas are in WIB (UTC+07:00), since areas next to
+  each other on one map share a zone (ASSUMPTION). Offset handling is
+  exercised by the vendor dialects instead: the Nokia-style EMS writes its
+  files with UTC timestamps (+0000) and the Huawei-style EMS writes local
+  time with +0700; file names and XML carry the offset (rule P2) and silver
+  normalizes both.
 - W6 Network, per public facts:
-  - technologies: LTE about 80-85% of sites, GSM about 15-20% (many GSM
-    cells co-sited with LTE);
+  - technologies, as shares of cells: LTE about 80-85%, GSM about 15-20%
+    (START, ASSUMPTION). Every served site carries LTE except a handful of
+    GSM-only rural sites; about a third of sites also carry GSM, 3 cells
+    each. An LTE cell is one sector on one band;
   - LTE bands: FDD B1 2100, B3 1800, B8 900, B28 700; TDD B40 2300 on part
     of the network; GSM on 900 and 1800;
   - sectors: 3 per site (ASSUMPTION), azimuths near 0/120/240 with jitter;
@@ -217,7 +222,7 @@ the property breaks:
 
 ## 9. Planning geography (rule G)
 
-- G1 Expansion area on the same map (rule W3), uncovered today, WIT.
+- G1 Expansion area on the same map (rule W3), uncovered today, WIB (rule W5).
 - G2 Terrain: synthetic height map for the expansion area only (spectral
   method, written fresh; START relief and roughness judged by eye and
   rendered).

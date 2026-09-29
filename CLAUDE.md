@@ -9,8 +9,8 @@ A mini telecom lakehouse and data generator for a synthetic 4G (LTE) and
 
 1. The network, its traffic and its faults are synthetic, generated from
    seeds. Every result says so. The network is modelled on public facts
-   about Indonesian networks (bands, technology mix, WIB and WIT time
-   zones). No real operator, network, site, city, client or person is
+   about Indonesian networks (bands, technology mix, the WIB time
+   zone). No real operator, network, site, city, client or person is
    named, and no real coordinates are used: coordinates are a local km
    grid.
 2. `docs/spec.md` is authoritative. A change to a rule is its own pull

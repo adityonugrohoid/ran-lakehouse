@@ -1,0 +1,222 @@
+{
+  "start_values": {
+    "raster_km (W4, START)": 0.25,
+    "urban_min_density_per_km2 (START)": 2900.0,
+    "suburban_min_density_per_km2 (START)": 850.0,
+    "isd_km (START)": {
+      "urban": 0.7,
+      "suburban": 2.0,
+      "rural": 4.0
+    },
+    "site_jitter_fraction (ASSUMPTION)": 0.15,
+    "min_spacing_fraction (ASSUMPTION)": 0.7,
+    "class_smoothing_km (ASSUMPTION)": 1.5,
+    "sectors (W6, ASSUMPTION)": 3,
+    "azimuth_jitter_sd_deg (ASSUMPTION)": 10.0,
+    "gsm_cosite_share (START)": {
+      "urban": 0.25,
+      "suburban": 0.3,
+      "rural": 0.55
+    },
+    "lte_extra_layer_p (START; B3 on every LTE site)": {
+      "urban": {
+        "B1": 0.6,
+        "B40": 0.3
+      },
+      "suburban": {
+        "B1": 0.3,
+        "B40": 0.15
+      },
+      "rural": {
+        "B8": 0.5,
+        "B28": 0.3
+      }
+    },
+    "demo vendor_split_x_km (START, design choice)": 12.5,
+    "demo gsm_only_share_rural (START)": 0.08,
+    "demo rural density served/expansion per km2 (ASSUMPTION)": [
+      80.0,
+      15.0
+    ],
+    "demo settlements (START)": {
+      "city": [
+        3,
+        150000.0
+      ],
+      "town": [
+        16,
+        20000.0
+      ],
+      "served villages": [
+        60
+      ],
+      "expansion villages": [
+        150
+      ]
+    }
+  },
+  "profiles": {
+    "demo": {
+      "fingerprint": "19ef353c2788c132a22bc53a15c0804644038475d83550a45517e85e275c5e56",
+      "map_km": {
+        "width": 60.0,
+        "height": 40.0,
+        "served_width": 40.0
+      },
+      "population": {
+        "total": 1390320,
+        "served": 1201779,
+        "expansion": 188542,
+        "settlements": {
+          "expansion village": 150,
+          "served city": 3,
+          "served town": 16,
+          "served village": 60
+        },
+        "served_area_km2_by_class": {
+          "urban": 61.94,
+          "suburban": 393.75,
+          "rural": 1144.31
+        }
+      },
+      "sites": {
+        "total": 290,
+        "by_area_class": {
+          "urban": 143,
+          "suburban": 96,
+          "rural": 51
+        },
+        "by_vendor": {
+          "huawei": 181,
+          "nokia": 109
+        },
+        "huawei_share": 0.624,
+        "vendor_split_x_km": 12.5,
+        "urban_sites_nokia": 8,
+        "lte_layers_per_lte_site": 1.79,
+        "by_technology": {
+          "GSM": 3,
+          "LTE": 197,
+          "LTE+GSM": 90
+        }
+      },
+      "cells": {
+        "total": 1824,
+        "by_technology": {
+          "GSM": 279,
+          "LTE": 1545
+        },
+        "lte_share": 0.847,
+        "by_band": {
+          "B1": 339,
+          "B28": 63,
+          "B3": 861,
+          "B40": 192,
+          "B8": 90,
+          "G1800": 90,
+          "G900": 189
+        },
+        "by_object_class": {
+          "EUtranCellFDD": 1353,
+          "EUtranCellTDD": 192,
+          "GsmCell": 279
+        },
+        "by_vendor": {
+          "huawei": 1143,
+          "nokia": 681
+        }
+      },
+      "nearest_site_km": {
+        "urban": {
+          "sites": 143,
+          "p10": 0.54,
+          "median": 0.61,
+          "p90": 0.67
+        },
+        "suburban": {
+          "sites": 96,
+          "p10": 1.58,
+          "median": 1.81,
+          "p90": 2.1
+        },
+        "rural": {
+          "sites": 51,
+          "p10": 3.08,
+          "median": 3.39,
+          "p90": 3.84
+        }
+      }
+    },
+    "tiny": {
+      "fingerprint": "708ba63770b56a6756662ef66b355981813011853e6b83ee3a19f8b42d4321d5",
+      "map_km": {
+        "width": 11.0,
+        "height": 4.0,
+        "served_width": 8.0
+      },
+      "population": {
+        "total": 46306,
+        "served": 40941,
+        "expansion": 5366,
+        "settlements": {
+          "expansion village": 3,
+          "served town": 1
+        },
+        "served_area_km2_by_class": {
+          "urban": 0.0,
+          "suburban": 17.62,
+          "rural": 14.38
+        }
+      },
+      "sites": {
+        "total": 5,
+        "by_area_class": {
+          "urban": 0,
+          "suburban": 5,
+          "rural": 0
+        },
+        "by_vendor": {
+          "huawei": 2,
+          "nokia": 3
+        },
+        "huawei_share": 0.4,
+        "vendor_split_x_km": 4.0,
+        "urban_sites_nokia": 0,
+        "lte_layers_per_lte_site": 1.6,
+        "by_technology": {
+          "LTE": 4,
+          "LTE+GSM": 1
+        }
+      },
+      "cells": {
+        "total": 27,
+        "by_technology": {
+          "GSM": 3,
+          "LTE": 24
+        },
+        "lte_share": 0.889,
+        "by_band": {
+          "B1": 9,
+          "B3": 15,
+          "G900": 3
+        },
+        "by_object_class": {
+          "EUtranCellFDD": 24,
+          "GsmCell": 3
+        },
+        "by_vendor": {
+          "huawei": 15,
+          "nokia": 12
+        }
+      },
+      "nearest_site_km": {
+        "suburban": {
+          "sites": 5,
+          "p10": 1.45,
+          "median": 1.52,
+          "p90": 1.67
+        }
+      }
+    }
+  }
+}
