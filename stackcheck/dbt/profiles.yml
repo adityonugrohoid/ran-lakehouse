@@ -1,0 +1,16 @@
+# Local stack only (rule S3). The warehouse name and the local DuckDB file
+# are set per run by ran_lakehouse.stackcheck.
+stackcheck:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('STACKCHECK_DUCKDB_PATH') }}"
+      extensions: [httpfs, iceberg]
+      attach:
+        - path: "{{ env_var('STACKCHECK_WAREHOUSE') }}"
+          alias: lk
+          type: iceberg
+          options:
+            endpoint: "http://127.0.0.1:18181/catalog"
+            authorization_type: none

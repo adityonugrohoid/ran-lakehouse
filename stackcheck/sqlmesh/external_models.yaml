@@ -1,0 +1,8 @@
+- name: lk.ran.counters
+  columns:
+    cell_id: VARCHAR
+    period_start: TIMESTAMP
+    rrc_att: BIGINT
+    rrc_succ: BIGINT
+    erab_att: BIGINT
+    erab_succ: BIGINT
