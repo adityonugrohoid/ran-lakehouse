@@ -8,7 +8,12 @@
       "suburban": 2.0,
       "rural": 4.0
     },
-    "site_jitter_fraction (ASSUMPTION)": 0.15,
+    "site_jitter_fraction (urban START, else ASSUMPTION)": {
+      "urban": 0.3,
+      "suburban": 0.15,
+      "rural": 0.15
+    },
+    "map_edge_margin_km (START)": 0.5,
     "min_spacing_fraction (ASSUMPTION)": 0.7,
     "class_smoothing_km (ASSUMPTION)": 1.5,
     "sectors (W6, ASSUMPTION)": 3,
@@ -16,7 +21,7 @@
     "gsm_cosite_share (START)": {
       "urban": 0.25,
       "suburban": 0.3,
-      "rural": 0.55
+      "rural": 0.6
     },
     "lte_extra_layer_p (START; B3 on every LTE site)": {
       "urban": {
@@ -57,7 +62,7 @@
   },
   "profiles": {
     "demo": {
-      "fingerprint": "19ef353c2788c132a22bc53a15c0804644038475d83550a45517e85e275c5e56",
+      "fingerprint": "763dbf5652bb5b9fdc50b2275b595da5fb63052d46b4f3fbd9d2cb7080590e84",
       "map_km": {
         "width": 60.0,
         "height": 40.0,
@@ -80,70 +85,70 @@
         }
       },
       "sites": {
-        "total": 290,
+        "total": 281,
         "by_area_class": {
-          "urban": 143,
-          "suburban": 96,
-          "rural": 51
+          "urban": 141,
+          "suburban": 97,
+          "rural": 43
         },
         "by_vendor": {
-          "huawei": 181,
-          "nokia": 109
+          "huawei": 183,
+          "nokia": 98
         },
-        "huawei_share": 0.624,
+        "huawei_share": 0.651,
         "vendor_split_x_km": 12.5,
-        "urban_sites_nokia": 8,
-        "lte_layers_per_lte_site": 1.79,
+        "urban_sites_nokia": 5,
+        "lte_layers_per_lte_site": 1.75,
         "by_technology": {
-          "GSM": 3,
-          "LTE": 197,
-          "LTE+GSM": 90
+          "GSM": 5,
+          "LTE": 193,
+          "LTE+GSM": 83
         }
       },
       "cells": {
-        "total": 1824,
+        "total": 1716,
         "by_technology": {
-          "GSM": 279,
-          "LTE": 1545
+          "GSM": 264,
+          "LTE": 1452
         },
-        "lte_share": 0.847,
+        "lte_share": 0.846,
         "by_band": {
-          "B1": 339,
-          "B28": 63,
-          "B3": 861,
-          "B40": 192,
-          "B8": 90,
+          "B1": 336,
+          "B28": 36,
+          "B3": 828,
+          "B40": 186,
+          "B8": 66,
           "G1800": 90,
-          "G900": 189
+          "G900": 174
         },
         "by_object_class": {
-          "EUtranCellFDD": 1353,
-          "EUtranCellTDD": 192,
-          "GsmCell": 279
+          "EUtranCellFDD": 1266,
+          "EUtranCellTDD": 186,
+          "GsmCell": 264
         },
         "by_vendor": {
-          "huawei": 1143,
-          "nokia": 681
+          "huawei": 1134,
+          "nokia": 582
         }
       },
       "nearest_site_km": {
         "urban": {
-          "sites": 143,
-          "p10": 0.54,
-          "median": 0.61,
-          "p90": 0.67
+          "sites": 141,
+          "p10": 0.39,
+          "median": 0.52,
+          "p90": 0.65
         },
         "suburban": {
-          "sites": 96,
+          "sites": 97,
           "p10": 1.58,
           "median": 1.81,
-          "p90": 2.1
+          "p90": 2.07
         },
         "rural": {
-          "sites": 51,
-          "p10": 3.08,
-          "median": 3.39,
-          "p90": 3.84
+          "sites": 43,
+          "p10": 3.06,
+          "median": 3.49,
+          "p90": 4.0
         }
       }
     },

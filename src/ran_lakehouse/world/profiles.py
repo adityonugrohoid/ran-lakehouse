@@ -73,8 +73,12 @@ SUBURBAN_MIN_DENSITY = 850.0
 # Target inter-site distance per area class, km (START, owner decision:
 # dense urban 0.5-1, suburban about 2, rural 4-6).
 ISD_KM = {"urban": 0.7, "suburban": 2.0, "rural": 4.0}
-# Site position jitter as a fraction of the class ISD (ASSUMPTION).
-SITE_JITTER_FRACTION = 0.15
+# Site position jitter as a fraction of the class ISD, uniform in x and y;
+# urban START 0.30 so city grids do not read as perfect lattices, else
+# ASSUMPTION 0.15.
+SITE_JITTER_FRACTION = {"urban": 0.30, "suburban": 0.15, "rural": 0.15}
+# Every site stays at least this far inside the map edge, km (START).
+MAP_EDGE_MARGIN_KM = 0.5
 # A site is dropped if it is closer than this fraction of its own class ISD
 # to a site already placed (ASSUMPTION).
 MIN_SPACING_FRACTION = 0.7
@@ -85,7 +89,7 @@ AZIMUTH_JITTER_SD_DEG = 10.0  # ASSUMPTION
 
 # Share of sites per area class that also carry GSM (START, rule W6: about
 # a third of sites overall).
-GSM_COSITE_SHARE = {"urban": 0.25, "suburban": 0.3, "rural": 0.55}
+GSM_COSITE_SHARE = {"urban": 0.25, "suburban": 0.3, "rural": 0.6}
 
 # Probability that a site of each class carries each extra LTE layer; B3
 # 1800 is on every LTE site (START, owner decision on the band mix).

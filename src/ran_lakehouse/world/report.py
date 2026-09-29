@@ -186,7 +186,8 @@ def start_values() -> dict[str, Any]:
         "urban_min_density_per_km2 (START)": P.URBAN_MIN_DENSITY,
         "suburban_min_density_per_km2 (START)": P.SUBURBAN_MIN_DENSITY,
         "isd_km (START)": P.ISD_KM,
-        "site_jitter_fraction (ASSUMPTION)": P.SITE_JITTER_FRACTION,
+        "site_jitter_fraction (urban START, else ASSUMPTION)": P.SITE_JITTER_FRACTION,
+        "map_edge_margin_km (START)": P.MAP_EDGE_MARGIN_KM,
         "min_spacing_fraction (ASSUMPTION)": P.MIN_SPACING_FRACTION,
         "class_smoothing_km (ASSUMPTION)": CLASS_SMOOTHING_KM,
         "sectors (W6, ASSUMPTION)": P.SECTORS,
@@ -393,7 +394,8 @@ def notes(record: dict[str, Any]) -> list[str]:
     tiny = record["profiles"]["tiny"]
     start = record["start_values"]
     isd = start["isd_km (START)"]
-    jitter = round(100 * start["site_jitter_fraction (ASSUMPTION)"])
+    jitter = start["site_jitter_fraction (urban START, else ASSUMPTION)"]
+    jitter_text = ", ".join(f"{c} {round(100 * v)}%" for c, v in jitter.items())
     smoothing = start["class_smoothing_km (ASSUMPTION)"]
     spacing = start["min_spacing_fraction (ASSUMPTION)"]
     nn = demo["nearest_site_km"]
@@ -404,9 +406,12 @@ def notes(record: dict[str, Any]) -> list[str]:
     gsm_sites = sites["by_technology"].get("LTE+GSM", 0) + sites["by_technology"].get("GSM", 0)
     layers = sites["lte_layers_per_lte_site"]
     return [
-        "Inter-site distance: sites sit on a hexagonal lattice spaced at the START ISD of their "
-        f"area class, jittered by up to {jitter}% of it, so the distance to the nearest site runs "
-        f"below the lattice spacing. Median nearest-site distance against lattice ISD: {ratios}.",
+        "Inter-site distance (ISD) means the lattice spacing: sites sit on a hexagonal lattice "
+        "spaced at the START ISD of their area class, each jittered in x and y by up to a "
+        f"fraction of it ({jitter_text}), so the distance to the nearest site runs below the "
+        f"lattice spacing. Median nearest-site distance against lattice ISD: {ratios}.",
+        f"Every site stays at least {start['map_edge_margin_km (START)']} km inside the map "
+        "edge; lattice points jittered outside that margin are dropped.",
         f"Area classes are judged on density smoothed over {smoothing} km (ASSUMPTION), so a "
         "village reads as rural and a town as a whole; a site closer than "
         f"{spacing} of its class ISD to a "
@@ -414,14 +419,14 @@ def notes(record: dict[str, Any]) -> list[str]:
         f"Vendor regions: sites west of x = {sites['vendor_split_x_km']} km are Huawei-style "
         f"({sites['huawei_share']} of sites), the rest Nokia-style; {sites['urban_sites_nokia']} "
         f"of {sites['by_area_class']['urban']} urban sites fall east of the split, on the "
-        "eastern edges of the cities. The split is a design choice (rule P5).",
+        "eastern edges of the cities. The split is a design choice (rule P5), and the border "
+        "through a city is intended: cells on an inter-vendor border are a real optimization "
+        "pain point.",
         f"Technology (rule W6, shares of cells): LTE {demo['cells']['lte_share']} of cells; GSM "
         f"on {gsm_sites} of {sites['total']} sites, {sites['by_technology'].get('GSM', 0)} of "
         f"them GSM-only rural sites; {layers} LTE layers per LTE site on average.",
-        f"Tiny profile: {tiny['sites']['total']} sites and {tiny['cells']['total']} cells from "
-        "the same generator and band rules. The START asked for about 7 sites and about 20 "
-        f"cells; with about {layers} LTE layers per site, 7 sites would carry about "
-        f"{round(7 * 3 * layers)} cells, so the two targets cannot both hold.",
+        f"Tiny profile (rule W7): {tiny['sites']['total']} sites and "
+        f"{tiny['cells']['total']} cells from the same generator and band rules.",
         "Names: DNs follow TS 32.300 V19.0.0 clause 7. Class names are the XML solution-set "
         "spellings (TS 28.659 V20.0.0 for E-UTRAN; TS 28.656 V19.0.0 for GERAN: BssFunction, "
         "BtsSiteMgr, GsmCell), where the TS 28.655 information model writes BSSFunction, "

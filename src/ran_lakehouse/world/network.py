@@ -17,6 +17,7 @@ from ran_lakehouse.world.profiles import (
     GSM_COSITE_SHARE,
     ISD_KM,
     LTE_EXTRA_LAYER_P,
+    MAP_EDGE_MARGIN_KM,
     MIN_SPACING_FRACTION,
     SECTOR_AZIMUTHS_DEG,
     SECTORS,
@@ -172,11 +173,14 @@ def place_sites(profile: Profile, population: PopulationLayer) -> list[tuple[flo
         isd = ISD_KM[area_class]
         for row, col, x, y in lattice(isd, profile.served_width_km, profile.height_km):
             entity = (class_index + 1) * 1_000_000 + row * 1_000 + col
-            dx, dy = (
-                rng(Purpose.SITE_JITTER, entity).uniform(-1.0, 1.0, 2) * SITE_JITTER_FRACTION * isd
-            )
-            px = float(np.clip(x + dx, 0.0, profile.served_width_km - 0.001))
-            py = float(np.clip(y + dy, 0.0, profile.height_km - 0.001))
+            jitter = SITE_JITTER_FRACTION[area_class] * isd
+            dx, dy = rng(Purpose.SITE_JITTER, entity).uniform(-1.0, 1.0, 2) * jitter
+            px, py = float(x + dx), float(y + dy)
+            # Sites stay inside the served region and away from the map edge.
+            inside_x = MAP_EDGE_MARGIN_KM <= px < profile.served_width_km
+            inside_y = MAP_EDGE_MARGIN_KM <= py <= profile.height_km - MAP_EDGE_MARGIN_KM
+            if not (inside_x and inside_y):
+                continue
             density = population.class_density_at(np.array([px]), np.array([py]))
             if str(area_class_of(density)[0]) != area_class:
                 continue
@@ -184,7 +188,11 @@ def place_sites(profile: Profile, population: PopulationLayer) -> list[tuple[flo
             # denser class's site; keep the coarser site only if it is not
             # too close to a site already placed.
             spacing = MIN_SPACING_FRACTION * isd
-            if all(np.hypot(px - sx, py - sy) >= spacing for sx, sy, _ in sites):
+            if all(
+                np.hypot(px - sx, py - sy) >= spacing
+                for sx, sy, other in sites
+                if other != area_class
+            ):
                 sites.append((px, py, area_class))
     return sites
 

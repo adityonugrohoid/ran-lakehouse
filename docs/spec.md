@@ -60,7 +60,7 @@ measured scale test, rule E1).
   - vendors: two vendor dialects by region (rule P5); the split is a
     design choice, since no public regional split exists.
 - W7 Profiles, one generator:
-  - tiny: about 20 cells, 2 days (tests, CI, seconds);
+  - tiny: about 5 sites (about 27 cells), 2 days (tests, CI, seconds);
   - demo: about 300 sites, about 1,500 LTE and 300 GSM cells, 12 weeks at
     15-minute granularity; planning area about 150 villages and 60
     candidate sites (evaluation, replay site);
@@ -169,6 +169,9 @@ measured scale test, rule E1).
   with object classes per the NRMs: LTE TS 28.658 (ENBFunction,
   EUtranCellFDD, EUtranCellTDD, EUtranRelation), GSM TS 28.655
   (BSSFunction, BTSSiteMgr, GSMCell, GSMRelation). DNs per TS 32.300.
+  DNs and files use the XML solution-set spellings: TS 28.659 for E-UTRAN
+  (the same names) and TS 28.656 for GERAN (BssFunction, BtsSiteMgr,
+  GsmCell, GsmRelation).
 - C2 FM: an alarm log with X.733 fields (perceivedSeverity, eventType,
   probableCause, specificProblem), raise and clear times, per TS 32.111-2
   style for LTE and GSM.
