@@ -271,7 +271,11 @@ the property breaks:
   on time travel, and on the D6 reprocessing case, written as a report.
   If DuckDB-Iceberg MERGE or time travel fails, bronze and silver merge in
   plain Parquet and Iceberg holds gold only; D7 then uses the Iceberg gold
-  history.
+  history. Decided by the stack check report (results/stack_spike.md): dbt
+  with incremental merge models keyed by formula_version, never table
+  materialization; late and duplicate files load through DuckDB MERGE;
+  SQLMesh rejected as released; no fallback, bronze, silver and gold are
+  all Iceberg.
 - S3 docker compose with four long-running services: the lakehouse app
   (generator, collector, pipeline, API), Lakekeeper, Postgres, SeaweedFS
   (S3-compatible object storage for the Iceberg warehouse; Lakekeeper
