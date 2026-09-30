@@ -2,10 +2,14 @@
 the neighbour relations that follow from coverage.
 
 Subscribers come from the population layer (rule W4); at each grid point
-they split over the LTE layers good enough there, in proportion to layer
-bandwidth, and each layer's share goes to its best server. GSM voice users
-go to the GSM best server. Per cell, the model keeps the user-weighted
-radio statistics the counters need (rule M4).
+they split over the LTE layers in proportion to layer bandwidth, each layer
+weighted by how far its RSRP sits inside the margin of the strongest layer
+and above the layer floor, and within a layer between the best and the
+second server by their difference in level plus offset. Both weights are
+logistic, not steps (rule M3): users' signal varies inside a grid point, so
+a small change moves users gradually. GSM voice users split over the GSM
+best and second server the same way. Per cell, the model keeps the
+user-weighted radio statistics the counters need (rule M4).
 """
 
 from dataclasses import dataclass
@@ -14,6 +18,7 @@ import numpy as np
 
 from ran_lakehouse.model.cells import CellState
 from ran_lakehouse.model.coverage import (
+    GSM_MIN_RXLEV_DBM,
     LTE_MIN_RSRP_DBM,
     NEIGHBOUR_MARGIN_DB,
     Grid,
@@ -27,13 +32,18 @@ LTE_SUBSCRIBERS_PER_PERSON = 0.8
 # GSM voice users per person, where GSM is present (ASSUMPTION: 2G-only
 # handsets and voice fallback).
 GSM_USERS_PER_PERSON = 0.1
-# A layer takes users at a point only if its best RSRP there reaches this
-# level; a point with no such layer goes to its strongest layer (ASSUMPTION).
+# A layer's weight at a point falls as its best RSRP drops below this floor
+# (ASSUMPTION, START) ...
 LAYER_MIN_RSRP_DBM = -110.0
-# A layer also needs its RSRP within this margin of the point's strongest
-# LTE layer, so a sparse capacity layer serves only near its own sites
-# (ASSUMPTION, in the manner of an inter-frequency reselection threshold).
+# ... and as it drops out of this margin of the point's strongest LTE layer,
+# so a sparse capacity layer serves mostly near its own sites (ASSUMPTION,
+# START, in the manner of an inter-frequency reselection threshold).
 LAYER_MARGIN_DB = 8.0
+# Scale of the logistic that softens both thresholds, and of the one that
+# splits a layer's users between its best and second server (rule M3,
+# START: the spread of users' signal inside a grid point).
+LAYER_SPREAD_DB = 3.0
+SERVER_SPREAD_DB = 3.0
 # Users below this SINR count as cell-edge users (ASSUMPTION).
 LTE_EDGE_SINR_DB = 0.0
 # GSM users below this carrier-to-interference-plus-noise count as edge
@@ -75,6 +85,43 @@ class Serving:
     unserved_persons: float
 
 
+def logistic(x: np.ndarray) -> np.ndarray:
+    """The logistic function, without overflow for large arguments.
+
+    Args:
+        x: Arguments.
+
+    Returns:
+        1 / (1 + exp(-x)).
+    """
+    out: np.ndarray = 0.5 * (1.0 + np.tanh(0.5 * x))
+    return out
+
+
+def best_share(state: CellState, layer: LayerCoverage) -> np.ndarray:
+    """Share of a point's users on its best server; the rest go to the second.
+
+    Args:
+        state: Cell parameters (the cell individual offsets).
+        layer: Layer coverage.
+
+    Returns:
+        Share per point: 1 where there is no second server that covers the
+        point, else a logistic in the ranked level difference (level plus
+        offset), at least 0.5.
+    """
+    minimum = LTE_MIN_RSRP_DBM if layer.technology == "LTE" else GSM_MIN_RXLEV_DBM
+    has_second = (layer.best >= 0) & (layer.second >= 0) & (layer.second_level_dbm >= minimum)
+    best = np.where(layer.best >= 0, layer.best, 0)
+    second = np.where(layer.second >= 0, layer.second, 0)
+    gap = (layer.best_level_dbm + state.cio_db[best]) - (
+        layer.second_level_dbm + state.cio_db[second]
+    )
+    gap = np.where(has_second, gap, 0.0)
+    share: np.ndarray = np.where(has_second, logistic(gap / SERVER_SPREAD_DB), 1.0)
+    return share
+
+
 def lte_layer_weights(layers: list[LayerCoverage], bandwidth: dict[str, float]) -> np.ndarray:
     """Share of each point's LTE users on each layer.
 
@@ -89,10 +136,10 @@ def lte_layer_weights(layers: list[LayerCoverage], bandwidth: dict[str, float]) 
     covered = np.array([layer.best >= 0 for layer in layers])
     width = np.array([bandwidth[layer.band] for layer in layers])[:, None]
     strongest = np.where(covered, level, -np.inf).max(axis=0)
-    good = covered & (level >= LAYER_MIN_RSRP_DBM) & (level >= strongest - LAYER_MARGIN_DB)
-    fallback = covered & (level == strongest) & (strongest >= LTE_MIN_RSRP_DBM)
-    chosen = np.where(good.any(axis=0), good, fallback)
-    raw = np.where(chosen, width, 0.0)
+    finite = np.where(covered, level, LTE_MIN_RSRP_DBM)
+    inside = logistic((finite - (strongest - LAYER_MARGIN_DB)) / LAYER_SPREAD_DB)
+    above = logistic((finite - LAYER_MIN_RSRP_DBM) / LAYER_SPREAD_DB)
+    raw = np.where(covered, width * inside * above, 0.0)
     total = raw.sum(axis=0)
     weights: np.ndarray = np.divide(raw, total, out=np.zeros_like(raw), where=total > 0)
     return weights
@@ -151,21 +198,32 @@ def build_serving(
 
     for layer, users in plans:
         served = (layer.best >= 0) & (users > 0)
-        cell = layer.best[served]
-        u = users[served]
-        sinr = layer.sinr_db[served]
-        subs += np.bincount(cell, u, n_cells)
-        np.add.at(by_class, (cell, class_column[served]), u)
-        sinr_mass += np.bincount(cell, u * sinr, n_cells)
-        if layer.technology == "LTE":
-            se_mass += np.bincount(cell, u * spectral_efficiency(sinr), n_cells)
-            edge_mass += np.bincount(cell, u * (sinr < LTE_EDGE_SINR_DB), n_cells)
-            np.add.at(cqi, (cell, cqi_index(sinr)), u)
-        else:
-            edge_mass += np.bincount(cell, u * (sinr < GSM_EDGE_CI_DB), n_cells)
-        steps = layer.distance_km[served] * 1000.0 / TA_STEP_M
-        ta_bin = np.clip(np.searchsorted(TA_BIN_EDGES_STEPS, steps, side="right") - 1, 0, n_ta - 1)
-        np.add.at(ta, (cell, ta_bin), u)
+        share = best_share(state, layer)
+        to_second = served & (share < 1.0)
+        for mask, cells_at, sinr_at, distance_at, part in (
+            (served, layer.best, layer.sinr_db, layer.distance_km, share),
+            # A user on the second server has it stronger at its own
+            # position, so it keeps the point's radio quality (ASSUMPTION);
+            # only the serving cell and its distance change.
+            (to_second, layer.second, layer.sinr_db, layer.second_distance_km, 1.0 - share),
+        ):
+            cell = cells_at[mask]
+            u = (users * part)[mask]
+            sinr = sinr_at[mask]
+            subs += np.bincount(cell, u, n_cells)
+            np.add.at(by_class, (cell, class_column[mask]), u)
+            sinr_mass += np.bincount(cell, u * sinr, n_cells)
+            if layer.technology == "LTE":
+                se_mass += np.bincount(cell, u * spectral_efficiency(sinr), n_cells)
+                edge_mass += np.bincount(cell, u * (sinr < LTE_EDGE_SINR_DB), n_cells)
+                np.add.at(cqi, (cell, cqi_index(sinr)), u)
+            else:
+                edge_mass += np.bincount(cell, u * (sinr < GSM_EDGE_CI_DB), n_cells)
+            steps = distance_at[mask] * 1000.0 / TA_STEP_M
+            ta_bin = np.clip(
+                np.searchsorted(TA_BIN_EDGES_STEPS, steps, side="right") - 1, 0, n_ta - 1
+            )
+            np.add.at(ta, (cell, ta_bin), u)
         overlap = served & (layer.second >= 0)
         overlap &= layer.second_level_dbm >= layer.best_level_dbm - NEIGHBOUR_MARGIN_DB
         sources.append(layer.best[overlap])

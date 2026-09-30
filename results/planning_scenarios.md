@@ -21,9 +21,9 @@ with 4 on the CI runner.
 
 | Back end | Total s | Largest card s | Proven (optimal or infeasible) | Time limit |
 |---|---|---|---|---|
-| highs | 3.651 | 1.766 | 20 of 20 | 0 |
-| cpsat | 253.371 | 65.049 | 18 of 20 | 2 |
-| scip | 3.411 | 1.529 | 20 of 20 | 0 |
+| highs | 3.762 | 1.801 | 20 of 20 | 0 |
+| cpsat | 256.183 | 65.596 | 18 of 20 | 2 |
+| scip | 3.34 | 1.494 | 20 of 20 | 0 |
 
 The back ends that prove every card agree on each card's status and objective: yes. Chosen: **scip** (every card proven, least total time); it serves both the stored optima and the plan solve.
 
@@ -126,5 +126,5 @@ with whole sites it can bind while the plan leaves some of it unused:
 
 ## Cost
 
-Report run 819.9 s, peak RSS 772 MB (network model, planning data, every card solved by every back end). Solves rerun after a
-wall-clock step of the build machine: 5.
+Report run 830.1 s, peak RSS 774 MB (network model, planning data, every card solved by every back end). Solves rerun after a
+wall-clock step of the build machine: 1.

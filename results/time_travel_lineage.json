@@ -10,14 +10,14 @@
     "cell": "ENB0001_B3_1",
     "kpi": "LTE_RRC_SSR v1",
     "hour": "2026-02-13T23:00:00+00:00",
-    "published_at": "2026-09-30T06:42:39.909656+00:00",
+    "published_at": "2026-09-30T15:22:27.939071+00:00",
     "as_of_publication": {
-      "value": 99.6309963099631,
+      "value": 99.66555183946488,
       "coverage": 0.75,
       "periods_reported": 3
     },
     "now": {
-      "value": 99.73190348525469,
+      "value": 99.75728155339806,
       "coverage": 1.0,
       "periods_reported": 4
     },
@@ -29,7 +29,7 @@
       "cell": "ENB0001_B3_1",
       "granularity": "day",
       "period": "2026-02-10",
-      "kpi_value": 0.45341733486063385,
+      "kpi_value": 0.41065653713875055,
       "coverage": 1.0,
       "silver_rows": 192,
       "bronze_rows": 192,
@@ -49,10 +49,10 @@
       },
       "first_row": {
         "measurement": "ERAB.EstabInitSuccNbr.sum",
-        "silver_value": "227.0",
+        "silver_value": "211.0",
         "dictionary_release": "HW-R1",
         "bronze_counter": "L.E-RAB.SuccEst",
-        "bronze_value": "227.0",
+        "bronze_value": "211.0",
         "managed_element": "ManagedElement=ENB0001",
         "file_name": "B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz",
         "arrival_time": "2026-02-09 17:17:16.270532+00:00"
@@ -63,7 +63,7 @@
       "cell": "BTS0001_G900_1",
       "granularity": "day",
       "period": "2026-02-10",
-      "kpi_value": 1.1443518064410658,
+      "kpi_value": 0.9780775716694773,
       "coverage": 1.0,
       "silver_rows": 192,
       "bronze_rows": 192,
@@ -83,10 +83,10 @@
       },
       "first_row": {
         "measurement": "attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState",
-        "silver_value": "47.0",
+        "silver_value": "45.0",
         "dictionary_release": "HW-R1",
         "bronze_counter": "K3010A",
-        "bronze_value": "47.0",
+        "bronze_value": "45.0",
         "managed_element": "ManagedElement=BSC01",
         "file_name": "B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz",
         "arrival_time": "2026-02-09 17:17:16.270532+00:00"
@@ -97,7 +97,7 @@
       "cell": "ENB0001_B3_1",
       "granularity": "15m",
       "period": "2026-02-10T04:00:00+00:00",
-      "kpi_value": 23.0,
+      "kpi_value": 21.0,
       "coverage": 1.0,
       "silver_rows": 1,
       "bronze_rows": 2,
@@ -117,7 +117,7 @@
       },
       "first_row": {
         "measurement": "RRU.PrbTotDl",
-        "silver_value": "23.0",
+        "silver_value": "21.0",
         "dictionary_release": "HW-R1",
         "bronze_counter": "L.ChMeas.PRB.DL.Avail",
         "bronze_value": "100.0",
@@ -128,7 +128,7 @@
     }
   ],
   "timing_s": {
-    "time travel staging": 74.5,
-    "lineage walks": 9.4
+    "time travel staging": 86.9,
+    "lineage walks": 10.4
   }
 }

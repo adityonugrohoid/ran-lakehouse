@@ -11,7 +11,7 @@ rule S2), one UTC day at a time, recomputing the WIB days and weeks each day tou
 ## Formula revision (rule D6)
 
 LTE_RRC_SSR v1 to v2, current from 2026-03-02 (WIB): history reprocessed from 2026-01-04 before the build reached UTC day 2026-03-01. Both versions are kept for the whole
-history. Network daily mean over the run: v1 98.638 %, v2 98.531 %.
+history. Network daily mean over the run: v1 98.938 %, v2 98.83 %.
 
 ## Agreement with the model
 
@@ -24,7 +24,7 @@ All agree: yes.
 
 | KPI | Cell-days compared | Agreeing | Largest difference | Missing in gold |
 |---|---|---|---|---|
-| GSM_ABN_REL v1 | 9,372 | 9,372 | 1.78e-15 | 0 |
+| GSM_ABN_REL v1 | 9,372 | 9,372 | 8.88e-16 | 0 |
 | GSM_CSSR v1 | 18,744 | 18,744 | 0 | 0 |
 | GSM_HOSR v1 | 18,744 | 18,744 | 1.42e-14 | 0 |
 | GSM_SAS v1 | 18,744 | 18,744 | 0 | 0 |
@@ -36,8 +36,8 @@ All agree: yes.
 | LTE_ERAB_ACC v1 | 102,852 | 102,852 | 0 | 0 |
 | LTE_ERAB_DROP v1 | 102,852 | 102,852 | 4.44e-16 | 0 |
 | LTE_ERAB_RET v1 | 31,896 | 31,896 | 8.88e-16 | 0 |
-| LTE_IP_THP_DL v1 | 102,852 | 102,852 | 2.28e-06 | 0 |
-| LTE_MOB_HOSR v1 | 102,496 | 102,496 | 1.42e-14 | 0 |
+| LTE_IP_THP_DL v1 | 102,852 | 102,852 | 2.72e-06 | 0 |
+| LTE_MOB_HOSR v1 | 102,779 | 102,779 | 1.42e-14 | 0 |
 | LTE_PRB_UTIL v1 | 102,852 | 102,852 | 0 | 0 |
 | LTE_RRC_SSR v1 | 102,852 | 102,852 | 1.42e-14 | 0 |
 | LTE_RRC_SSR v2 | 102,852 | 102,852 | 0 | 0 |
@@ -55,38 +55,37 @@ Persistent: breach on 3 of 7 days of a WIB week, days judged at coverage 0.75 or
 
 ![Worst cells](gold_worst_cells.png)
 
-The figure: LTE_RRC_SSR v2, week of 2026-01-26, top 10 persistent cells.
+The figure: GSM_SAS v1, week of 2026-01-12, top 5 persistent cells.
 
 | KPI | Weeks with a persistent cell | Persistent cell-weeks | Most in one week |
 |---|---|---|---|
-| GSM_CSSR v1 | 12 | 75 | 8 |
-| GSM_HOSR v1 | 9 | 16 | 3 |
-| GSM_SAS v1 | 12 | 29 | 3 |
-| GSM_TCH_BLOCK v1 | 12 | 71 | 7 |
-| LTE_ERAB_ACC v1 | 12 | 95 | 12 |
-| LTE_ERAB_DROP v1 | 12 | 135 | 14 |
-| LTE_MOB_HOSR v1 | 9 | 14 | 2 |
-| LTE_PRB_UTIL v1 | 12 | 131 | 12 |
-| LTE_RRC_SSR v1 | 12 | 131 | 16 |
-| LTE_RRC_SSR v2 | 12 | 137 | 17 |
+| GSM_CSSR v1 | 12 | 32 | 4 |
+| GSM_HOSR v1 | 6 | 7 | 2 |
+| GSM_SAS v1 | 12 | 41 | 5 |
+| GSM_TCH_BLOCK v1 | 12 | 24 | 3 |
+| LTE_ERAB_ACC v1 | 5 | 11 | 5 |
+| LTE_ERAB_DROP v1 | 12 | 32 | 5 |
+| LTE_PRB_UTIL v1 | 12 | 33 | 5 |
+| LTE_RRC_SSR v1 | 7 | 16 | 5 |
+| LTE_RRC_SSR v2 | 10 | 21 | 5 |
 
 ## Weekend throughput: a traffic-mix effect
 
-Network DL IP throughput is lower at weekends although PRB use is lower too. Cell by
-cell it is not: 1,021 of 1,452 LTE cells have a weekend throughput at
-least their weekday one, and 20 have both lower throughput and lower PRB use.
-At weekends traffic moves from the urban business areas, where the radio is best, to
+Network DL IP throughput is lower at weekends (6.6 against 7.6 Mbit/s on weekdays, from the rows below). Cell by
+cell it is not: 1,054 of 1,452 LTE cells have a weekend throughput at
+least their weekday one, and 11 have both lower throughput and lower PRB use.
+At weekends traffic moves from the urban business areas, where throughput is highest, to
 residential and suburban cells, so the network mean falls (complete WIB days,
 weekday against Saturday and Sunday):
 
 | Area class | Day | DL IP throughput (Mbit/s) | Share of DL volume (%) | PRB utilization, N_RB-weighted (%) | Mean CQI |
 |---|---|---|---|---|---|
-| rural | weekday | 4.39 | 13.2 | 19.0 | 9.88 |
-| rural | weekend | 4.23 | 15.7 | 19.4 | 9.88 |
-| suburban | weekday | 6.57 | 52.5 | 26.6 | 9.66 |
-| suburban | weekend | 6.24 | 62.4 | 27.3 | 9.66 |
-| urban | weekday | 6.85 | 34.3 | 14.8 | 8.94 |
-| urban | weekend | 4.9 | 22.0 | 10.9 | 8.43 |
+| rural | weekday | 4.01 | 13.9 | 20.0 | 9.68 |
+| rural | weekend | 3.67 | 16.4 | 20.4 | 9.68 |
+| suburban | weekday | 7.85 | 51.4 | 26.5 | 9.71 |
+| suburban | weekend | 7.42 | 61.0 | 27.2 | 9.71 |
+| urban | weekday | 10.8 | 34.7 | 15.0 | 8.97 |
+| urban | weekend | 9.44 | 22.6 | 11.0 | 8.6 |
 
 ## A faulted cell
 
@@ -99,22 +98,22 @@ A3), so the cell and the date are withheld.
 
 | Table | Rows | Data files | MB |
 |---|---|---|---|
-| gold.cells | 1,716 | 89 | 2.7 |
-| gold.lte_cell_15m | 11,592,768 | 84 | 334.6 |
-| gold.lte_cell_60m | 2,898,192 | 84 | 35.2 |
-| gold.gsm_cell_15m | 2,107,776 | 84 | 25.5 |
-| gold.lte_kpi_15m | 96,295,024 | 140 | 695.4 |
-| gold.lte_kpi_hour | 27,008,131 | 141 | 288.2 |
-| gold.lte_kpi_day | 1,135,092 | 182 | 34.0 |
-| gold.lte_kpi_week | 162,156 | 110 | 20.1 |
-| gold.gsm_kpi_15m | 12,646,656 | 84 | 49.1 |
-| gold.gsm_kpi_hour | 3,166,416 | 84 | 17.9 |
-| gold.gsm_kpi_day | 133,056 | 167 | 3.5 |
+| gold.cells | 1,716 | 84 | 2.5 |
+| gold.lte_cell_15m | 11,592,768 | 84 | 333.1 |
+| gold.lte_cell_60m | 2,898,192 | 84 | 35.3 |
+| gold.gsm_cell_15m | 2,107,776 | 84 | 24.8 |
+| gold.lte_kpi_15m | 96,326,960 | 140 | 701.7 |
+| gold.lte_kpi_hour | 27,016,127 | 140 | 291.9 |
+| gold.lte_kpi_day | 1,135,428 | 182 | 34.2 |
+| gold.lte_kpi_week | 162,204 | 110 | 20.1 |
+| gold.gsm_kpi_15m | 12,646,656 | 84 | 49.4 |
+| gold.gsm_kpi_hour | 3,166,416 | 84 | 18.0 |
+| gold.gsm_kpi_day | 133,056 | 167 | 3.6 |
 | gold.gsm_kpi_week | 19,008 | 95 | 2.2 |
-| gold.worst_cells_week | 834 | 121 | 0.3 |
+| gold.worst_cells_week | 217 | 115 | 0.3 |
 | gold.kpi_catalog | 17 | 2 | 0.0 |
 | gold.loads | 174 | 85 | 0.1 |
-| total | | | 1,509.0 |
+| total | | | 1,517.3 |
 
 ## Cost
 
@@ -123,11 +122,11 @@ Measured on the build machine; varies run to run. Each dbt run is its own proces
 | Step | Value |
 |---|---|
 | UTC days built | 84 |
-| dbt runs | 98 |
-| dbt runs rerun after a wall-clock step | 6 |
-| seconds, days | 1,518.7 |
-| seconds, revision reprocessing | 119.1 |
-| seconds, build total | 1,648.7 |
-| seconds, model check | 94.7 |
-| peak RSS, Python (MB) | 748 |
-| peak RSS, largest dbt run (MB) | 1,038 |
+| dbt runs | 92 |
+| dbt runs rerun after a wall-clock step | 0 |
+| seconds, days | 1,498.2 |
+| seconds, revision reprocessing | 113.6 |
+| seconds, build total | 1,623.3 |
+| seconds, model check | 110.1 |
+| peak RSS, Python (MB) | 749 |
+| peak RSS, largest dbt run (MB) | 1,046 |

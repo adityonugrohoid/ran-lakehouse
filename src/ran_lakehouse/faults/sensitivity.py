@@ -33,7 +33,9 @@ from ran_lakehouse.model import NetworkModel, default_model
 from ran_lakehouse.model.serving import (
     LAYER_MARGIN_DB,
     LAYER_MIN_RSRP_DBM,
+    LAYER_SPREAD_DB,
     LTE_SUBSCRIBERS_PER_PERSON,
+    SERVER_SPREAD_DB,
     lte_layer_weights,
 )
 from ran_lakehouse.world import build_world
@@ -42,6 +44,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 RESULTS = REPO_ROOT / "results"
 RECORD_JSON = RESULTS / "whatif_sensitivity.json"
 RECORD_MD = RESULTS / "whatif_sensitivity.md"
+# The same report on the model before the soft assignment of rule M3 (hard
+# best-server and layer thresholds), kept to compare against.
+BASELINE_JSON = RESULTS / "whatif_sensitivity_hard_thresholds.json"
 
 PROFILE = "demo"
 SAMPLE_SEED = 20260930
@@ -160,13 +165,13 @@ def cases(base: NetworkModel, sample: np.ndarray) -> list[dict[str, Any]]:
 
 
 def spread(values: list[float]) -> dict[str, float] | None:
-    """Median, p90 and max of absolute changes.
+    """Median, p90, p99 and max of absolute changes.
 
     Args:
         values: Changes (NaN dropped).
 
     Returns:
-        The three, or None with no values.
+        The four and the count, or None with no values.
     """
     v = np.abs(np.array([x for x in values if not np.isnan(x)]))
     if not len(v):
@@ -174,6 +179,7 @@ def spread(values: list[float]) -> dict[str, float] | None:
     return {
         "median": round(float(np.median(v)), 2),
         "p90": round(float(np.percentile(v, 90)), 2),
+        "p99": round(float(np.percentile(v, 99)), 2),
         "max": round(float(v.max()), 2),
         "count": len(v),
     }
@@ -355,6 +361,28 @@ def layer_case(base: NetworkModel, rows: list[dict[str, Any]]) -> dict[str, Any]
     }
 
 
+def comparison(record: dict[str, Any]) -> dict[str, Any]:
+    """The figures compared before and after the soft assignment.
+
+    Args:
+        record: A sensitivity record.
+
+    Returns:
+        Neighbour throughput and co-sited layer subscribers (relative change,
+        with the share moved by more than 10%), and the changed cell's
+        subscribers.
+    """
+    neighbours = record["touched neighbours"]
+    co_sited = record["neighbours by relation"]["other band, same site"]
+    return {
+        "neighbour throughput, relative %": neighbours[THROUGHPUT]["relative, %"],
+        "neighbour throughput, share moved > 10%": neighbours[THROUGHPUT]["share moved > 10%"],
+        "co-sited layer subscribers, relative %": co_sited["subscribers, relative %"],
+        "changed cell subscribers, relative %": record["changed cell"]["subscribers, relative %"],
+        "smoke case neighbour": record["smoke case"]["neighbour state"],
+    }
+
+
 def build() -> dict[str, Any]:
     """The record.
 
@@ -375,6 +403,8 @@ def build() -> dict[str, Any]:
         "layer split": {
             "margin to the strongest layer, dB": LAYER_MARGIN_DB,
             "minimum RSRP, dBm": LAYER_MIN_RSRP_DBM,
+            "logistic scale, dB": LAYER_SPREAD_DB,
+            "server split logistic scale, dB": SERVER_SPREAD_DB,
         },
         "changed cell": summary([r for r in rows if r["is_changed"]]),
         "touched neighbours": summary(neighbours),
@@ -388,6 +418,7 @@ def build() -> dict[str, Any]:
         },
         "smoke case": smoke_case(base),
         "layer case": layer_case(base, rows),
+        "before": comparison(json.loads(BASELINE_JSON.read_text())),
     }
 
 
@@ -398,11 +429,11 @@ def fmt(s: dict[str, float] | None) -> str:
         s: spread()'s result.
 
     Returns:
-        "median | p90 | max".
+        "median | p90 | p99 | max".
     """
     if s is None:
-        return "n/a | n/a | n/a"
-    return f"{s['median']:g} | {s['p90']:g} | {s['max']:g}"
+        return "n/a | n/a | n/a | n/a"
+    return f"{s['median']:g} | {s['p90']:g} | {s['p99']:g} | {s['max']:g}"
 
 
 def table(group: dict[str, Any]) -> list[str]:
@@ -415,7 +446,7 @@ def table(group: dict[str, Any]) -> list[str]:
         Markdown lines.
     """
     lines = [
-        "| KPI | relative change %: median, p90, max | absolute change: median, p90, max "
+        "| KPI | relative change %: median, p90, p99, max | absolute change: median, p90, p99, max "
         "| share moved > 10% |",
         "|---|---|---|---|",
     ]
@@ -461,6 +492,33 @@ def routine(kpi: dict[str, Any]) -> str:
     )
 
 
+def verdict(before: dict[str, Any], after: dict[str, Any]) -> str:
+    """What the soft assignment did to the tail, judged on the figures.
+
+    Args:
+        before: comparison() of the hard-threshold record.
+        after: comparison() of this record.
+
+    Returns:
+        A paragraph.
+    """
+    thr_b = before["neighbour throughput, relative %"]
+    thr_a = after["neighbour throughput, relative %"]
+    sub_b = before["co-sited layer subscribers, relative %"]
+    sub_a = after["co-sited layer subscribers, relative %"]
+    shrank = thr_a["p99"] < thr_b["p99"] and sub_a["p99"] < sub_b["p99"]
+    return (
+        f"The tail {'shrank' if shrank else 'did not shrink'}: neighbour throughput p99 "
+        f"{thr_b['p99']:g}% to {thr_a['p99']:g}% (max {thr_b['max']:g}% to {thr_a['max']:g}%), "
+        f"co-sited layer subscribers p99 {sub_b['p99']:g}% to {sub_a['p99']:g}% (max "
+        f"{sub_b['max']:g}% to {sub_a['max']:g}%). The medians move from {thr_b['median']:g}% "
+        f"to {thr_a['median']:g}% (neighbour throughput) and from "
+        f"{before['changed cell subscribers, relative %']['median']:g}% to "
+        f"{after['changed cell subscribers, relative %']['median']:g}% (the changed cell's "
+        "subscribers)."
+    )
+
+
 def render_markdown(record: dict[str, Any]) -> str:
     """The report.
 
@@ -476,8 +534,11 @@ def render_markdown(record: dict[str, Any]) -> str:
     smoke = record["smoke case"]
     nb = smoke["neighbour state"]
     se = nb["spectral efficiency, bit/s/Hz"]
-    before, after = nb["load"]["before"], nb["load"]["after"]
+    load_b, load_a = nb["load"]["before"], nb["load"]["after"]
     layer = record["layer case"]
+    before = record["before"]
+    after = comparison(record)
+    hard = before["smoke case neighbour"]
     lines = [
         "# What-if sensitivity",
         "",
@@ -505,7 +566,7 @@ def render_markdown(record: dict[str, Any]) -> str:
         "",
         "By how the neighbour relates to the changed cell (DL IP throughput):",
         "",
-        "| Relation | cases | relative change %: median, p90, max | share moved > 10% |",
+        "| Relation | cases | relative change %: median, p90, p99, max | share moved > 10% |",
         "|---|---|---|---|",
         *[
             f"| {rel} | {g['cases']} | {fmt(g[THROUGHPUT]['relative, %']).replace(' | ', ', ')} "
@@ -515,7 +576,7 @@ def render_markdown(record: dict[str, Any]) -> str:
         "",
         "By change (DL IP throughput of neighbours):",
         "",
-        "| Change | cases | relative change %: median, p90, max | share moved > 10% |",
+        "| Change | cases | relative change %: median, p90, p99, max | share moved > 10% |",
         "|---|---|---|---|",
         *[
             f"| {ch} | {g['cases']} | {fmt(g[THROUGHPUT]['relative, %']).replace(' | ', ', ')} "
@@ -523,59 +584,78 @@ def render_markdown(record: dict[str, Any]) -> str:
             for ch, g in record["neighbours by change"].items()
         ],
         "",
-        "## Why a neighbour can lose a quarter of its throughput",
+        "## Why a neighbour loses throughput: the API smoke case",
         "",
-        f"`{smoke['change']}` (the API smoke test's change) hands "
-        f"{smoke['grid points handed to the neighbour']} grid points "
-        f"({smoke['persons at them']} persons) to `{smoke['neighbour cell']}`. They are edge "
-        f"points: median SINR {smoke['their SINR before, dB (median)']:g} dB before and "
-        f"{smoke['their SINR after, dB (median)']:g} dB after. The neighbour's subscribers go "
-        f"from {nb['subscribers'][0]} to {nb['subscribers'][1]}, its mean spectral efficiency "
-        f"from {se[0]:g} to {se[1]:g} "
-        f"bit/s/Hz and its edge share from {nb['edge share'][0]:g} to {nb['edge share'][1]:g}. "
-        "Capacity scales with spectral efficiency and demand with users, so the load rises "
-        "on both counts: PRB use "
-        f"{before['PRB use mean, %']:g}% to {after['PRB use mean, %']:g}% "
-        f"on average, {before['PRB use p95, %']:g}% to {after['PRB use p95, %']:g}% at p95 and "
-        f"{before['PRB use max, %']:g}% to {after['PRB use max, %']:g}% "
-        "at the busiest period. Per-user throughput is capacity times (1 - load) (rule M4, "
-        "processor sharing), and the throughput KPI is volume over active time, so it is "
-        "weighted to the busy periods where that term falls fastest: "
-        f"{nb['DL IP throughput, kbit/s'][0]} to {nb['DL IP throughput, kbit/s'][1]} kbit/s. "
-        "The neighbour is not lightly loaded at its busy hour; it absorbs poor edge users "
-        "at a load where each extra user costs the most.",
+        f"`{smoke['change']}` (the API smoke test's change) makes `{smoke['neighbour cell']}` "
+        f"the best server at {smoke['grid points handed to the neighbour']} grid points "
+        f"({smoke['persons at them']} persons, median SINR "
+        f"{smoke['their SINR before, dB (median)']:g} dB before and "
+        f"{smoke['their SINR after, dB (median)']:g} dB after); under rule M3 their users move "
+        "in part, by the logistic split. The neighbour's subscribers go from "
+        f"{nb['subscribers'][0]} to {nb['subscribers'][1]}, its mean spectral efficiency from "
+        f"{se[0]:g} to {se[1]:g} bit/s/Hz, its edge share from {nb['edge share'][0]:g} to "
+        f"{nb['edge share'][1]:g}, and its PRB use "
+        f"{load_b['PRB use mean, %']:g}% to {load_a['PRB use mean, %']:g}% on average, "
+        f"{load_b['PRB use p95, %']:g}% to {load_a['PRB use p95, %']:g}% at p95 and "
+        f"{load_b['PRB use max, %']:g}% to {load_a['PRB use max, %']:g}% at the busiest period; "
+        f"its DL IP throughput goes from {nb['DL IP throughput, kbit/s'][0]} to "
+        f"{nb['DL IP throughput, kbit/s'][1]} kbit/s. With hard thresholds the same change took "
+        f"it from {hard['subscribers'][0]} to {hard['subscribers'][1]} subscribers and from "
+        f"{hard['DL IP throughput, kbit/s'][0]} to {hard['DL IP throughput, kbit/s'][1]} "
+        f"kbit/s (PRB p95 {hard['load']['before']['PRB use p95, %']:g}% to "
+        f"{hard['load']['after']['PRB use p95, %']:g}%). Per-user throughput is capacity times "
+        "(1 - load) (rule M4, processor sharing) and the KPI is volume over active time, so "
+        "it weighs the busy periods, where an added edge user costs the most.",
         "",
-        "## Cross-layer jumps",
+        "## Largest co-sited layer shift",
         "",
-        f"`{layer['change']}` moves only "
+        f"`{layer['change']}` moves "
         f"{plural(layer['own-layer points changing best server'], 'point')} "
-        "to another best server inside its own layer, yet the co-sited "
+        "to another best server inside its own layer; the co-sited "
         f"`{layer['co-sited cell']}` goes from {layer['its subscribers'][0]} to "
         f"{layer['its subscribers'][1]} subscribers (throughput "
         f"{layer['its DL IP throughput, kbit/s'][0]} to {layer['its DL IP throughput, kbit/s'][1]} "
-        f"kbit/s). {layer['subscribers the share change moves']} of the subscribers it gains "
-        "come from "
-        f"{layer['points of the co-sited cell whose layer share changed']} points where the "
-        f"co-sited layer's share went from {layer['its layer share at them, median'][0]:g} to "
+        f"kbit/s). The layer share moves {layer['subscribers the share change moves']} "
+        "subscribers onto it, at "
+        f"{layer['points of the co-sited cell whose layer share changed']} points where its "
+        f"share went from {layer['its layer share at them, median'][0]:g} to "
         f"{layer['its layer share at them, median'][1]:g} (median). "
-        "At each grid point, users split over the LTE layers in proportion to "
-        "bandwidth, and a layer takes a share only while its RSRP is at least "
-        f"{record['layer split']['minimum RSRP, dBm']:g} dBm and within "
-        f"{record['layer split']['margin to the strongest layer, dB']:g} dB of the strongest "
-        "layer (ASSUMPTION, rule M3). A point whose changed layer crosses that margin hands "
-        "its whole share to the other layers at once: a step, with no spread of users' "
-        "signal inside the 125 m point and no hysteresis.",
+        "At each grid point, users split over the LTE layers in proportion to bandwidth, "
+        "each layer weighted by logistics (scale "
+        f"{record['layer split']['logistic scale, dB']:g} dB) in how far its RSRP sits inside "
+        f"the {record['layer split']['margin to the strongest layer, dB']:g} dB margin of the "
+        "strongest layer and above the "
+        f"{record['layer split']['minimum RSRP, dBm']:g} dBm floor; within a layer, users split "
+        "between the best and second server by a logistic (scale "
+        f"{record['layer split']['server split logistic scale, dB']:g} dB) in their level "
+        "difference (rule M3, ASSUMPTION).",
+        "",
+        "## Before and after the soft assignment",
+        "",
+        "Before: the same report on the model with hard thresholds (one best server per point, "
+        "a layer's share switched on or off at the margin and the floor), from "
+        "`whatif_sensitivity_hard_thresholds.json`. After: this report (rule M3 soft "
+        "assignment).",
+        "",
+        "| Figure | before: median, p90, p99, max | after: median, p90, p99, max |",
+        "|---|---|---|",
+        *[
+            f"| {name} | {fmt(before[name]).replace(' | ', ', ')} "
+            f"| {fmt(after[name]).replace(' | ', ', ')} |"
+            for name in (
+                "neighbour throughput, relative %",
+                "co-sited layer subscribers, relative %",
+                "changed cell subscribers, relative %",
+            )
+        ],
+        "",
+        "Neighbour cases moved by more than 10% in throughput: "
+        f"{100 * before['neighbour throughput, share moved > 10%']:.1f}% before, "
+        f"{100 * after['neighbour throughput, share moved > 10%']:.1f}% after.",
         "",
         "## Finding",
         "",
-        "Typical one-step effects are modest and plausible, and most neighbours move by a few "
-        "percent. The long tail comes from hard assignments at the point level: best server "
-        "and layer share both switch whole 125 m points at a threshold, so a change that tips "
-        "a few dense points moves their users together, and the throughput KPI amplifies it "
-        "on a neighbour that is busy at its peak. A smoother assignment (users of a point "
-        "spread over servers and layers by the within-point signal spread) would shorten the "
-        "tail (not tested here); it changes every generated counter, so it is a model "
-        "change for its own decision, not made here.",
+        verdict(before, after),
     ]
     res = record.get("resources")
     if res:

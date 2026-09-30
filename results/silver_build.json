@@ -5,7 +5,7 @@
   "partitions_built": 168,
   "late_files_merged": 5,
   "rows": {
-    "silver.pm_measurements": 464354374,
+    "silver.pm_measurements": 482733542,
     "silver.pm_files": 15968,
     "silver.pm_gaps": 4164,
     "silver.counter_map": 204,
@@ -15,26 +15,26 @@
     "catch-up": {
       "loads": 5,
       "files": 5,
-      "bronze_rows": 286810,
-      "silver_rows": 293722,
-      "seconds_total": 14.5,
-      "seconds_max": 3.8
+      "bronze_rows": 297940,
+      "silver_rows": 304852,
+      "seconds_total": 16.2,
+      "seconds_max": 4.9
     },
     "partition": {
       "loads": 168,
       "files": 15963,
-      "bronze_rows": 453245164,
-      "silver_rows": 464198538,
-      "seconds_total": 2818.4,
-      "seconds_max": 60.4
+      "bronze_rows": 471645724,
+      "silver_rows": 482571472,
+      "seconds_total": 4602.8,
+      "seconds_max": 109.2
     }
   },
   "flags": {
     "derived": 11592768,
-    "suspect": 4405,
-    "conflict": 1819,
-    "late": 2204188,
-    "15 min": 374510422,
+    "suspect": 4619,
+    "conflict": 1949,
+    "late": 2285430,
+    "15 min": 392889590,
     "60 min": 89843952
   },
   "counter_map": {
@@ -80,15 +80,15 @@
   "storage": {
     "silver.pm_measurements": {
       "data_files": 176,
-      "bytes": 1618159204
+      "bytes": 1696769900
     },
     "silver.pm_files": {
       "data_files": 173,
-      "bytes": 1894204
+      "bytes": 1893256
     },
     "silver.pm_gaps": {
       "data_files": 28,
-      "bytes": 65849
+      "bytes": 65851
     },
     "silver.counter_map": {
       "data_files": 1,
@@ -100,10 +100,10 @@
     }
   },
   "timing_s": {
-    "silver build": 2861.1,
-    "counts, evaluation and storage": 61.2
+    "silver build": 4652.2,
+    "counts, evaluation and storage": 62.3
   },
-  "peak_rss_mb_during_build": 2235,
-  "commit_retries": 0,
+  "peak_rss_mb_during_build": 2057,
+  "commit_retries": 1,
   "duckdb_memory_limit": "1GB"
 }

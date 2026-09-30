@@ -583,6 +583,45 @@ def render_catalog(record: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def network_throughput(by_area_class: dict[str, Any], day: str) -> float:
+    """Network DL IP throughput of a day type from the area-class rows.
+
+    Throughput is volume over active time, so the network figure is the
+    volume-share-weighted harmonic mean of the classes.
+
+    Args:
+        by_area_class: weekend_traffic_mix["by_area_class"].
+        day: "weekday" or "weekend".
+
+    Returns:
+        Mbit/s.
+    """
+    time = sum(
+        v[day]["share_of_dl_volume_pct"] / v[day]["dl_ip_throughput_mbit_s"]
+        for v in by_area_class.values()
+    )
+    share = sum(v[day]["share_of_dl_volume_pct"] for v in by_area_class.values())
+    return float(share / time)
+
+
+def network_sentence(by_area_class: dict[str, Any]) -> str:
+    """Whether network throughput is lower at weekends, with the figures.
+
+    Args:
+        by_area_class: weekend_traffic_mix["by_area_class"].
+
+    Returns:
+        A sentence.
+    """
+    weekday = network_throughput(by_area_class, "weekday")
+    weekend = network_throughput(by_area_class, "weekend")
+    lower = "lower" if weekend < weekday else "not lower"
+    return (
+        f"Network DL IP throughput is {lower} at weekends ({weekend:.1f} against {weekday:.1f} "
+        "Mbit/s on weekdays, from the rows below)."
+    )
+
+
 def render_markdown(record: dict[str, Any]) -> str:
     """Render the gold build report.
 
@@ -666,13 +705,13 @@ def render_markdown(record: dict[str, Any]) -> str:
         "",
         "## Weekend throughput: a traffic-mix effect",
         "",
-        "Network DL IP throughput is lower at weekends although PRB use is lower too. Cell by",
+        network_sentence(record["weekend_traffic_mix"]["by_area_class"]) + " Cell by",
         f"cell it is not: {record['weekend_traffic_mix']['cells_weekend_throughput_not_lower']:,}"
         f" of {record['weekend_traffic_mix']['cells']:,} LTE cells have a weekend throughput at",
         "least their weekday one, and "
         f"{record['weekend_traffic_mix']['cells_lower_throughput_and_lower_prb']} have both lower "
         "throughput and lower PRB use.",
-        "At weekends traffic moves from the urban business areas, where the radio is best, to",
+        "At weekends traffic moves from the urban business areas, where throughput is highest, to",
         "residential and suburban cells, so the network mean falls (complete WIB days,",
         "weekday against Saturday and Sunday):",
         "",

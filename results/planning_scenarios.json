@@ -4,20 +4,20 @@
   "solver_comparison": {
     "backends": {
       "highs": {
-        "total_s": 3.651,
-        "largest_s": 1.766,
+        "total_s": 3.762,
+        "largest_s": 1.801,
         "proven": 20,
         "time_limit": 0
       },
       "cpsat": {
-        "total_s": 253.371,
-        "largest_s": 65.049,
+        "total_s": 256.183,
+        "largest_s": 65.596,
         "proven": 18,
         "time_limit": 2
       },
       "scip": {
-        "total_s": 3.411,
-        "largest_s": 1.529,
+        "total_s": 3.34,
+        "largest_s": 1.494,
         "proven": 20,
         "time_limit": 0
       }
@@ -185,7 +185,7 @@
           "objective_gain_without_it": 800000000
         }
       ],
-      "solve_seconds": 0.038
+      "solve_seconds": 0.044
     }
   },
   "cards": [
@@ -290,7 +290,7 @@
       "request": "Every village with a school must get indoor 4G. Find the cheapest plan."
     }
   ],
-  "solves_rerun_after_clock_step": 5,
-  "timing_s": 819.9,
-  "peak_rss_mb": 772
+  "solves_rerun_after_clock_step": 1,
+  "timing_s": 830.1,
+  "peak_rss_mb": 774
 }

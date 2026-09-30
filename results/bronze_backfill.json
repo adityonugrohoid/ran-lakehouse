@@ -7,7 +7,7 @@
     "deliveries": 16680,
     "loaded": 16632,
     "skipped_same_file": 48,
-    "pm_rows": 457253306
+    "pm_rows": 475816636
   },
   "file_arrivals": {
     "CM loaded": 168,
@@ -17,20 +17,20 @@
     "PM skipped, same file": 48
   },
   "rows": {
-    "bronze.pm_values": 457253306,
+    "bronze.pm_values": 475816636,
     "bronze.file_arrivals": 16680,
-    "bronze.cm_records": 728723,
+    "bronze.cm_records": 825407,
     "bronze.fm_records": 16,
     "evaluation.delivery_anomalies": 284
   },
   "pm_rows_by_granularity": {
-    "15 min": 366554126,
+    "15 min": 385117456,
     "60 min": 90699180
   },
   "pm_rows_by_dictionary_release": {
-    "HW-R1": 228442949,
-    "HW-R2": 75710677,
-    "none declared (OMeS)": 153099680
+    "HW-R1": 238043669,
+    "HW-R2": 79268837,
+    "none declared (OMeS)": 158504130
   },
   "delivery_anomalies_planted": {
     "D1": 72,
@@ -42,16 +42,16 @@
   },
   "storage": {
     "bronze.pm_values": {
-      "data_files": 527,
-      "bytes": 1903970210
+      "data_files": 555,
+      "bytes": 2177257360
     },
     "bronze.file_arrivals": {
-      "data_files": 449,
-      "bytes": 2550221
+      "data_files": 469,
+      "bytes": 2597947
     },
     "bronze.cm_records": {
-      "data_files": 87,
-      "bytes": 21013692
+      "data_files": 85,
+      "bytes": 23529155
     },
     "bronze.fm_records": {
       "data_files": 12,
@@ -65,15 +65,15 @@
   "landing_at_end": {
     "retention_days": 3,
     "files": 599,
-    "bytes": 43865584
+    "bytes": 46928995
   },
   "timing_s": {
-    "simulate": 94.6,
-    "render": 832.0,
-    "collect": 1927.4,
-    "total": 2880.8
+    "simulate": 102.6,
+    "render": 887.2,
+    "collect": 2073.0,
+    "total": 3090.6
   },
-  "peak_rss_mb": 2773,
+  "peak_rss_mb": 2856,
   "machine": {
     "cpus": 16,
     "python": "3.12.3",

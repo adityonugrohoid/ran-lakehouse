@@ -6,55 +6,67 @@ Synthetic network, clean demo network (no planted fault present); written by `py
 
 ## Changed cell (400 cases)
 
-| KPI | relative change %: median, p90, max | absolute change: median, p90, max | share moved > 10% |
+| KPI | relative change %: median, p90, p99, max | absolute change: median, p90, p99, max | share moved > 10% |
 |---|---|---|---|
-| DL IP throughput (kbit/s) | 5.29, 18.86, 599.76 | 972.71, 3474.17, 46684.3 | 29.1% |
-| Mean DL PRB use (%) | 5.42, 18.85, 95.01 | 0.76, 4.43, 27.36 | 29.2% |
-| E-RAB drop rate (%) | 11.29, 106.63, 2367.74 | 0.06, 0.57, 3.75 | 53.3% |
-| E-RAB accessibility (%) | 0.1, 0.87, 3 | 0.1, 0.86, 2.9 | 0.0% |
-| subscribers | 10.26, 26.2, 142.67 | | |
+| DL IP throughput (kbit/s) | 4.08, 15.69, 49.51, 85.06 | 858.44, 2476.64, 5276.37, 8255.9 | 18.5% |
+| Mean DL PRB use (%) | 6.42, 15.43, 33.01, 78.27 | 0.89, 3.64, 9.31, 13.41 | 27.5% |
+| E-RAB drop rate (%) | 11.37, 72.54, 430.77, 2442.05 | 0.06, 0.39, 1.72, 4.04 | 54.0% |
+| E-RAB accessibility (%) | 0.11, 0.51, 1.22, 2.04 | 0.11, 0.5, 1.2, 1.97 | 0.0% |
+| subscribers | 11.82, 21.03, 42.04, 70.83 | | |
 
-## Touched neighbours (1541 cases)
+## Touched neighbours (1713 cases)
 
-| KPI | relative change %: median, p90, max | absolute change: median, p90, max | share moved > 10% |
+| KPI | relative change %: median, p90, p99, max | absolute change: median, p90, p99, max | share moved > 10% |
 |---|---|---|---|
-| DL IP throughput (kbit/s) | 2.2, 8.11, 79.41 | 425.68, 1440.56, 7811.72 | 7.6% |
-| Mean DL PRB use (%) | 1.35, 6.68, 74.16 | 0.26, 1.27, 21.34 | 3.9% |
-| E-RAB drop rate (%) | 1.08, 39.59, 2118.95 | 0.01, 0.23, 4.1 | 21.2% |
-| E-RAB accessibility (%) | 0.01, 0.31, 1.57 | 0.01, 0.3, 1.51 | 0.0% |
-| subscribers | 1.33, 9.04, 94.87 | | |
+| DL IP throughput (kbit/s) | 1.34, 5.03, 12.61, 39.42 | 252.8, 648.57, 1706.9, 4071.93 | 2.0% |
+| Mean DL PRB use (%) | 1.12, 3.5, 8.45, 20.1 | 0.17, 0.93, 2.02, 6.51 | 0.6% |
+| E-RAB drop rate (%) | 1.54, 20.04, 372.23, 1762.24 | 0.01, 0.13, 1.19, 4.07 | 15.3% |
+| E-RAB accessibility (%) | 0.01, 0.18, 0.55, 1.24 | 0.01, 0.17, 0.54, 1.23 | 0.0% |
+| subscribers | 1.67, 4.55, 8.87, 21.06 | | |
 
-Neighbour throughput moves by a median 2.2% and a p90 of 8.11%; 7.6% of neighbour cases move by more than 10%. One-step changes do not routinely move neighbours by more than 10% (p90 below 10%), but the tail is long.
+Neighbour throughput moves by a median 1.34% and a p90 of 5.03%; 2.0% of neighbour cases move by more than 10%. One-step changes do not routinely move neighbours by more than 10% (p90 below 10%), but the tail is long.
 
 By how the neighbour relates to the changed cell (DL IP throughput):
 
-| Relation | cases | relative change %: median, p90, max | share moved > 10% |
+| Relation | cases | relative change %: median, p90, p99, max | share moved > 10% |
 |---|---|---|---|
-| same band | 1270 | 2.24, 7.98, 79.41 | 7.6% |
-| other band, same site | 76 | 2.08, 8.33, 73.02 | 9.2% |
-| other band, other site | 195 | 2.09, 8.14, 19.72 | 7.2% |
+| same band | 1194 | 1.43, 4.87, 12.21, 39.42 | 2.1% |
+| other band, same site | 211 | 0.76, 3.02, 15.39, 18.6 | 3.3% |
+| other band, other site | 308 | 1.51, 5.68, 9.27, 12.63 | 0.6% |
 
 By change (DL IP throughput of neighbours):
 
-| Change | cases | relative change %: median, p90, max | share moved > 10% |
+| Change | cases | relative change %: median, p90, p99, max | share moved > 10% |
 |---|---|---|---|
-| tilt +1 | 348 | 2.37, 8.6, 73.02 | 8.0% |
-| tilt -1 | 342 | 2.38, 8.12, 79.41 | 8.2% |
-| power +1 | 448 | 2.1, 7.65, 72.86 | 7.6% |
-| power -1 | 403 | 2.12, 7.88, 71.92 | 6.7% |
+| tilt +1 | 391 | 1.64, 5.41, 14.43, 18.69 | 2.0% |
+| tilt -1 | 361 | 1.61, 5.29, 14.63, 39.32 | 3.0% |
+| power +1 | 507 | 1.12, 4.39, 12.11, 39.42 | 1.8% |
+| power -1 | 454 | 1.22, 4.9, 10.32, 19.35 | 1.3% |
 
-## Why a neighbour can lose a quarter of its throughput
+## Why a neighbour loses throughput: the API smoke case
 
-`ENB0041_B3_1 tilt +1` (the API smoke test's change) hands 5 grid points (160 persons) to `ENB0031_B3_2`. They are edge points: median SINR -1.4 dB before and -2.8 dB after. The neighbour's subscribers go from 963 to 1091, its mean spectral efficiency from 1.426 to 1.319 bit/s/Hz and its edge share from 0.195 to 0.257. Capacity scales with spectral efficiency and demand with users, so the load rises on both counts: PRB use 26.8% to 31.7% on average, 50.4% to 61% at p95 and 78% to 95% at the busiest period. Per-user throughput is capacity times (1 - load) (rule M4, processor sharing), and the throughput KPI is volume over active time, so it is weighted to the busy periods where that term falls fastest: 16629 to 12342 kbit/s. The neighbour is not lightly loaded at its busy hour; it absorbs poor edge users at a load where each extra user costs the most.
+`ENB0041_B3_1 tilt +1` (the API smoke test's change) makes `ENB0031_B3_2` the best server at 5 grid points (160 persons, median SINR -1.4 dB before and -2.8 dB after); under rule M3 their users move in part, by the logistic split. The neighbour's subscribers go from 908 to 926, its mean spectral efficiency from 1.491 to 1.491 bit/s/Hz, its edge share from 0.172 to 0.152, and its PRB use 24.6% to 25% on average, 46% to 47% at p95 and 71% to 72% at the busiest period; its DL IP throughput goes from 18503 to 18292 kbit/s. With hard thresholds the same change took it from 963 to 1091 subscribers and from 16629 to 12342 kbit/s (PRB p95 50.4% to 61%). Per-user throughput is capacity times (1 - load) (rule M4, processor sharing) and the KPI is volume over active time, so it weighs the busy periods, where an added edge user costs the most.
 
-## Cross-layer jumps
+## Largest co-sited layer shift
 
-`ENB0238_B3_2 power -1` moves only 38 points to another best server inside its own layer, yet the co-sited `ENB0238_B28_2` goes from 1208 to 2330 subscribers (throughput 9318 to 3745 kbit/s). 1122 of the subscribers it gains come from 258 points where the co-sited layer's share went from 0.333 to 1 (median). At each grid point, users split over the LTE layers in proportion to bandwidth, and a layer takes a share only while its RSRP is at least -110 dBm and within 8 dB of the strongest layer (ASSUMPTION, rule M3). A point whose changed layer crosses that margin hands its whole share to the other layers at once: a step, with no spread of users' signal inside the 125 m point and no hysteresis.
+`ENB0238_B3_2 power -1` moves 38 points to another best server inside its own layer; the co-sited `ENB0238_B28_2` goes from 1524 to 1590 subscribers (throughput 5047 to 4798 kbit/s). The layer share moves 68 subscribers onto it, at 272 points where its share went from 0.454 to 0.493 (median). At each grid point, users split over the LTE layers in proportion to bandwidth, each layer weighted by logistics (scale 3 dB) in how far its RSRP sits inside the 8 dB margin of the strongest layer and above the -110 dBm floor; within a layer, users split between the best and second server by a logistic (scale 3 dB) in their level difference (rule M3, ASSUMPTION).
+
+## Before and after the soft assignment
+
+Before: the same report on the model with hard thresholds (one best server per point, a layer's share switched on or off at the margin and the floor), from `whatif_sensitivity_hard_thresholds.json`. After: this report (rule M3 soft assignment).
+
+| Figure | before: median, p90, p99, max | after: median, p90, p99, max |
+|---|---|---|
+| neighbour throughput, relative % | 2.2, 8.11, 28.48, 79.41 | 1.34, 5.03, 12.61, 39.42 |
+| co-sited layer subscribers, relative % | 2.94, 9.73, 93.4, 94.87 | 1.6, 3.77, 5.05, 6.31 |
+| changed cell subscribers, relative % | 10.26, 26.2, 100, 142.67 | 11.82, 21.03, 42.04, 70.83 |
+
+Neighbour cases moved by more than 10% in throughput: 7.6% before, 2.0% after.
 
 ## Finding
 
-Typical one-step effects are modest and plausible, and most neighbours move by a few percent. The long tail comes from hard assignments at the point level: best server and layer share both switch whole 125 m points at a threshold, so a change that tips a few dense points moves their users together, and the throughput KPI amplifies it on a neighbour that is busy at its peak. A smoother assignment (users of a point spread over servers and layers by the within-point signal spread) would shorten the tail (not tested here); it changes every generated counter, so it is a model change for its own decision, not made here.
+The tail shrank: neighbour throughput p99 28.48% to 12.61% (max 79.41% to 39.42%), co-sited layer subscribers p99 93.4% to 5.05% (max 94.87% to 6.31%). The medians move from 2.2% to 1.34% (neighbour throughput) and from 10.26% to 11.82% (the changed cell's subscribers).
 
 ## Cost
 
-Report run 759.9 s, peak resident set 669 MB.
+Report run 890.3 s, peak resident set 642 MB.
