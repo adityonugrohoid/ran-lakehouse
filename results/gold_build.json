@@ -1,0 +1,293 @@
+{
+  "profile": "demo",
+  "weeks": 12,
+  "revision": [
+    {
+      "kpi_id": "LTE_RRC_SSR",
+      "from_version": 1,
+      "to_version": 2,
+      "effective_day": "2026-03-02",
+      "detail": "history reprocessed from 2026-01-04 before the build reached UTC day 2026-03-01"
+    }
+  ],
+  "build": {
+    "utc_days_built": 84,
+    "dbt_runs": 96,
+    "dbt_runs_rerun_after_clock_step": 4,
+    "seconds_days": 1510.3,
+    "seconds_reprocess": 112.9,
+    "seconds_total": 1634.3
+  },
+  "peak_rss": {
+    "python_mb": 258,
+    "largest_dbt_run_mb": 1045
+  },
+  "rows": {
+    "cells": 1716,
+    "lte_cell_15m": 11592768,
+    "lte_cell_60m": 2898192,
+    "gsm_cell_15m": 2107776,
+    "lte_kpi_15m": 96295024,
+    "lte_kpi_hour": 27008131,
+    "lte_kpi_day": 1135092,
+    "lte_kpi_week": 162156,
+    "gsm_kpi_15m": 12646656,
+    "gsm_kpi_hour": 3166416,
+    "gsm_kpi_day": 133056,
+    "gsm_kpi_week": 19008,
+    "worst_cells_week": 1317,
+    "kpi_catalog": 17,
+    "loads": 174
+  },
+  "storage": {
+    "cells": {
+      "data_files": 88,
+      "bytes": 2577450
+    },
+    "lte_cell_15m": {
+      "data_files": 84,
+      "bytes": 333876427
+    },
+    "lte_cell_60m": {
+      "data_files": 86,
+      "bytes": 36104308
+    },
+    "gsm_cell_15m": {
+      "data_files": 86,
+      "bytes": 26133944
+    },
+    "lte_kpi_15m": {
+      "data_files": 140,
+      "bytes": 691850926
+    },
+    "lte_kpi_hour": {
+      "data_files": 140,
+      "bytes": 287281837
+    },
+    "lte_kpi_day": {
+      "data_files": 182,
+      "bytes": 34006680
+    },
+    "lte_kpi_week": {
+      "data_files": 110,
+      "bytes": 20082232
+    },
+    "gsm_kpi_15m": {
+      "data_files": 86,
+      "bytes": 50140150
+    },
+    "gsm_kpi_hour": {
+      "data_files": 86,
+      "bytes": 18383108
+    },
+    "gsm_kpi_day": {
+      "data_files": 168,
+      "bytes": 3583263
+    },
+    "gsm_kpi_week": {
+      "data_files": 95,
+      "bytes": 2219051
+    },
+    "worst_cells_week": {
+      "data_files": 121,
+      "bytes": 367294
+    },
+    "kpi_catalog": {
+      "data_files": 2,
+      "bytes": 13480
+    },
+    "loads": {
+      "data_files": 85,
+      "bytes": 97079
+    }
+  },
+  "coverage": {
+    "lte": {
+      "cell_days": 121968,
+      "below_full_coverage": 18876,
+      "with_suspect_values": 129
+    },
+    "gsm": {
+      "cell_days": 22176,
+      "below_full_coverage": 3432,
+      "with_suspect_values": 0
+    }
+  },
+  "worst_cells": {
+    "GSM_CSSR v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 75,
+      "most_in_a_week": 8
+    },
+    "GSM_HOSR v1": {
+      "weeks": 9,
+      "persistent_cell_weeks": 16,
+      "most_in_a_week": 3
+    },
+    "GSM_SAS v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 29,
+      "most_in_a_week": 3
+    },
+    "GSM_TCH_BLOCK v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 71,
+      "most_in_a_week": 7
+    },
+    "LTE_ERAB_ACC v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 230,
+      "most_in_a_week": 68
+    },
+    "LTE_ERAB_DROP v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 174,
+      "most_in_a_week": 29
+    },
+    "LTE_MOB_HOSR v1": {
+      "weeks": 9,
+      "persistent_cell_weeks": 14,
+      "most_in_a_week": 2
+    },
+    "LTE_PRB_UTIL v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 131,
+      "most_in_a_week": 12
+    },
+    "LTE_RRC_SSR v1": {
+      "weeks": 12,
+      "persistent_cell_weeks": 283,
+      "most_in_a_week": 81
+    },
+    "LTE_RRC_SSR v2": {
+      "weeks": 12,
+      "persistent_cell_weeks": 294,
+      "most_in_a_week": 84
+    }
+  },
+  "persistence": {
+    "n": 3,
+    "m": 7,
+    "min_coverage": 0.75
+  },
+  "network_days": {
+    "first": "2026-01-05",
+    "last": "2026-03-28",
+    "rrc_v1_mean": 98.54,
+    "rrc_v2_mean": 98.433
+  },
+  "model_check": {
+    "GSM_ABN_REL v1": {
+      "compared": 9372,
+      "agreeing": 9372,
+      "max_abs_diff": 1.78e-15,
+      "missing_in_gold": 0
+    },
+    "GSM_CSSR v1": {
+      "compared": 18744,
+      "agreeing": 18744,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "GSM_HOSR v1": {
+      "compared": 18744,
+      "agreeing": 18744,
+      "max_abs_diff": 1.42e-14,
+      "missing_in_gold": 0
+    },
+    "GSM_SAS v1": {
+      "compared": 18744,
+      "agreeing": 18744,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "GSM_SDCCH_BLOCK v1": {
+      "compared": 18744,
+      "agreeing": 18744,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "GSM_SDCCH_DROP v1": {
+      "compared": 9372,
+      "agreeing": 9372,
+      "max_abs_diff": 2.22e-16,
+      "missing_in_gold": 0
+    },
+    "GSM_TCH_BLOCK v1": {
+      "compared": 18744,
+      "agreeing": 18744,
+      "max_abs_diff": 8.88e-16,
+      "missing_in_gold": 0
+    },
+    "LTE_AVAIL v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 1.42e-14,
+      "missing_in_gold": 0
+    },
+    "LTE_CQI_MEAN v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "LTE_ERAB_ACC v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "LTE_ERAB_DROP v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 4.44e-16,
+      "missing_in_gold": 0
+    },
+    "LTE_ERAB_RET v1": {
+      "compared": 31896,
+      "agreeing": 31896,
+      "max_abs_diff": 8.88e-16,
+      "missing_in_gold": 0
+    },
+    "LTE_IP_THP_DL v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 2.28e-06,
+      "missing_in_gold": 0
+    },
+    "LTE_MOB_HOSR v1": {
+      "compared": 102496,
+      "agreeing": 102496,
+      "max_abs_diff": 1.42e-14,
+      "missing_in_gold": 0
+    },
+    "LTE_PRB_UTIL v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    },
+    "LTE_RRC_SSR v1": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 1.42e-14,
+      "missing_in_gold": 0
+    },
+    "LTE_RRC_SSR v2": {
+      "compared": 102852,
+      "agreeing": 102852,
+      "max_abs_diff": 0.0,
+      "missing_in_gold": 0
+    }
+  },
+  "model_check_tolerance": {
+    "relative": 1e-06,
+    "availability_pct": 0.556
+  },
+  "model_check_seconds": 95.5,
+  "model_check_wib_days": 83,
+  "figures": {
+    "faulted_cell": "one planted F1e fault lasting 84 h, two days either side",
+    "worst_cells": "LTE_RRC_SSR v2, week of 2026-01-19, top 10 persistent cells"
+  }
+}

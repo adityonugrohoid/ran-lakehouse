@@ -36,7 +36,16 @@ their own hour:
 uv run ranlake silver --warehouse demo
 ```
 
-The gold layer and the API land in the next pull requests.
+and gold: LTE and GSM KPIs per cell at 15 minutes, hour, day and week,
+each with its coverage and suspect share, plus the weekly worst cells,
+built by the dbt project in `transform/` one day at a time (formulas in
+`results/kpi_catalog.md`):
+
+```bash
+uv run ranlake gold --warehouse demo
+```
+
+The API lands in the next pull requests.
 
 ## License
 

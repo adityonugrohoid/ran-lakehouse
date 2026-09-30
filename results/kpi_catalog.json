@@ -1,0 +1,396 @@
+{
+  "kpis": [
+    {
+      "kpi_id": "LTE_ERAB_ACC",
+      "formula_version": 1,
+      "name": "E-RAB accessibility",
+      "technology": "LTE",
+      "formula": "100 * (RRC.ConnEstabSucc.sum / RRC.ConnEstabAtt.sum) * (S1SIG.ConnEstabSucc / S1SIG.ConnEstabAtt) * (ERAB.EstabInitSuccNbr.sum / ERAB.EstabInitAttNbr.sum)",
+      "source": "3GPP TS 32.450 V19.0.0 clause 6.1.1",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 92.0,
+      "effective_from": null,
+      "operators_differ": "Which RRC establishment causes count (mobile-originated only, or all including emergency and signalling), and whether the S1 term is included."
+    },
+    {
+      "kpi_id": "LTE_ERAB_RET",
+      "formula_version": 1,
+      "name": "E-RAB retainability (R2, UE level)",
+      "technology": "LTE",
+      "formula": "3600 * ERAB.RelActNbr.sum / ERAB.SessionTimeUE",
+      "source": "3GPP TS 32.450 V19.0.0 clause 6.2.1",
+      "unit": "releases per session hour",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": null,
+      "effective_from": null,
+      "operators_differ": "Per QCI (R1) or per UE (R2); many operators report a drop rate per established E-RAB instead (LTE_ERAB_DROP). The Huawei-style dictionary carries no session-time counter, so it is computed for Nokia-style cells only."
+    },
+    {
+      "kpi_id": "LTE_IP_THP_DL",
+      "formula_version": 1,
+      "name": "E-UTRAN IP throughput, downlink",
+      "technology": "LTE",
+      "formula": "1000 * DRB.IPVolDl.sum [kbit] / DRB.IPTimeDl.sum [ms]",
+      "source": "3GPP TS 32.450 V19.0.0 clause 6.3.1",
+      "unit": "kbit/s",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": null,
+      "effective_from": null,
+      "operators_differ": "Whether the last TTI emptying the buffer is excluded (TS 32.450 excludes it); many operators also report cell throughput over the whole period."
+    },
+    {
+      "kpi_id": "LTE_AVAIL",
+      "formula_version": 1,
+      "name": "E-UTRAN cell availability",
+      "technology": "LTE",
+      "formula": "100 * (900 * reported periods - RRU.CellUnavailableTime.sum) / (900 * reported periods)",
+      "source": "3GPP TS 32.450 V19.0.0 clause 6.4.1",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 99.0,
+      "effective_from": null,
+      "operators_differ": "Whether planned maintenance and energy-saving shutdowns count as unavailable. Nokia-style availability is sampled every 10 s (ASSUMPTION), so its unavailable time has 10 s resolution."
+    },
+    {
+      "kpi_id": "LTE_MOB_HOSR",
+      "formula_version": 1,
+      "name": "E-UTRAN mobility (handover success)",
+      "technology": "LTE",
+      "formula": "100 * sum over neighbour relations of HO.OutSuccTarget.sum / sum of HO.OutAttTarget.sum",
+      "source": "3GPP TS 32.450 V19.0.0 clause 6.5.1, execution phase: its HO.ExeSucc / HO.ExeAtt mapped to the TS 32.425 per-relation HO.OutSuccTarget / HO.OutAttTarget",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 97.0,
+      "effective_from": null,
+      "operators_differ": "Whether the preparation phase is included (TS 32.450 includes it; the model has no preparation counters) and whether inter-RAT handovers count."
+    },
+    {
+      "kpi_id": "LTE_RRC_SSR",
+      "formula_version": 1,
+      "name": "RRC setup success rate",
+      "technology": "LTE",
+      "formula": "100 * RRC.ConnEstabSucc.sum / RRC.ConnEstabAtt.sum",
+      "source": "operator-defined",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 95.0,
+      "effective_from": null,
+      "operators_differ": "Establishment causes counted; whether re-attempts within a few seconds count once; whether the S1 signalling connection must also succeed (v2)."
+    },
+    {
+      "kpi_id": "LTE_ERAB_DROP",
+      "formula_version": 1,
+      "name": "E-RAB drop rate",
+      "technology": "LTE",
+      "formula": "100 * ERAB.RelActNbr.sum / ERAB.EstabInitSuccNbr.sum",
+      "source": "operator-defined",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": 2.5,
+      "effective_from": null,
+      "operators_differ": "Which release causes count as drops (ERAB.RelActNbr counts abnormal releases with data in the buffer) and the denominator (established E-RABs, incoming handovers included or not)."
+    },
+    {
+      "kpi_id": "LTE_PRB_UTIL",
+      "formula_version": 1,
+      "name": "DL PRB utilization",
+      "technology": "LTE",
+      "formula": "sum of RRU.PrbTotDl [%] / reported periods",
+      "source": "operator-defined",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": 80.0,
+      "effective_from": null,
+      "operators_differ": "Mean over all periods or over the busy hour only; DL only or DL and UL."
+    },
+    {
+      "kpi_id": "LTE_CQI_MEAN",
+      "formula_version": 1,
+      "name": "Mean downlink wideband CQI",
+      "technology": "LTE",
+      "formula": "sum over bins i of i * CARR.WBCQIDist.Bin[i] / sum of CARR.WBCQIDist.Bin[i] (CQI index 0 to 15, TS 36.213 Table 7.2.3-1)",
+      "source": "operator-defined",
+      "unit": "CQI index",
+      "granularities": [
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": null,
+      "effective_from": null,
+      "operators_differ": "Mean index or share of samples at CQI 7 and above. Reported hourly (rules P1, P4), so it has no 15-minute value."
+    },
+    {
+      "kpi_id": "GSM_SAS",
+      "formula_version": 1,
+      "name": "GERAN service access success rate, CS",
+      "technology": "GSM",
+      "formula": "100 * (succTCHSeizures / attTCHSeizures) * (succImmediateAssingProcs / attImmediateAssingProcs)",
+      "source": "3GPP TS 32.410 V19.0.0 clause 7.4",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 96.5,
+      "effective_from": null,
+      "operators_differ": "TS 32.410 excludes SDCCH set-up repetitions; vendor counters often do not. attTCHSeizures here is the vendor TCH request count minus the requests that met all TCHs busy."
+    },
+    {
+      "kpi_id": "GSM_ABN_REL",
+      "formula_version": 1,
+      "name": "GERAN service abnormal release rate",
+      "technology": "GSM",
+      "formula": "100 * (nbrOfLostRadioLinksTCH + unsuccHDOsWithReconnection + unsuccHDOsWithLossOfConnection) / (succTCHSeizures + succIncomingInternalInterCellHDOs)",
+      "source": "3GPP TS 32.410 V19.0.0 clause 8.2, without the intra-cell handover terms (not modelled)",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei"
+      ],
+      "better": "lower",
+      "breach_threshold": null,
+      "effective_from": null,
+      "operators_differ": "Operators usually call a TCH drop rate their own formula; the Nokia-style dictionary carries no unsuccessful-handover counter, so it is computed for Huawei-style cells only."
+    },
+    {
+      "kpi_id": "GSM_HOSR",
+      "formula_version": 1,
+      "name": "Handover success rate (cell)",
+      "technology": "GSM",
+      "formula": "100 * succOutgoingInternalInterCellHDOs / attOutgoingInternalInterCellHDOs",
+      "source": "3GPP TS 32.410 V19.0.0 clause 9.5",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 94.5,
+      "effective_from": null,
+      "operators_differ": "Internal only or including external (inter-BSC) handovers."
+    },
+    {
+      "kpi_id": "GSM_CSSR",
+      "formula_version": 1,
+      "name": "Call setup success rate",
+      "technology": "GSM",
+      "formula": "100 * (1 - attSDCCHSeizuresMeetingSDCCHBlockedState / attImmediateAssingProcs) * succTCHSeizures / (attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState)",
+      "source": "operator-defined, vendor-style definition",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 96.0,
+      "effective_from": null,
+      "operators_differ": "The most varied GSM KPI: vendors and operators multiply different SDCCH, TCH assignment and drop terms."
+    },
+    {
+      "kpi_id": "GSM_TCH_BLOCK",
+      "formula_version": 1,
+      "name": "TCH blocking",
+      "technology": "GSM",
+      "formula": "100 * attTCHSeizuresMeetingTCHBlockedState / (attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState)",
+      "source": "operator-defined, vendor-style definition",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": 3.0,
+      "effective_from": null,
+      "operators_differ": "Denominator with or without the blocked requests; handover requests counted or not."
+    },
+    {
+      "kpi_id": "GSM_SDCCH_BLOCK",
+      "formula_version": 1,
+      "name": "SDCCH blocking",
+      "technology": "GSM",
+      "formula": "100 * attSDCCHSeizuresMeetingSDCCHBlockedState / attImmediateAssingProcs",
+      "source": "operator-defined, vendor-style definition",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": 1.0,
+      "effective_from": null,
+      "operators_differ": "Denominator: immediate assignment attempts or SDCCH seizure attempts."
+    },
+    {
+      "kpi_id": "GSM_SDCCH_DROP",
+      "formula_version": 1,
+      "name": "SDCCH drop rate",
+      "technology": "GSM",
+      "formula": "100 * nbrOfLostRadioLinksSDCCH / succImmediateAssingProcs",
+      "source": "operator-defined, vendor-style definition",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "nokia"
+      ],
+      "better": "lower",
+      "breach_threshold": null,
+      "effective_from": null,
+      "operators_differ": "Which SDCCH releases count as drops. The Huawei-style dictionary carries no SDCCH lost-radio-link counter, so it is computed for Nokia-style cells only."
+    },
+    {
+      "kpi_id": "LTE_RRC_SSR",
+      "formula_version": 2,
+      "name": "RRC setup success rate (with S1 signalling)",
+      "technology": "LTE",
+      "formula": "100 * (RRC.ConnEstabSucc.sum / RRC.ConnEstabAtt.sum) * (S1SIG.ConnEstabSucc / S1SIG.ConnEstabAtt)",
+      "source": "operator-defined",
+      "unit": "%",
+      "granularities": [
+        "15m",
+        "hour",
+        "day",
+        "week"
+      ],
+      "vendors": [
+        "huawei",
+        "nokia"
+      ],
+      "better": "higher",
+      "breach_threshold": 95.0,
+      "effective_from": "2026-03-02",
+      "operators_differ": "Revised by the operator: a set-up now counts only when the S1 signalling connection also succeeds. History is reprocessed; v1 and v2 are both kept."
+    }
+  ],
+  "persistence": {
+    "n": 3,
+    "m": 7
+  },
+  "min_coverage": 0.75
+}
