@@ -1,0 +1,295 @@
+{
+  "profile": "demo",
+  "scenarios": 20,
+  "solver_comparison": {
+    "backends": {
+      "highs": {
+        "total_s": 3.717,
+        "largest_s": 1.787,
+        "proven": 20,
+        "time_limit": 0
+      },
+      "cpsat": {
+        "total_s": 3.111,
+        "largest_s": 0.808,
+        "proven": 20,
+        "time_limit": 0
+      },
+      "scip": {
+        "total_s": 3.458,
+        "largest_s": 1.542,
+        "proven": 20,
+        "time_limit": 0
+      }
+    },
+    "agree": true,
+    "repeats": 3,
+    "time_limit_s": 60.0
+  },
+  "backend": "cpsat",
+  "counts": {
+    "easy / optimal": 5,
+    "hard / optimal": 5,
+    "infeasible / infeasible": 3,
+    "medium / optimal": 7
+  },
+  "infeasible_answers": {
+    "S18": [
+      {
+        "constraint": "must_cover",
+        "uncoverable_villages": []
+      },
+      {
+        "constraint": "max_sites",
+        "relax_to": 13
+      }
+    ],
+    "S19": [
+      {
+        "constraint": "min_persons_share",
+        "relax_to": 0.4951
+      }
+    ],
+    "S20": [
+      {
+        "constraint": "must_cover",
+        "uncoverable_villages": [
+          177,
+          199,
+          203
+        ]
+      }
+    ]
+  },
+  "worked": {
+    "scenario_id": "S15",
+    "difficulty": "hard",
+    "request": "East strip: grid power only within 2 km (solar otherwise), fiber within 4 km. All villages above 1,000 people plus village 91 get 2G; opex under 60 juta/bulan; minimize capex.",
+    "constraints": {
+      "schema_version": "1.0.0",
+      "area": {
+        "x_min_km": 50.0,
+        "x_max_km": 60.0,
+        "y_min_km": 0.0,
+        "y_max_km": 40.0
+      },
+      "objective": "min_capex",
+      "technology": "GSM",
+      "must_cover": {
+        "schools": false,
+        "min_persons": 1000,
+        "village_ids": [
+          91
+        ]
+      },
+      "max_sites": null,
+      "capex_budget_idr": null,
+      "monthly_opex_limit_idr": 60000000,
+      "power_rule": {
+        "grid_within_km": 2.0
+      },
+      "backhaul_rule": {
+        "fiber_within_km": 4.0,
+        "microwave_clearance": 0.6
+      },
+      "min_persons_share": null
+    },
+    "plan": {
+      "backend": "cpsat",
+      "status": "optimal",
+      "objective": 14476089570,
+      "sites": [
+        {
+          "site_id": "C01",
+          "backhaul": "satellite",
+          "hub": "",
+          "power": "solar"
+        },
+        {
+          "site_id": "C07",
+          "backhaul": "microwave",
+          "hub": "SITE0277",
+          "power": "solar"
+        },
+        {
+          "site_id": "C09",
+          "backhaul": "microwave",
+          "hub": "SITE0278",
+          "power": "solar"
+        },
+        {
+          "site_id": "C18",
+          "backhaul": "microwave",
+          "hub": "SITE0280",
+          "power": "solar"
+        },
+        {
+          "site_id": "C31",
+          "backhaul": "microwave",
+          "hub": "SITE0281",
+          "power": "solar"
+        }
+      ],
+      "villages_covered": [
+        85,
+        91,
+        93,
+        95,
+        97,
+        100,
+        109,
+        119,
+        121,
+        122,
+        123,
+        124,
+        127,
+        135,
+        137,
+        143,
+        149,
+        158,
+        159,
+        160,
+        165,
+        170,
+        177,
+        183,
+        186,
+        188,
+        203,
+        207,
+        208,
+        209,
+        213,
+        218,
+        228
+      ],
+      "persons_covered": 68846,
+      "capex_idr": 14476089570,
+      "monthly_idr": 40500000,
+      "constraints": [
+        {
+          "constraint": "must_cover",
+          "limit": 33,
+          "used": 33,
+          "binding": true,
+          "objective_gain_without_it": 14476089570
+        },
+        {
+          "constraint": "monthly_opex",
+          "limit": 60000000,
+          "used": 40500000,
+          "binding": true,
+          "objective_gain_without_it": 800000000
+        }
+      ],
+      "solve_seconds": 0.105
+    }
+  },
+  "cards": [
+    {
+      "scenario_id": "S01",
+      "area": "north",
+      "request": "Plan LTE for the northern half. Use at most 6 sites and cover as many people as possible."
+    },
+    {
+      "scenario_id": "S02",
+      "area": "south",
+      "request": "In the south, which 5 sites would reach the most villages with GSM?"
+    },
+    {
+      "scenario_id": "S03",
+      "area": "whole",
+      "request": "Find the cheapest set of sites that gives indoor 2G to every village with a school."
+    },
+    {
+      "scenario_id": "S04",
+      "area": "west",
+      "request": "West strip: cover at least 80% of the population with LTE at the lowest capital cost."
+    },
+    {
+      "scenario_id": "S05",
+      "area": "whole",
+      "request": "Where should 3 LTE sites go to reach the most people?"
+    },
+    {
+      "scenario_id": "S06",
+      "area": "east",
+      "request": "Tolong buat plan 4G untuk area timur, budget capex maksimal 15 miliar rupiah, target populasi sebanyak mungkin."
+    },
+    {
+      "scenario_id": "S07",
+      "area": "north-east",
+      "request": "North-east corner: both 2G and 4G, no more than 5 sites, most people covered, and opex must stay under 40 juta per month."
+    },
+    {
+      "scenario_id": "S08",
+      "area": "whole",
+      "request": "Every village above 3,000 people needs indoor LTE. Minimize capex, and use fiber only where the route is within 2 km."
+    },
+    {
+      "scenario_id": "S09",
+      "area": "south-west",
+      "request": "GSM for the south-west: villages 157 and 89 must be covered, then as many other people as possible with 3 sites."
+    },
+    {
+      "scenario_id": "S10",
+      "area": "central",
+      "request": "Central area LTE: at least 70% of people, microwave only where the full first Fresnel zone clears, lowest capex."
+    },
+    {
+      "scenario_id": "S11",
+      "area": "whole",
+      "request": "Semua desa dengan sekolah harus dapat 2G. Maksimal 14 site, sisanya maximize jumlah desa yang tercover."
+    },
+    {
+      "scenario_id": "S12",
+      "area": "west",
+      "request": "West strip, GSM: the cheapest plan that reaches 95% of the people."
+    },
+    {
+      "scenario_id": "S13",
+      "area": "whole",
+      "request": "2G for the whole area within 40 billion rupiah capex and 150 million a month opex. Every school village covered; maximize people."
+    },
+    {
+      "scenario_id": "S14",
+      "area": "north",
+      "request": "Northern half, both technologies, at least 90% of people, at most 12 sites, capex under 30 billion. Minimize capex."
+    },
+    {
+      "scenario_id": "S15",
+      "area": "east",
+      "request": "East strip: grid power only within 2 km (solar otherwise), fiber within 4 km. All villages above 1,000 people plus village 91 get 2G; opex under 60 juta/bulan; minimize capex."
+    },
+    {
+      "scenario_id": "S16",
+      "area": "whole",
+      "request": "Kita ada budget 45 miliar dan max 20 site. Target: 4G indoor untuk sebanyak mungkin orang, tapi desa di atas 3.000 jiwa wajib tercover."
+    },
+    {
+      "scenario_id": "S17",
+      "area": "south",
+      "request": "South half, both 2G and 4G: maximize villages covered with at most 8 sites, monthly cost under 80 million, and full Fresnel clearance for any microwave hop."
+    },
+    {
+      "scenario_id": "S18",
+      "area": "whole",
+      "request": "Cover every village with a school with 2G using only 5 sites."
+    },
+    {
+      "scenario_id": "S19",
+      "area": "north",
+      "request": "Utara: 4G untuk 99% penduduk dengan capex maksimal 10 miliar."
+    },
+    {
+      "scenario_id": "S20",
+      "area": "whole",
+      "request": "Every village with a school must get indoor 4G. Find the cheapest plan."
+    }
+  ],
+  "solves_rerun_after_clock_step": 1,
+  "timing_s": 66.5,
+  "peak_rss_mb": 772
+}

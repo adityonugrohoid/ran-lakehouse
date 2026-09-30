@@ -60,6 +60,16 @@ candidate sites, coverage, backhaul and power options) into gold:
 uv run ranlake planning --warehouse demo
 ```
 
+Write the scenario cards to gold, their exact optima to the
+evaluation-only table, and the solver report
+(`results/planning_scenarios.md`); then solve any constraint set that
+follows `contract/plan_constraints.schema.json`:
+
+```bash
+uv run python -m ran_lakehouse.planning.scenario_report --warehouse demo
+uv run ranlake plan --warehouse demo --constraints my_constraints.json
+```
+
 The API lands in the next pull requests.
 
 ## License
