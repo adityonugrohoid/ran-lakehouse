@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 # Breaking changes bump the major version (rule A1).
-CONTRACT_VERSION = "1.0.0"
+CONTRACT_VERSION = "1.1.0"
 VERSION_HEADER = "X-Contract-Version"
 CONTRACT_DIR = Path(__file__).resolve().parents[3] / "contract"
 OPENAPI_PATH = CONTRACT_DIR / "openapi.json"
@@ -20,19 +20,24 @@ PLAN_SCHEMA_PATH = CONTRACT_DIR / "plan_constraints.schema.json"
 
 
 def plan_schema() -> dict[str, Any]:
-    """The plan constraint schema, checked to carry the contract version.
+    """The plan constraint schema, checked against the contract version.
 
     Returns:
         The JSON Schema.
 
     Raises:
-        RuntimeError: If its version is not CONTRACT_VERSION.
+        RuntimeError: If its $id is not CONTRACT_VERSION or it accepts another major.
     """
     schema: dict[str, Any] = json.loads(PLAN_SCHEMA_PATH.read_text())
-    version = schema["properties"]["schema_version"]["const"]
-    if version != CONTRACT_VERSION or not schema["$id"].endswith(f"/{CONTRACT_VERSION}"):
+    major = CONTRACT_VERSION.split(".")[0]
+    pattern = schema["properties"]["schema_version"]["pattern"]
+    if (
+        not schema["$id"].endswith(f"/{CONTRACT_VERSION}")
+        or pattern != f"^{major}\\.[0-9]+\\.[0-9]+$"
+    ):
         raise RuntimeError(
-            f"{PLAN_SCHEMA_PATH.name} is version {version}, the contract is {CONTRACT_VERSION}"
+            f"{PLAN_SCHEMA_PATH.name} ($id {schema['$id']}, versions {pattern}) does not match "
+            f"contract {CONTRACT_VERSION}"
         )
     return schema
 

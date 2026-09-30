@@ -384,3 +384,42 @@ class WhatIfResult(Strict):
     changes: list[ChangeIn]
     cells: list[CellKpis]
     touched_cells_total: CellKpis
+
+
+class FileArrivals(Strict):
+    """Files one EMS delivered, of one kind."""
+
+    ems: str
+    kind: str
+    files: int
+    files_last_day: int = Field(description="Files in the day before the latest arrival")
+    not_loaded: int
+    latest_arrival: datetime
+
+
+class LayerRows(Strict):
+    """Rows of one lake table."""
+
+    layer: Literal["bronze", "silver", "gold"]
+    table: str
+    rows: int
+
+
+class DCase(Strict):
+    """A planted data-quality case (rule D) as the pipeline flagged it."""
+
+    rule: str
+    kind: str
+    count: int
+
+
+class Status(Strict):
+    """What the pipeline has taken in and what it flagged."""
+
+    clock: str
+    accelerated: bool | None
+    simulated_time: datetime | None
+    files: list[FileArrivals]
+    layers: list[LayerRows]
+    d_cases: list[DCase]
+    latest_quality_events: list[QualityEvent]

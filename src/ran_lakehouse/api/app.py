@@ -22,12 +22,12 @@ import duckdb
 import jsonschema
 from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ran_lakehouse.api import models as m
-from ran_lakehouse.api import queries
+from ran_lakehouse.api import queries, status_page
 from ran_lakehouse.api.contract import CONTRACT_VERSION, VERSION_HEADER, plan_schema
 from ran_lakehouse.api.whatif import WhatIfEngine
 from ran_lakehouse.lake.lineage import lineage
@@ -272,6 +272,32 @@ def definition(s: Services, kpi_id: str, version: int, granularity: str) -> dict
 Granularity = Literal["15m", "hour", "day", "week"]
 
 
+def pipeline_status(s: Services) -> m.Status:
+    """The status record: the clock, files, rows, flagged D cases and events.
+
+    Args:
+        s: Services.
+
+    Returns:
+        The record.
+    """
+    clock, accelerated, simulated = status_page.NO_LIVE_RUN, None, None
+    if s.status_path.exists():
+        run = json.loads(s.status_path.read_text())
+        clock, accelerated = run["clock"], run["accelerated"]
+        simulated = datetime.fromisoformat(run["simulated_time"])
+    found = queries.status(s.cursor())
+    return m.Status(
+        clock=clock,
+        accelerated=accelerated,
+        simulated_time=simulated,
+        files=[m.FileArrivals(**f) for f in found["files"]],
+        layers=[m.LayerRows(**x) for x in found["layers"]],
+        d_cases=[m.DCase(**d) for d in found["d_cases"]],
+        latest_quality_events=[m.QualityEvent(**e) for e in found["latest_quality_events"]],
+    )
+
+
 def build_router() -> APIRouter:
     """The v1 routes.
 
@@ -294,6 +320,10 @@ def build_router() -> APIRouter:
                 what_if_week_start=s.whatif.week_start,
             )
         )
+
+    @r.get("/status", summary="Pipeline status: files, rows per layer, flagged D cases, clock")
+    def status(request: Request) -> m.Envelope[m.Status]:
+        return envelope(pipeline_status(services(request)))
 
     @r.get("/topology", summary="Sites, their cells and the configured neighbour relations")
     def topology(request: Request) -> m.Envelope[m.Topology]:
@@ -538,6 +568,15 @@ def create_app() -> FastAPI:
         ),
     )
     app.include_router(build_router())
+
+    @app.get(
+        "/status",
+        response_class=HTMLResponse,
+        summary="Pipeline status page (HTML of /v1/status)",
+        responses=ERRORS,
+    )
+    def status_html(request: Request) -> HTMLResponse:
+        return HTMLResponse(status_page.render(pipeline_status(services(request))))
 
     @app.middleware("http")
     async def version_header(

@@ -5,7 +5,7 @@ Every query names its tables through the catalog "lk" and never the
 evaluation schema (rule A3); a test walks every route to prove it.
 """
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any
 
 import duckdb
@@ -374,3 +374,80 @@ def planning_table(con: duckdb.DuckDBPyConnection, name: str) -> list[dict[str, 
     if name not in keys:
         raise ValueError(f"no planning table {name}")
     return rows(con, f"SELECT * FROM lk.gold.{name} ORDER BY {keys[name]}", {})
+
+
+STATUS_EVENTS = 20  # quality events shown on the status page (START)
+# Row counts shown on the status page, per layer.
+LAYER_TABLES = (
+    ("bronze", "file_arrivals"),
+    ("bronze", "pm_values"),
+    ("bronze", "cm_records"),
+    ("bronze", "fm_records"),
+    ("silver", "pm_measurements"),
+    ("silver", "pm_files"),
+    ("silver", "pm_gaps"),
+    ("gold", "lte_kpi_15m"),
+    ("gold", "lte_kpi_day"),
+    ("gold", "gsm_kpi_15m"),
+    ("gold", "gsm_kpi_day"),
+    ("gold", "worst_cells_week"),
+)
+
+FILES_SQL = """
+WITH latest AS (SELECT max(arrival_time) AS t FROM lk.bronze.file_arrivals)
+SELECT ems, kind, count(*) AS files,
+    count(*) FILTER (WHERE arrival_time > latest.t - INTERVAL 1 DAY) AS files_last_day,
+    count(*) FILTER (WHERE NOT loaded) AS not_loaded,
+    max(arrival_time) AS latest_arrival
+FROM lk.bronze.file_arrivals, latest
+GROUP BY ems, kind
+ORDER BY ems, kind
+"""
+
+# The planted data-quality cases (rule D) as the pipeline flagged them:
+# what silver and gold recorded, by kind and count only.
+D_CASES_SQL = """
+SELECT 'D1' AS rule, 'late files' AS kind, count(*) AS count FROM lk.silver.pm_files WHERE late
+UNION ALL SELECT 'D1', 'late rows merged', coalesce(sum(late_rows), 0) FROM lk.silver.loads
+UNION ALL SELECT 'D2', 'files delivered twice, same content', count(*)
+    FROM lk.silver.pm_files WHERE deliveries > 1 AND versions = 1
+UNION ALL SELECT 'D2', 'files redelivered with changed content', count(*)
+    FROM lk.silver.pm_files WHERE versions > 1
+UNION ALL SELECT 'D2', 'conflicting rows flagged', coalesce(sum(conflict_rows), 0)
+    FROM lk.silver.loads
+UNION ALL SELECT 'D3', 'missing periods per element', count(*) FROM lk.silver.pm_gaps
+UNION ALL SELECT 'D4', 'suspect rows carried', coalesce(sum(suspect_rows), 0) FROM lk.silver.loads
+UNION ALL SELECT 'D5', 'counters mapped across a rename', count(*) FROM (
+    SELECT vendor, measurement, bin FROM lk.silver.counter_map
+    GROUP BY ALL HAVING count(DISTINCT vendor_counter) > 1)
+UNION ALL SELECT 'D6', 'KPIs with more than one formula version', count(*) FROM (
+    SELECT kpi_id FROM lk.gold.kpi_catalog GROUP BY kpi_id HAVING count(*) > 1)
+"""
+
+
+def status(con: duckdb.DuckDBPyConnection) -> dict[str, Any]:
+    """What the pipeline has taken in and what it flagged.
+
+    Args:
+        con: DuckDB with the lake as "lk".
+
+    Returns:
+        Files per EMS and kind, rows per layer table, the flagged D cases
+        and the latest day's quality events.
+    """
+    layers = [
+        {
+            "layer": schema,
+            "table": table,
+            "rows": con.execute(f"SELECT count(*) FROM lk.{schema}.{table}").fetchone()[0],  # type: ignore[index]
+        }
+        for schema, table in LAYER_TABLES
+    ]
+    end = con.execute("SELECT max(period_end) FROM lk.silver.pm_files").fetchone()[0]  # type: ignore[index]
+    events = [] if end is None else quality_events(con, end - timedelta(days=1), end)
+    return {
+        "files": rows(con, FILES_SQL, {}),
+        "layers": layers,
+        "d_cases": rows(con, D_CASES_SQL, {}),
+        "latest_quality_events": events[-STATUS_EVENTS:],
+    }
