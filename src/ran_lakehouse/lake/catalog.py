@@ -40,9 +40,15 @@ S3_FALLBACK = {
 COMMIT_RETRY_WAIT_S = 2.0  # ASSUMPTION
 COMMIT_ATTEMPTS = 5  # ASSUMPTION
 COMMIT_CONFLICT = "CatalogCommitConflicts"
+# A read the object store refuses with a vended credential it does not
+# (yet) know: seen once on the build machine, gone a minute later. One
+# retry after a short wait, then fail loudly (ASSUMPTION for the wait).
+VENDED_KEY_REJECTED = "InvalidAccessKeyId"
+READ_RETRY_WAIT_S = 2.0
 
 logger = logging.getLogger(__name__)
 commit_retries = {"count": 0}
+read_retries = {"count": 0}
 
 
 def management(method: str, path: str, body: dict[str, Any] | None) -> Any:
@@ -164,6 +170,41 @@ def pyiceberg(warehouse: str) -> Any:
     return load_catalog(
         CATALOG_ALIAS, type="rest", uri=f"{CATALOG_URL}/catalog", warehouse=warehouse
     )
+
+
+def read(
+    con: duckdb.DuckDBPyConnection, sql: str, params: dict[str, Any] | list[Any]
+) -> duckdb.DuckDBPyConnection:
+    """Run one reading statement, retrying once if a vended key is refused.
+
+    The retry goes to the same local store with credentials vended again
+    for the new statement; there is no fallback endpoint.
+
+    Args:
+        con: DuckDB with the lake attached.
+        sql: Query.
+        params: Its parameters.
+
+    Returns:
+        The connection with the result ready to fetch.
+
+    Raises:
+        duckdb.HTTPException: If the store refuses the key twice, or for any
+            other HTTP error.
+    """
+    try:
+        return con.execute(sql, params)
+    except duckdb.HTTPException as exc:
+        if VENDED_KEY_REJECTED not in str(exc):
+            raise
+        read_retries["count"] += 1
+        logger.warning(
+            "lake read refused a vended key; retrying once in %.1f s: %s",
+            READ_RETRY_WAIT_S,
+            str(exc).splitlines()[0],
+        )
+        time.sleep(READ_RETRY_WAIT_S)
+    return con.execute(sql, params)
 
 
 def write(con: duckdb.DuckDBPyConnection, sql: str) -> None:

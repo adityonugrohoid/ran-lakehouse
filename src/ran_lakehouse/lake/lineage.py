@@ -16,6 +16,7 @@ from typing import Any
 
 import duckdb
 
+from ran_lakehouse.lake.catalog import read
 from ran_lakehouse.lake.kpi_catalog import HOURLY_ONLY, INPUTS
 
 WIB = timedelta(hours=7)  # rule W5
@@ -123,7 +124,8 @@ def lineage(
         granularity=granularity,
         period_column=PERIOD_COLUMN[granularity],
     )
-    result = con.execute(
+    result = read(
+        con,
         sql,
         {
             "cell": cell,

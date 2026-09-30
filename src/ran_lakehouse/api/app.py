@@ -30,6 +30,7 @@ from ran_lakehouse.api import models as m
 from ran_lakehouse.api import queries, status_page
 from ran_lakehouse.api.contract import CONTRACT_VERSION, VERSION_HEADER, plan_schema
 from ran_lakehouse.api.whatif import WhatIfEngine
+from ran_lakehouse.lake.catalog import read
 from ran_lakehouse.lake.lineage import lineage
 from ran_lakehouse.planning.solver import BACKEND, PlanningData, solve_plan
 
@@ -91,7 +92,7 @@ class Services:
             The services.
         """
         tables = {
-            name: con.execute(f"SELECT * FROM lk.gold.{name}").to_arrow_table()
+            name: read(con, f"SELECT * FROM lk.gold.{name}", {}).to_arrow_table()
             for name in PLANNING_TABLES
         }
         return cls(
