@@ -2394,6 +2394,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pyiceberg", extra = ["pyarrow"] },
+    { name = "pytz" },
 ]
 
 [package.dev-dependencies]
@@ -2415,6 +2416,7 @@ requires-dist = [
     { name = "matplotlib", specifier = "==3.11.2" },
     { name = "numpy", specifier = "==2.5.3" },
     { name = "pyiceberg", extras = ["pyarrow"], specifier = "==0.12.0" },
+    { name = "pytz", specifier = "==2026.4" },
 ]
 
 [package.metadata.requires-dev]
