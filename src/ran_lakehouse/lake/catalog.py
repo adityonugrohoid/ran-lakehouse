@@ -27,6 +27,14 @@ CATALOG_ALIAS = "lk"
 DUCKDB_MEMORY_LIMIT = "1GB"
 # DuckDB spills past its memory limit here (rule 6: generated data in data/).
 SPILL_DIR = Path(__file__).resolve().parents[3] / "data" / "duckdb-spill"
+# Default S3 settings for requests made without vended credentials: the
+# local SeaweedFS, never the public endpoint (rule S3, local stack only).
+S3_FALLBACK = {
+    "s3_endpoint": "localhost:8333",
+    "s3_url_style": "path",
+    "s3_use_ssl": "false",
+    "s3_region": "local-01",
+}
 # Commit conflicts from a wall-clock step (see write()): wait longer than the
 # steps seen on the build machine (about 1.5 s, WSL2 time sync), bounded.
 COMMIT_RETRY_WAIT_S = 2.0  # ASSUMPTION
@@ -103,6 +111,20 @@ def ensure_warehouse(name: str) -> None:
     )
 
 
+def use_local_s3(con: duckdb.DuckDBPyConnection) -> None:
+    """Point DuckDB's default S3 settings at the local store.
+
+    Without vended credentials (a loadTable that returned none), DuckDB would
+    send the request to the public AWS S3 endpoint; with these settings it
+    goes to the local SeaweedFS and fails there, loudly.
+
+    Args:
+        con: DuckDB connection (httpfs is loaded on first use).
+    """
+    for name, value in S3_FALLBACK.items():
+        con.execute(f"SET {name} = '{value}'")
+
+
 def connect(warehouse: str) -> duckdb.DuckDBPyConnection:
     """DuckDB with the warehouse attached as catalog "lk".
 
@@ -120,6 +142,7 @@ def connect(warehouse: str) -> duckdb.DuckDBPyConnection:
     # Keep a laptop-scale run well inside memory (ASSUMPTION: 1 GB for DuckDB).
     con.execute(f"SET memory_limit = '{DUCKDB_MEMORY_LIMIT}'")
     con.execute(f"SET temp_directory = '{SPILL_DIR}'")
+    use_local_s3(con)
     # Bronze and silver rows carry their own keys; insertion order is not kept.
     con.execute("SET preserve_insertion_order = false")
     con.execute(
