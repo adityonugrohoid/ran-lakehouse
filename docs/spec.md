@@ -78,9 +78,20 @@ measured scale test, rule E1).
   sector antenna pattern (horizontal and vertical, cite the 3GPP TR used).
   No terrain in the served region (stated). Best server and signal
   quality per grid cell from received power and interference.
-- M3 Load: users from the population layer (rule W4) assigned to their
-  best server, times a diurnal and weekly profile (ASSUMPTION shape,
-  checked against the real data, rule E2), plus noise.
+- M3 Load: users from the population layer (rule W4) spread over the
+  servers at their grid point, times a diurnal and weekly profile
+  (ASSUMPTION shape, checked against the real data, rule E2), plus noise.
+  The spread uses soft thresholds, not hard ones (ASSUMPTION: users'
+  signal varies inside a grid point, so a small change moves users
+  gradually):
+  - across LTE layers, users split in proportion to bandwidth, each layer
+    weighted by a logistic in how far its RSRP sits inside the margin of
+    the point's strongest layer (START 8 dB) and above the layer floor
+    (START -110 dBm);
+  - within a layer (LTE and GSM), users split between the best and the
+    second server by a logistic in their difference in signal level plus
+    cell individual offset;
+  - both logistics have a START scale of 3 dB.
 - M4 LTE counters derived from load and signal quality: PRB use, IP
   throughput falling with load and poor quality, RRC and E-RAB success
   falling with congestion and interference, drops rising at weak edges and
