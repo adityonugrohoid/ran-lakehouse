@@ -55,6 +55,20 @@ def build_parser() -> argparse.ArgumentParser:
         "gold", help="build gold KPIs from silver through dbt, one UTC day at a time"
     )
     build_gold.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    trace = commands.add_parser(
+        "lineage",
+        help="trace one gold KPI value to its silver rows, bronze rows and source files",
+    )
+    trace.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    trace.add_argument("--kpi", required=True, help="KPI id, for example LTE_ERAB_DROP")
+    trace.add_argument("--version", type=int, required=True, help="formula version")
+    trace.add_argument("--cell", required=True, help="cell name")
+    trace.add_argument("--granularity", required=True, choices=["15m", "hour", "day", "week"])
+    trace.add_argument(
+        "--period",
+        required=True,
+        help="UTC start (ISO, with offset) for 15m and hour; WIB date for day and week",
+    )
     return parser
 
 
@@ -102,6 +116,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         silver.create_tables(con, True)
         load_id = f"silver-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
         print(json.dumps(silver.SilverBuild(con, load_id, silver.GRACE).run(None), indent=2))
+        return 0
+    if args.command == "lineage":
+        from datetime import date, datetime
+
+        from ran_lakehouse.lake.catalog import connect
+        from ran_lakehouse.lake.lineage import lineage
+
+        if args.granularity in ("15m", "hour"):
+            period: date | datetime = datetime.fromisoformat(args.period)
+        else:
+            period = date.fromisoformat(args.period)
+        rows = lineage(
+            connect(args.warehouse), args.kpi, args.version, args.cell, args.granularity, period
+        )
+        if not rows:
+            raise SystemExit("no such gold KPI value")
+        print(json.dumps(rows, indent=2, default=str))
         return 0
     if args.command == "gold":
         from datetime import UTC, datetime

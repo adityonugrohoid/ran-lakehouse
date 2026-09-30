@@ -1,0 +1,134 @@
+{
+  "time_travel": {
+    "profile": "tiny",
+    "late_file": {
+      "ems": "EMS-HW-01",
+      "period_start": "2026-02-13T23:45:00+00:00",
+      "arrival": "2026-02-14T03:52:00+00:00",
+      "detail": "delay_min=232"
+    },
+    "cell": "ENB0001_B3_1",
+    "kpi": "LTE_RRC_SSR v1",
+    "hour": "2026-02-13T23:00:00+00:00",
+    "published_at": "2026-09-30T06:42:39.909656+00:00",
+    "as_of_publication": {
+      "value": 99.6309963099631,
+      "coverage": 0.75,
+      "periods_reported": 3
+    },
+    "now": {
+      "value": 99.73190348525469,
+      "coverage": 1.0,
+      "periods_reported": 4
+    },
+    "snapshots_of_lte_kpi_hour": 9
+  },
+  "lineage": [
+    {
+      "kpi": "LTE_ERAB_DROP v1",
+      "cell": "ENB0001_B3_1",
+      "granularity": "day",
+      "period": "2026-02-10",
+      "kpi_value": 0.45341733486063385,
+      "coverage": 1.0,
+      "silver_rows": 192,
+      "bronze_rows": 192,
+      "files": 96,
+      "dictionary_releases": [
+        "HW-R1"
+      ],
+      "vendor_counters": [
+        "L.E-RAB.AbnormRel",
+        "L.E-RAB.SuccEst"
+      ],
+      "flags": {
+        "derived": 0,
+        "suspect": 0,
+        "late": 0,
+        "conflict": 0
+      },
+      "first_row": {
+        "measurement": "ERAB.EstabInitSuccNbr.sum",
+        "silver_value": "227.0",
+        "dictionary_release": "HW-R1",
+        "bronze_counter": "L.E-RAB.SuccEst",
+        "bronze_value": "227.0",
+        "managed_element": "ManagedElement=ENB0001",
+        "file_name": "B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz",
+        "arrival_time": "2026-02-09 17:17:16.270532+00:00"
+      }
+    },
+    {
+      "kpi": "GSM_TCH_BLOCK v1",
+      "cell": "BTS0001_G900_1",
+      "granularity": "day",
+      "period": "2026-02-10",
+      "kpi_value": 1.1443518064410658,
+      "coverage": 1.0,
+      "silver_rows": 192,
+      "bronze_rows": 192,
+      "files": 96,
+      "dictionary_releases": [
+        "HW-R1"
+      ],
+      "vendor_counters": [
+        "K3010A",
+        "K3011A"
+      ],
+      "flags": {
+        "derived": 0,
+        "suspect": 0,
+        "late": 0,
+        "conflict": 0
+      },
+      "first_row": {
+        "measurement": "attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState",
+        "silver_value": "47.0",
+        "dictionary_release": "HW-R1",
+        "bronze_counter": "K3010A",
+        "bronze_value": "47.0",
+        "managed_element": "ManagedElement=BSC01",
+        "file_name": "B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz",
+        "arrival_time": "2026-02-09 17:17:16.270532+00:00"
+      }
+    },
+    {
+      "kpi": "LTE_PRB_UTIL v1",
+      "cell": "ENB0001_B3_1",
+      "granularity": "15m",
+      "period": "2026-02-10T04:00:00+00:00",
+      "kpi_value": 23.0,
+      "coverage": 1.0,
+      "silver_rows": 1,
+      "bronze_rows": 2,
+      "files": 1,
+      "dictionary_releases": [
+        "HW-R1"
+      ],
+      "vendor_counters": [
+        "L.ChMeas.PRB.DL.Avail",
+        "L.ChMeas.PRB.DL.Used.Avg"
+      ],
+      "flags": {
+        "derived": 2,
+        "suspect": 0,
+        "late": 0,
+        "conflict": 0
+      },
+      "first_row": {
+        "measurement": "RRU.PrbTotDl",
+        "silver_value": "23.0",
+        "dictionary_release": "HW-R1",
+        "bronze_counter": "L.ChMeas.PRB.DL.Avail",
+        "bronze_value": "100.0",
+        "managed_element": "ManagedElement=ENB0001",
+        "file_name": "B20260210.1100+0700-1115+0700_EMS-HW-01.xml.gz",
+        "arrival_time": "2026-02-10 04:20:30.334709+00:00"
+      }
+    }
+  ],
+  "timing_s": {
+    "time travel staging": 74.5,
+    "lineage walks": 9.4
+  }
+}

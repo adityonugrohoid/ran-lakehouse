@@ -7,7 +7,7 @@ with the planted formula revision inside the week.
 
 from collections.abc import Iterator
 from dataclasses import replace
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +20,7 @@ from ran_lakehouse.faults.plant import plan_faults
 from ran_lakehouse.lake import bronze, gold, kpi_catalog, silver
 from ran_lakehouse.lake.gold import GoldBuild, Revision, Target
 from ran_lakehouse.lake.gold_check import compare
+from ran_lakehouse.lake.lineage import lineage
 from ran_lakehouse.model import RUN_START, NetworkModel, default_model
 from ran_lakehouse.world import build_world
 
@@ -266,3 +267,73 @@ def test_cells_carry_the_resource_blocks_of_their_bandwidth(
     ):
         expected = int(n_rb) if technology == "LTE" else None
         assert stored[cell.cell_name] == expected, cell.cell_name
+
+
+def factors() -> dict[tuple[str, str], float]:
+    table = silver.counter_map().to_pylist()
+    return {(r["release"], r["vendor_counter"]): r["factor"] for r in table}
+
+
+@pytest.mark.parametrize(
+    ("kpi_id", "vendor", "technology", "granularity"),
+    [
+        ("LTE_ERAB_DROP", "huawei", "LTE", "hour"),
+        ("LTE_ERAB_DROP", "nokia", "LTE", "day"),
+        ("GSM_TCH_BLOCK", "huawei", "GSM", "day"),
+    ],
+)
+def test_lineage_walks_a_value_back_to_its_files(
+    con: duckdb.DuckDBPyConnection,
+    tiny: NetworkModel,
+    kpi_id: str,
+    vendor: str,
+    technology: str,
+    granularity: str,
+) -> None:
+    cell = next(
+        c.cell_name
+        for c, v, t in zip(tiny.world.cells, tiny.state.vendor, tiny.state.technology, strict=True)
+        if v == vendor and t == technology
+    )
+    day = RUN_START.date() + timedelta(days=FIRST_DAY + 1)
+    period = datetime(day.year, day.month, day.day, 4, tzinfo=UTC) if granularity == "hour" else day
+    found = lineage(con, kpi_id, 1, cell, granularity, period)
+    assert found
+    assert all(r["file_name"] and r["arrival_time"] for r in found)
+    assert all(r["bronze_value"] is not None for r in found if r["silver_value"] is not None)
+    factor = factors()
+    for r in found:
+        if r["silver_value"] is not None and not r["derived"]:
+            expected = r["bronze_value"] * factor[(r["dictionary_release"], r["bronze_counter"])]
+            assert r["silver_value"] == pytest.approx(expected)
+    totals: dict[str, float] = {}
+    for r in found:
+        totals[r["measurement"]] = totals.get(r["measurement"], 0.0) + (r["silver_value"] or 0.0)
+    if kpi_id == "LTE_ERAB_DROP":
+        value = 100 * totals["ERAB.RelActNbr.sum"] / totals["ERAB.EstabInitSuccNbr.sum"]
+    else:
+        value = (
+            100
+            * totals["attTCHSeizuresMeetingTCHBlockedState"]
+            / totals["attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState"]
+        )
+    assert value == pytest.approx(found[0]["kpi_value"])
+
+
+def test_lineage_follows_a_derived_value_to_both_counters(
+    con: duckdb.DuckDBPyConnection, tiny: NetworkModel
+) -> None:
+    cell = next(
+        c.cell_name
+        for c, v, t in zip(tiny.world.cells, tiny.state.vendor, tiny.state.technology, strict=True)
+        if v == "huawei" and t == "LTE"
+    )
+    day = RUN_START.date() + timedelta(days=FIRST_DAY + 1)
+    found = lineage(
+        con, "LTE_PRB_UTIL", 1, cell, "15m", datetime(day.year, day.month, day.day, 4, tzinfo=UTC)
+    )
+    assert {r["bronze_counter"] for r in found} == {
+        "L.ChMeas.PRB.DL.Used.Avg",
+        "L.ChMeas.PRB.DL.Avail",
+    }
+    assert all(r["derived"] for r in found)
