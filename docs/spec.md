@@ -265,10 +265,13 @@ the property breaks:
 - G3 Villages: id, x_km, y_km, population, schools, the served network's
   outdoor level per technology, covered_today_lte and covered_today_gsm.
   Service coverage is indoor: the outdoor level clears the threshold plus
-  an indoor margin (START 10 dB at 900 MHz, ASSUMPTION; ITU-R P.2109-2
-  (08/2023) for context).
+  the median building entry loss of ITU-R P.2109-2 (08/2023) Annex 1
+  clause 3 at 0.9 GHz for traditional buildings (about 14.2 dB); village
+  housing is modelled as the traditional class (ASSUMPTION).
 - G4 Candidate sites: id, x_km, y_km, elevation, build cost, grid
-  distance, fiber distance. Costs in IDR, ASSUMPTION, stated.
+  distance, fiber distance. Costs in IDR, ASSUMPTION, stated. Candidates
+  are each village's highest local hilltop within START 3 km, kept START
+  1.5 km apart, up to START 60 by persons nearby.
 - G5 Coverage: Hata (rule M) for the 900 MHz rural layers (LTE B8, GSM
   900; START 30 m masts) plus Bullington diffraction on the terrain
   profile, ITU-R P.526-16 (11/2025) Annex 1 clause 4.5.1 eqs (49) to (57)

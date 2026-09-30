@@ -51,13 +51,17 @@ MICROWAVE_GHZ = 8.0
 FRESNEL_CLEARANCE = 0.6  # used for the options (START, CLEARANCE_SOURCE)
 FULL_CLEARANCE = 1.0  # P.530-19 clause 2.2.2.1 step 1, reported beside it
 # Service coverage is indoor: the outdoor level must clear the threshold by
-# this building entry margin (START, ASSUMPTION). For context, ITU-R
-# P.2109-2 (08/2023) Annex 1 clause 3, eqs (1) to (10) and Table 1, give a
-# median building entry loss at 0.9 GHz and horizontal incidence of about
-# 14.2 dB for traditional and 31.2 dB for thermally-efficient buildings
-# (P2109_MEDIAN_DB, computed from the Recommendation).
-INDOOR_MARGIN_DB = 10.0
+# the median building entry loss of ITU-R P.2109-2 (08/2023) Annex 1
+# clause 3 (eqs (1) to (10), Table 1) at 0.9 GHz and horizontal incidence,
+# P = 50%: about 14.2 dB for traditional and 31.2 dB for thermally-efficient
+# buildings (computed from the Recommendation; they match its Fig. 1).
+# Village housing is modelled as the traditional class (ASSUMPTION).
 P2109_MEDIAN_DB = {"traditional": 14.2, "thermally-efficient": 31.2}
+INDOOR_MARGIN_DB = P2109_MEDIAN_DB["traditional"]
+INDOOR_MARGIN_SOURCE = (
+    "ITU-R P.2109-2 (08/2023) Annex 1 clause 3, median building entry loss at 0.9 GHz, "
+    "horizontal incidence, traditional buildings (village housing, ASSUMPTION)"
+)
 THRESHOLD_CONTEXT = (
     "3GPP sets no planning threshold: TS 36.133 V19.5.0 clause 9.1.4 gives the RSRP reporting "
     "range (-156 to -44 dBm); TS 45.005 V19.0.0 clause 6.2 the GSM 900 reference sensitivity "

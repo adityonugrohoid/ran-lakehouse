@@ -23,14 +23,15 @@ LINE_SEGMENT_KM = 1.0
 LINE_TURN_SD_DEG = 15.0
 GRID_LINE_KM = 14.0  # power grid reach into the expansion area (START)
 FIBER_ROUTE_KM = 9.0  # fiber reach (START)
-# Candidate sites (START): a node is a local high point when it is the
-# highest within HIGH_POINT_RADIUS_KM; a candidate needs a village within
-# NEAR_VILLAGE_KM, candidates keep MIN_SPACING_KM apart, and they are taken
-# greedily by the persons in villages within SCORE_RADIUS_KM.
+# Candidate sites (START): a hilltop is a node that is the highest within
+# HIGH_POINT_RADIUS_KM. Each village proposes its highest hilltop within
+# NEAR_VILLAGE_KM; proposals keep MIN_SPACING_KM apart (higher first), so
+# candidates cluster where villages do and leave gaps elsewhere. At most
+# CANDIDATES are kept, by the persons in villages within SCORE_RADIUS_KM.
 CANDIDATES = 60
 HIGH_POINT_RADIUS_KM = 0.5
 NEAR_VILLAGE_KM = 3.0
-MIN_SPACING_KM = 2.0
+MIN_SPACING_KM = 1.5
 SCORE_RADIUS_KM = 5.0
 # Build cost, IDR (ASSUMPTION): tower, civil works and radio equipment, plus
 # an access road per km from the nearest village.
@@ -169,7 +170,7 @@ def distance_to_line(x_km: np.ndarray, y_km: np.ndarray, line: np.ndarray) -> np
 
 
 def high_points(terrain: Terrain) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Nodes that are the highest within HIGH_POINT_RADIUS_KM.
+    """Nodes that are the highest within HIGH_POINT_RADIUS_KM, away from the edges.
 
     Args:
         terrain: The terrain.
@@ -181,7 +182,12 @@ def high_points(terrain: Terrain) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     h = terrain.heights_m
     padded = np.pad(h, r, mode="edge")
     window_max = sliding_window_view(padded, (2 * r + 1, 2 * r + 1)).max(axis=(2, 3))
-    rows, cols = np.nonzero(h >= window_max)
+    top = h >= window_max
+    # A node within the radius of the area's edge is left out: the terrain
+    # is cut there, so a slope running out of the area would look like a top.
+    top[:r, :] = top[-r:, :] = False
+    top[:, :r] = top[:, -r:] = False
+    rows, cols = np.nonzero(top)
     return (
         terrain.x0_km + cols * terrain.step_km,
         terrain.y0_km + rows * terrain.step_km,
@@ -189,15 +195,31 @@ def high_points(terrain: Terrain) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     )
 
 
-def candidates(terrain: Terrain, village_list: list[Village]) -> list[Candidate]:
-    """Candidate sites on local high points near villages.
+def qualifying(terrain: Terrain, village_list: list[Village]) -> int:
+    """How many hilltops qualify before the CANDIDATES cap.
 
     Args:
         terrain: The terrain.
         village_list: The villages.
 
     Returns:
-        Up to CANDIDATES sites, the best-scored first.
+        The count.
+    """
+    return len(proposals(terrain, village_list)[0])
+
+
+def proposals(
+    terrain: Terrain, village_list: list[Village]
+) -> tuple[list[int], dict[str, np.ndarray]]:
+    """The villages' hilltops, kept MIN_SPACING_KM apart.
+
+    Args:
+        terrain: The terrain.
+        village_list: The villages.
+
+    Returns:
+        (indices of the qualifying hilltops, arrays x, y, h, nearest village
+        distance and persons score of every hilltop).
     """
     x, y, h = high_points(terrain)
     vx = np.array([v.x_km for v in village_list])
@@ -206,13 +228,31 @@ def candidates(terrain: Terrain, village_list: list[Village]) -> list[Candidate]
     d = np.hypot(x[:, None] - vx[None, :], y[:, None] - vy[None, :])
     nearest = d.min(axis=1)
     score = (vp[None, :] * (d <= SCORE_RADIUS_KM)).sum(axis=1)
-    order = [i for i in np.argsort(-score, kind="stable") if nearest[i] <= NEAR_VILLAGE_KM]
-    chosen: list[int] = []
-    for i in order:
-        if all(np.hypot(x[i] - x[j], y[i] - y[j]) >= MIN_SPACING_KM for j in chosen):
-            chosen.append(int(i))
-        if len(chosen) == CANDIDATES:
-            break
+    proposed = set()
+    for village in range(len(village_list)):
+        near = np.flatnonzero(d[:, village] <= NEAR_VILLAGE_KM)
+        if near.size:
+            proposed.add(int(near[np.argmax(h[near])]))
+    spaced: list[int] = []
+    for i in sorted(proposed, key=lambda k: (-h[k], k)):
+        if all(np.hypot(x[i] - x[j], y[i] - y[j]) >= MIN_SPACING_KM for j in spaced):
+            spaced.append(i)
+    return spaced, {"x": x, "y": y, "h": h, "nearest": nearest, "score": score}
+
+
+def candidates(terrain: Terrain, village_list: list[Village]) -> list[Candidate]:
+    """Candidate sites: the villages' nearby hilltops, irregular like real ones.
+
+    Args:
+        terrain: The terrain.
+        village_list: The villages.
+
+    Returns:
+        Up to CANDIDATES sites, the best-scored first.
+    """
+    spaced, a = proposals(terrain, village_list)
+    x, y, h, nearest, score = a["x"], a["y"], a["h"], a["nearest"], a["score"]
+    chosen = sorted(spaced, key=lambda k: (-score[k], k))[:CANDIDATES]
     return [
         Candidate(
             site_id=f"C{k + 1:02d}",

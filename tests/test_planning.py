@@ -50,7 +50,7 @@ def test_candidates_sit_on_high_points_near_villages(demo_world: World) -> None:
     terrain = build_terrain(demo_world.profile)
     villages = geography.villages(demo_world, terrain)
     sites = geography.candidates(terrain, villages)
-    assert len(villages) == 150 and len(sites) == geography.CANDIDATES
+    assert len(villages) == 150 and 0 < len(sites) <= geography.CANDIDATES
     hx, hy, _ = geography.high_points(terrain)
     high = set(zip(np.round(hx, 3), np.round(hy, 3), strict=True))
     for s in sites:

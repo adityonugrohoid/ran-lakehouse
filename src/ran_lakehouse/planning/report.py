@@ -83,7 +83,7 @@ def parameters() -> dict[str, Any]:
         "GSM 900 BCCH power dBm (rule M)": radio.GSM_POWER_DBM,
         "LTE RSRP threshold dBm (START)": radio.LTE_RSRP_THRESHOLD_DBM,
         "GSM RxLev threshold dBm (START)": radio.GSM_RXLEV_THRESHOLD_DBM,
-        "indoor margin dB (START, ASSUMPTION)": radio.INDOOR_MARGIN_DB,
+        "indoor margin dB (ITU-R P.2109-2, traditional buildings)": radio.INDOOR_MARGIN_DB,
         "microwave GHz (START)": radio.MICROWAVE_GHZ,
         "Fresnel clearance used (START)": radio.FRESNEL_CLEARANCE,
         "hub zone km, hub antenna m, max hop km (START)": [
@@ -104,6 +104,24 @@ def parameters() -> dict[str, Any]:
             "solar and battery": backhaul.SOLAR_IDR,
         },
     }
+
+
+def greedy_cover(served: np.ndarray) -> int:
+    """Candidates a greedy cover needs to serve every village some candidate serves.
+
+    Args:
+        served: Mask (candidates, villages).
+
+    Returns:
+        Candidates picked (an upper bound on the minimum cover).
+    """
+    left = served.any(axis=0)
+    picked = 0
+    while left.any():
+        best = int(np.argmax((served & left[None, :]).sum(axis=1)))
+        left &= ~served[best]
+        picked += 1
+    return picked
 
 
 def counts(plan: Plan, data: dict[str, Any]) -> dict[str, Any]:
@@ -147,6 +165,7 @@ def counts(plan: Plan, data: dict[str, Any]) -> dict[str, Any]:
             "persons without indoor GSM": int(population[~indoor_gsm].sum()),
         },
         "candidates": len(sites),
+        "candidates_qualifying": geography.qualifying(plan.terrain, plan.villages),
         "candidate_elevation_m": spread(np.array([s["elevation_m"] for s in sites])),
         "build_cost_idr": spread(np.array([s["build_cost_idr"] for s in sites])),
         "villages_served_by_some_candidate": {
@@ -154,6 +173,10 @@ def counts(plan: Plan, data: dict[str, Any]) -> dict[str, Any]:
             "GSM indoor": int(site_gsm.any(axis=0).sum()),
         },
         "villages_per_candidate_lte_indoor": spread(site_lte.sum(axis=1)),
+        "greedy_cover_candidates": {
+            "LTE indoor": greedy_cover(site_lte),
+            "GSM indoor": greedy_cover(site_gsm),
+        },
         "backhaul": {
             "fiber spur km": spread(np.array([o["distance_km"] for o in option("fiber")])),
             "microwave clear at 0.6 F1 (used)": len(microwave),
@@ -441,7 +464,8 @@ def build(warehouse: str) -> dict[str, Any]:
             "fresnel": radio.FRESNEL_SOURCE,
             "clearance": radio.CLEARANCE_SOURCE,
             "thresholds": radio.THRESHOLD_CONTEXT,
-            "indoor margin context, ITU-R P.2109-2 median at 0.9 GHz (dB)": radio.P2109_MEDIAN_DB,
+            "indoor margin": radio.INDOOR_MARGIN_SOURCE,
+            "ITU-R P.2109-2 median at 0.9 GHz (dB)": radio.P2109_MEDIAN_DB,
         },
         "parameters": parameters(),
         "counts": counts(plan, data),
@@ -500,8 +524,10 @@ def render_markdown(record: dict[str, Any]) -> str:
         "weak outdoor coverage from the served edge. The served cells' levels at each village",
         "use the model's Hata plus the same Bullington diffraction over the terrain as the",
         "candidates. Service coverage is indoor: the outdoor level must clear the threshold by",
-        f"the indoor margin ({record['parameters']['indoor margin dB (START, ASSUMPTION)']:g} dB,"
-        " START).",
+        "the indoor margin ("
+        f"{record['parameters']['indoor margin dB (ITU-R P.2109-2, traditional buildings)']:g}"
+        " dB, the ITU-R P.2109-2 median for traditional buildings; village housing is",
+        "modelled as that class, ASSUMPTION).",
         "",
         "| Villages | Count |",
         "|---|---|",
@@ -510,7 +536,14 @@ def render_markdown(record: dict[str, Any]) -> str:
         "",
         "## Candidates and coverage (rules G4, G5)",
         "",
-        f"{c['candidates']} candidates on local high points near villages; elevation "
+        f"{c['candidates_qualifying']} hilltops qualify and {c['candidates']} are kept (cap "
+        f"{record['parameters']['candidate sites (START)']}, by persons nearby): each village's"
+        " highest hilltop within "
+        f"{record['parameters']['candidate near a village within km (START)']:g} km, kept "
+        f"{record['parameters']['candidate spacing km (START)']:g} km apart, so they cluster",
+        "where villages do. A greedy cover serves every village some candidate serves with "
+        f"{c['greedy_cover_candidates']['LTE indoor']} candidates (LTE indoor) or "
+        f"{c['greedy_cover_candidates']['GSM indoor']} (GSM indoor); elevation "
         f"{c['candidate_elevation_m'][0]:g} to {c['candidate_elevation_m'][2]:g} m; build cost "
         f"{c['build_cost_idr'][0]:,.0f} to {c['build_cost_idr'][2]:,.0f} IDR (ASSUMPTION).",
         "",
