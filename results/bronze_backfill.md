@@ -34,12 +34,12 @@ D5 counts the network elements moved to the renamed dictionary release.
 
 | Table | Rows | Data files | MB |
 |---|---|---|---|
-| bronze.pm_values | 457,253,306 | 527 | 1,904.8 |
-| bronze.file_arrivals | 16,680 | 449 | 2.5 |
+| bronze.pm_values | 457,253,306 | 527 | 1,904.0 |
+| bronze.file_arrivals | 16,680 | 449 | 2.6 |
 | bronze.cm_records | 728,723 | 87 | 21.0 |
 | bronze.fm_records | 16 | 12 | 0.0 |
 | evaluation.delivery_anomalies | 284 | 1 | 0.0 |
-| total | | | 1,928.4 |
+| total | | | 1,927.6 |
 
 | PM rows by granularity (rule P1, P4) | Rows |
 |---|---|
@@ -61,12 +61,12 @@ maximum resident set size.
 
 | Step | Seconds |
 |---|---|
-| simulate | 92.2 |
-| render | 818.5 |
-| collect | 1,909.4 |
-| total | 2,847.2 |
+| simulate | 94.6 |
+| render | 832.0 |
+| collect | 1,927.4 |
+| total | 2,880.8 |
 
-Peak RSS: 2,784 MB.
+Peak RSS: 2,773 MB.
 
 | Machine | |
 |---|---|

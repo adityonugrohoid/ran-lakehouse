@@ -8,6 +8,7 @@ import pytest
 
 from ran_lakehouse.faults import report as fault_report
 from ran_lakehouse.faults.evaluate import evaluate, right_fix
+from ran_lakehouse.faults.locality import MAX_SHARE, reach
 from ran_lakehouse.faults.plant import (
     KINDS,
     MISTAKEN_TILT_DEG,
@@ -137,3 +138,11 @@ def test_runs_stream_one_day_at_a_time(tiny: NetworkModel) -> None:
     evaluate(tiny, planted(tiny, "F1f", 6), try_parameters=False)
     fault_report.daily_series(tiny, planted(tiny, "F1c", 24 * 7), "F1c")
     assert DAY_TRACKER.peak <= 2
+
+
+def test_no_planted_fault_reaches_beyond_its_area() -> None:
+    demo = default_model(build_world("demo"))
+    reaches = [reach(demo, f) for f in plan_faults(demo, 12)]
+    assert reaches
+    worst = max(reaches, key=lambda r: r.share)
+    assert worst.share <= MAX_SHARE, worst

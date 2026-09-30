@@ -17,7 +17,7 @@ from `faults.json`.
 | F1b | neighbour relation deleted from the neighbour list | strongest neighbour relation deleted | 48-144 | add neighbour | E-RAB drop rate (%), cell |
 | F1c | transmit power reduced after maintenance | power -6 dB | 48-144 | restore power | DL IP throughput (kbit/s), area |
 | F1d | traffic surge in the cell's area | persons x2.5 within 0.6 km (suburban cells) | 24-72 | load-balancing offset or capacity note | DL IP throughput (kbit/s), cell |
-| F1e | external uplink interference source | uplink source 15 dBm, 0.3-0.8 km along the azimuth | 48-168 | no parameter fix, field visit | RRC setup success (%), cell |
+| F1e | external uplink interference source | uplink source 0.1-0.3 km along the azimuth, raising the cell's uplink noise by 15 dB | 48-168 | no parameter fix, field visit | RRC setup success (%), cell |
 | F1f | cell out of service | cell down | 3-12 | no parameter fix, alarm-driven | Cell availability (%), cell |
 
 Recovery = (fixed - faulty) / (clean - faulty) on the primary KPI: 1 restores the clean
@@ -170,9 +170,9 @@ PM, KPIs over the week (clean / faulty / fixed):
 
 | KPI | Cell | Area (cell and touched cells) |
 |---|---|---|
-| E-RAB accessibility (%) | 98.915 / 68.717 / 68.717 | 98.915 / 68.717 / 68.717 |
-| RRC setup success (%) | 99.377 / 76.21 / 76.21 | 99.377 / 76.21 / 76.21 |
-| E-RAB drop rate (%) | 0.503 / 3.337 / 3.337 | 0.503 / 3.337 / 3.337 |
+| E-RAB accessibility (%) | 98.915 / 69.17 / 69.17 | 98.915 / 69.17 / 69.17 |
+| RRC setup success (%) | 99.377 / 76.587 / 76.587 | 99.377 / 76.587 / 76.587 |
+| E-RAB drop rate (%) | 0.503 / 3.296 / 3.296 | 0.503 / 3.296 / 3.296 |
 | DL IP throughput (kbit/s) | 21727.49 / 21727.49 / 21727.49 | 21727.49 / 21727.49 / 21727.49 |
 | Handover success (%) | 98.682 / 98.682 / 98.682 | 98.682 / 98.682 / 98.682 |
 | Mean DL PRB use (%) | 12.344 / 12.344 / 12.344 | 12.344 / 12.344 / 12.344 |
@@ -183,8 +183,8 @@ PM traces (clean, faulty):
 
 - subscribers served by the cell: [393, 393]
 - cells touched: 1
-- uplink noise rise at the cell, dB: 16.2
-- UL interference per PRB, dBm (vendor-style), week mean: [-116.2, -100.0]
+- uplink noise rise at the cell, dB: 15.0
+- UL interference per PRB, dBm (vendor-style), week mean: [-116.2, -101.2]
 
 CM change log:
 
@@ -199,11 +199,11 @@ Right answer: no parameter fix, field visit. Recovery (cell): 0.0; over the area
 Every single bounded parameter change on the cell:
 
 - tilt +2: recovery 0.014
-- tilt -2: recovery -0.015
+- tilt -2: recovery -0.016
 - power +3: recovery -0.003
 - power -3: recovery -0.013
-- cio -3: recovery 0.013
-- cio +3: recovery -0.038
+- cio -3: recovery 0.014
+- cio +3: recovery -0.04
 
 ## F1f: cell out of service
 
@@ -247,7 +247,7 @@ Right answer: no parameter fix, alarm-driven. Recovery (cell): 0.0; over the are
 | F1b | 4 | 4 | 1.0 / 1.0 / 1.0 | 1.0 / 1.0 / 1.0 |
 | F1c | 7 | 7 | 1.0 / 1.0 / 1.0 | 1.0 / 1.0 / 1.0 |
 | F1d | 3 | 2 | 1.071 / 2.138 / 3.205 | -0.414 / -0.223 / 0.053 |
-| F1e | 6 | 6 | 0.001 / 0.009 / 0.029 | n/a |
+| F1e | 6 | 6 | 0.0 / 0.008 / 0.028 | n/a |
 | F1f | 5 | 4 | 0.0 / 0.0 / 0.0 | 0.0 / 0.0 / 0.0 |
 
 F1e counts the best single bounded parameter change; F1f has no parameter to change.
@@ -257,13 +257,57 @@ Outages of GSM cells are not evaluated here: the recovery KPIs are LTE KPIs.
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Faults | 0 | 5 | 3 | 3 | 3 | 0 | 0 | 3 | 4 | 3 | 6 | 3 |
 
+## Reach of every planted fault (rule F1)
+
+Each fault's first whole day replayed with and without it (same random draws). A
+cell is affected when a KPI moves by more than 1 point (RRC setup success, E-RAB accessibility or drop rate; GSM service access or
+TCH blocking); the faulty cell always counts. Share: the affected cells' part of
+their technology's access attempts that day, which may not exceed 2% (START, tested). Faults are listed by
+reach only; their cells and times are evaluation-only (rule A3).
+
+| Kind | Cells affected | Share of access attempts (%) |
+|---|---|---|
+| F1d | 2 | 1.29 |
+| F1e | 3 | 0.5 |
+| F1f | 4 | 0.3 |
+| F1e | 3 | 0.28 |
+| F1e | 9 | 0.27 |
+| F1e | 10 | 0.26 |
+| F1d | 2 | 0.25 |
+| F1b | 1 | 0.25 |
+| F1e | 5 | 0.17 |
+| F1c | 3 | 0.13 |
+| F1f | 1 | 0.12 |
+| F1a | 2 | 0.11 |
+| F1a | 3 | 0.1 |
+| F1b | 1 | 0.09 |
+| F1b | 1 | 0.08 |
+| F1c | 1 | 0.08 |
+| F1d | 1 | 0.08 |
+| F1e | 3 | 0.07 |
+| F1c | 1 | 0.07 |
+| F1c | 1 | 0.05 |
+| F1c | 2 | 0.05 |
+| F1f | 1 | 0.05 |
+| F1a | 1 | 0.04 |
+| F1f | 2 | 0.04 |
+| F1b | 1 | 0.03 |
+| F1c | 1 | 0.02 |
+| F1a | 1 | 0.02 |
+| F1a | 1 | 0.02 |
+| F1a | 1 | 0.01 |
+| F1a | 2 | 0.01 |
+| F1c | 1 | 0.01 |
+| F1a | 1 | 0.0 |
+| F1f | 1 | 0.0 |
+
 ## Twelve weeks, network-wide LTE KPIs
 
 | KPI | Clean | With faults |
 |---|---|---|
-| E-RAB accessibility (%) | 97.888 | 97.744 |
-| RRC setup success (%) | 98.651 | 98.543 |
-| E-RAB drop rate (%) | 0.622 | 0.633 |
+| E-RAB accessibility (%) | 97.888 | 97.875 |
+| RRC setup success (%) | 98.651 | 98.64 |
+| E-RAB drop rate (%) | 0.622 | 0.623 |
 | DL IP throughput (kbit/s) | 6036.952 | 6033.981 |
 | Handover success (%) | 98.684 | 98.684 |
 | Mean DL PRB use (%) | 18.53 | 18.532 |
@@ -276,12 +320,13 @@ Measured on the build machine; varies run to run.
 
 | Step | Seconds |
 |---|---|
-| demo network and fault plan | 25.6 |
-| six demonstrations | 85.5 |
-| recovery of every planted fault | 187.7 |
-| 12 weeks of counters with faults | 70.4 |
+| demo network and fault plan | 27.0 |
+| six demonstrations | 86.6 |
+| recovery of every planted fault | 192.1 |
+| reach of every planted fault | 27.6 |
+| 12 weeks of counters with faults | 75.1 |
 
 | Resource | Value |
 |---|---|
-| wall time of the whole report, s | 380.7 |
-| peak resident set, MB | 1276 |
+| wall time of the whole report, s | 420.2 |
+| peak resident set, MB | 1257 |

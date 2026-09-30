@@ -17,16 +17,16 @@
       "files": 5,
       "bronze_rows": 286810,
       "silver_rows": 293722,
-      "seconds_total": 12.7,
-      "seconds_max": 3.7
+      "seconds_total": 14.5,
+      "seconds_max": 3.8
     },
     "partition": {
       "loads": 168,
       "files": 15963,
       "bronze_rows": 453245164,
       "silver_rows": 464198538,
-      "seconds_total": 2181.6,
-      "seconds_max": 52.1
+      "seconds_total": 2818.4,
+      "seconds_max": 60.4
     }
   },
   "flags": {
@@ -80,15 +80,15 @@
   "storage": {
     "silver.pm_measurements": {
       "data_files": 176,
-      "bytes": 1618920181
+      "bytes": 1618159204
     },
     "silver.pm_files": {
       "data_files": 173,
-      "bytes": 1893258
+      "bytes": 1894204
     },
     "silver.pm_gaps": {
       "data_files": 28,
-      "bytes": 65920
+      "bytes": 65849
     },
     "silver.counter_map": {
       "data_files": 1,
@@ -100,10 +100,10 @@
     }
   },
   "timing_s": {
-    "silver build": 2222.9,
-    "counts, evaluation and storage": 60.7
+    "silver build": 2861.1,
+    "counts, evaluation and storage": 61.2
   },
-  "peak_rss_mb_during_build": 2240,
+  "peak_rss_mb_during_build": 2235,
   "commit_retries": 0,
   "duckdb_memory_limit": "1GB"
 }
