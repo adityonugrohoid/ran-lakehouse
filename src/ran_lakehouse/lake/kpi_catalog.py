@@ -400,3 +400,42 @@ def catalog_table(kpis: tuple[Kpi, ...]) -> pa.Table:
             "operators_differ": pa.array([k.operators_differ for k in kpis], pa.string()),
         }
     )
+
+
+RRC = ("RRC.ConnEstabAtt.sum", "RRC.ConnEstabSucc.sum")
+S1 = ("S1SIG.ConnEstabAtt", "S1SIG.ConnEstabSucc")
+TCH_REQUESTS = "attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState"
+TCH_BLOCKED = "attTCHSeizuresMeetingTCHBlockedState"
+IMMEDIATE = ("attImmediateAssingProcs", "succImmediateAssingProcs")
+
+# The silver measurements each KPI version reads (rule D8 lineage), under
+# their silver names (lake.silver): 3GPP names, or labelled sums.
+INPUTS: dict[tuple[str, int], tuple[str, ...]] = {
+    ("LTE_ERAB_ACC", 1): (*RRC, *S1, "ERAB.EstabInitAttNbr.sum", "ERAB.EstabInitSuccNbr.sum"),
+    ("LTE_ERAB_RET", 1): ("ERAB.RelActNbr.sum", "ERAB.SessionTimeUE"),
+    ("LTE_IP_THP_DL", 1): ("DRB.IPVolDl.sum", "DRB.IPTimeDl.sum"),
+    ("LTE_AVAIL", 1): ("RRU.CellUnavailableTime.sum",),
+    ("LTE_MOB_HOSR", 1): ("HO.OutAttTarget.sum", "HO.OutSuccTarget.sum"),
+    ("LTE_RRC_SSR", 1): RRC,
+    ("LTE_RRC_SSR", 2): (*RRC, *S1),
+    ("LTE_ERAB_DROP", 1): ("ERAB.RelActNbr.sum", "ERAB.EstabInitSuccNbr.sum"),
+    ("LTE_PRB_UTIL", 1): ("RRU.PrbTotDl",),
+    ("LTE_CQI_MEAN", 1): ("CARR.WBCQIDist.Bin",),
+    ("GSM_SAS", 1): (TCH_REQUESTS, TCH_BLOCKED, "succTCHSeizures", *IMMEDIATE),
+    ("GSM_ABN_REL", 1): (
+        "nbrOfLostRadioLinksTCH",
+        "unsuccHDOsWithReconnection + unsuccHDOsWithLossOfConnection",
+        "succTCHSeizures",
+        "succIncomingInternalInterCellHDOs",
+    ),
+    ("GSM_HOSR", 1): ("attOutgoingInternalInterCellHDOs", "succOutgoingInternalInterCellHDOs"),
+    ("GSM_CSSR", 1): (
+        "attSDCCHSeizuresMeetingSDCCHBlockedState",
+        "attImmediateAssingProcs",
+        "succTCHSeizures",
+        TCH_REQUESTS,
+    ),
+    ("GSM_TCH_BLOCK", 1): (TCH_BLOCKED, TCH_REQUESTS),
+    ("GSM_SDCCH_BLOCK", 1): ("attSDCCHSeizuresMeetingSDCCHBlockedState", "attImmediateAssingProcs"),
+    ("GSM_SDCCH_DROP", 1): ("nbrOfLostRadioLinksSDCCH", "succImmediateAssingProcs"),
+}

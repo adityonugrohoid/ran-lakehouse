@@ -45,6 +45,14 @@ built by the dbt project in `transform/` one day at a time (formulas in
 uv run ranlake gold --warehouse demo
 ```
 
+Trace any gold value back to its silver rows, bronze rows and source files
+(name, hash, arrival):
+
+```bash
+uv run ranlake lineage --warehouse demo --kpi LTE_ERAB_DROP --version 1 \
+  --cell ENB0001_B3_1 --granularity day --period 2026-02-10
+```
+
 The API lands in the next pull requests.
 
 ## License
