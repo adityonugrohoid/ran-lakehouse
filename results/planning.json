@@ -49,7 +49,11 @@
       "satellite terminal": 150000000,
       "satellite monthly": 25000000,
       "grid line per km": 250000000,
-      "solar and battery": 650000000
+      "solar and battery": 650000000,
+      "fiber monthly": 3000000,
+      "microwave monthly": 2000000,
+      "grid power monthly": 6000000,
+      "solar monthly": 1500000
     }
   },
   "counts": {
@@ -127,8 +131,8 @@
     "backhaul_power_options": 300
   },
   "timing_s": {
-    "network model and plan": 28.1,
-    "total": 39.4
+    "network model and plan": 28.3,
+    "total": 39.5
   },
   "peak_rss_mb": 744
 }

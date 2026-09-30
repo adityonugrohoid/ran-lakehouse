@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ran-lakehouse/plan_constraints/1.0.0",
+  "title": "Plan constraints",
+  "description": "What a coverage plan for the synthetic expansion area must satisfy (rule G9). Part of the API contract (rule A1). Costs are IDR; distances km; coverage is indoor service (rule G3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "area",
+    "objective",
+    "technology",
+    "must_cover",
+    "max_sites",
+    "capex_budget_idr",
+    "monthly_opex_limit_idr",
+    "power_rule",
+    "backhaul_rule",
+    "min_persons_share"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "area": {
+      "description": "Candidate sites and villages inside this box are in play.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x_min_km", "x_max_km", "y_min_km", "y_max_km"],
+      "properties": {
+        "x_min_km": {"type": "number"},
+        "x_max_km": {"type": "number"},
+        "y_min_km": {"type": "number"},
+        "y_max_km": {"type": "number"}
+      }
+    },
+    "objective": {
+      "description": "max_persons and max_villages count covered villages; min_capex minimizes capital cost subject to the other constraints.",
+      "enum": ["max_persons", "max_villages", "min_capex"]
+    },
+    "technology": {
+      "description": "Which service counts as covered; both needs LTE and GSM.",
+      "enum": ["LTE", "GSM", "both"]
+    },
+    "must_cover": {
+      "description": "Villages that must be covered: those with a school, those with at least min_persons, and the named ones.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schools", "min_persons", "village_ids"],
+      "properties": {
+        "schools": {"type": "boolean"},
+        "min_persons": {"type": ["integer", "null"], "minimum": 0},
+        "village_ids": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true}
+      }
+    },
+    "max_sites": {"type": ["integer", "null"], "minimum": 0},
+    "capex_budget_idr": {
+      "description": "Build, backhaul and power capital cost of all chosen sites.",
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "monthly_opex_limit_idr": {
+      "description": "Monthly backhaul and power cost of all chosen sites.",
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "power_rule": {
+      "description": "A site takes grid power when the grid line is within grid_within_km, else solar.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grid_within_km"],
+      "properties": {"grid_within_km": {"type": "number", "minimum": 0}}
+    },
+    "backhaul_rule": {
+      "description": "Fiber when the fiber route is within fiber_within_km; microwave only where the hop clears this fraction of the first Fresnel zone; satellite always.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fiber_within_km", "microwave_clearance"],
+      "properties": {
+        "fiber_within_km": {"type": "number", "minimum": 0},
+        "microwave_clearance": {"enum": [0.6, 1.0]}
+      }
+    },
+    "min_persons_share": {
+      "description": "Share of the area's persons that must be covered.",
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

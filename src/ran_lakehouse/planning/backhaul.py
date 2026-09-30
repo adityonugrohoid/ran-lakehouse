@@ -39,6 +39,12 @@ SATELLITE_TERMINAL_IDR = 150_000_000
 SATELLITE_MONTHLY_IDR = 25_000_000
 GRID_LINE_IDR_PER_KM = 250_000_000
 SOLAR_IDR = 650_000_000
+# Monthly costs, IDR (ASSUMPTION): fiber lease and upkeep, microwave licence
+# and upkeep, grid energy for a rural site, solar and battery upkeep.
+FIBER_MONTHLY_IDR = 3_000_000
+MICROWAVE_MONTHLY_IDR = 2_000_000
+GRID_POWER_MONTHLY_IDR = 6_000_000
+SOLAR_MONTHLY_IDR = 1_500_000
 
 
 @dataclass(frozen=True)
@@ -148,7 +154,7 @@ def options(
                 round(fiber_km, 3),
                 FIBER_MBPS,
                 round(FIBER_IDR_PER_KM * fiber_km),
-                0,
+                FIBER_MONTHLY_IDR,
                 "",
                 False,
             ),
@@ -159,7 +165,7 @@ def options(
                 round(hop[1], 3) if hop else 0.0,
                 MICROWAVE_MBPS if hop else 0.0,
                 MICROWAVE_LINK_IDR if hop else 0,
-                0,
+                MICROWAVE_MONTHLY_IDR if hop else 0,
                 hop[0] if hop else f"no hub within {MAX_HOP_KM:g} km clears the Fresnel zone",
                 strict is not None,
             ),
@@ -180,8 +186,8 @@ def options(
                 on_grid,
                 round(grid_km, 3),
                 0.0,
-                round(GRID_LINE_IDR_PER_KM * grid_km) if on_grid else 0,
-                0,
+                round(GRID_LINE_IDR_PER_KM * grid_km),
+                GRID_POWER_MONTHLY_IDR,
                 "" if on_grid else f"grid line {grid_km:.1f} km away, beyond {GRID_POWER_KM:g} km",
                 False,
             ),
@@ -191,8 +197,8 @@ def options(
                 not on_grid,
                 0.0,
                 0.0,
-                SOLAR_IDR if not on_grid else 0,
-                0,
+                SOLAR_IDR,
+                SOLAR_MONTHLY_IDR,
                 "" if not on_grid else "grid power within reach",
                 False,
             ),

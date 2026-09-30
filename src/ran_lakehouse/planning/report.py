@@ -102,6 +102,10 @@ def parameters() -> dict[str, Any]:
             "satellite monthly": backhaul.SATELLITE_MONTHLY_IDR,
             "grid line per km": backhaul.GRID_LINE_IDR_PER_KM,
             "solar and battery": backhaul.SOLAR_IDR,
+            "fiber monthly": backhaul.FIBER_MONTHLY_IDR,
+            "microwave monthly": backhaul.MICROWAVE_MONTHLY_IDR,
+            "grid power monthly": backhaul.GRID_POWER_MONTHLY_IDR,
+            "solar monthly": backhaul.SOLAR_MONTHLY_IDR,
         },
     }
 

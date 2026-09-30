@@ -59,6 +59,11 @@ def build_parser() -> argparse.ArgumentParser:
         "planning", help="generate the expansion area's planning data into gold tables"
     )
     planning.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    solve = commands.add_parser(
+        "plan", help="solve a constraint set (contract/plan_constraints.schema.json) on gold"
+    )
+    solve.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    solve.add_argument("--constraints", required=True, type=Path, help="constraint set, JSON")
     trace = commands.add_parser(
         "lineage",
         help="trace one gold KPI value to its silver rows, bronze rows and source files",
@@ -130,6 +135,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         data = tables(build_plan(default_model(build_world("demo"))))
         write_gold(connect(args.warehouse), data)
         print(json.dumps({name: table.num_rows for name, table in data.items()}, indent=2))
+        return 0
+    if args.command == "plan":
+        from ran_lakehouse.lake.catalog import connect
+        from ran_lakehouse.planning.solver import BACKEND, PlanningData, solve_plan
+
+        con = connect(args.warehouse)
+        names = ("villages", "candidate_sites", "coverage", "backhaul_power_options")
+        planning_data = PlanningData.from_tables(
+            {n: con.execute(f"SELECT * FROM lk.gold.{n}").to_arrow_table() for n in names}
+        )
+        constraints = json.loads(args.constraints.read_text())
+        print(json.dumps(solve_plan(planning_data, constraints, BACKEND), indent=2))
         return 0
     if args.command == "lineage":
         from datetime import date, datetime

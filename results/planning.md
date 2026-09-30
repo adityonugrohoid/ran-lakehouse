@@ -90,7 +90,7 @@ The gold table uses the 0.6 F1 clearance; the 1.0 F1 count is beside it.
 | hub zone km, hub antenna m, max hop km (START) | 4 / 40 / 30 |
 | grid power within km (START) | 5 |
 | satellite Mbps (START) | 8 |
-| costs IDR (ASSUMPTION) | build base 1,800,000,000; access road per km 120,000,000; fiber per km 150,000,000; microwave link 350,000,000; satellite terminal 150,000,000; satellite monthly 25,000,000; grid line per km 250,000,000; solar and battery 650,000,000 |
+| costs IDR (ASSUMPTION) | build base 1,800,000,000; access road per km 120,000,000; fiber per km 150,000,000; microwave link 350,000,000; satellite terminal 150,000,000; satellite monthly 25,000,000; grid line per km 250,000,000; solar and battery 650,000,000; fiber monthly 3,000,000; microwave monthly 2,000,000; grid power monthly 6,000,000; solar monthly 1,500,000 |
 
 ## Gold tables (rule G7)
 
@@ -105,6 +105,6 @@ The gold table uses the 0.6 F1 clearance; the 1.0 F1 count is beside it.
 
 | Step | Value |
 |---|---|
-| seconds, network model and plan | 28.1 |
-| seconds, total | 39.4 |
+| seconds, network model and plan | 28.3 |
+| seconds, total | 39.5 |
 | peak RSS (MB) | 744 |
