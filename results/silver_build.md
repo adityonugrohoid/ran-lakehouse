@@ -27,20 +27,20 @@ D5 counts network elements moved to the renamed release.
 
 | Table | Rows | Data files | MB |
 |---|---|---|---|
-| silver.pm_measurements | 464,354,374 | 176 | 1,618.2 |
+| silver.pm_measurements | 482,733,542 | 176 | 1,696.8 |
 | silver.pm_files | 15,968 | 173 | 1.9 |
 | silver.pm_gaps | 4,164 | 28 | 0.1 |
 | silver.counter_map | 204 | 1 | 0.0 |
 | silver.loads | 173 | 173 | 0.4 |
-| total | | | 1,620.5 |
+| total | | | 1,699.1 |
 
 | pm_measurements rows | Rows |
 |---|---|
 | derived | 11,592,768 |
-| suspect | 4,405 |
-| conflict | 1,819 |
-| late | 2,204,188 |
-| 15 min | 374,510,422 |
+| suspect | 4,619 |
+| conflict | 1,949 |
+| late | 2,285,430 |
+| 15 min | 392,889,590 |
 | 60 min | 89,843,952 |
 
 Derived rows are 3GPP measurements converted from vendor-style quantities
@@ -57,8 +57,8 @@ Derived rows are 3GPP measurements converted from vendor-style quantities
 
 | Loads | Count | Files | Bronze rows read | Silver rows | Seconds, total | Seconds, max |
 |---|---|---|---|---|---|---|
-| catch-up | 5 | 5 | 286,810 | 293,722 | 14.5 | 3.8 |
-| partition | 168 | 15,963 | 453,245,164 | 464,198,538 | 2,818.4 | 60.4 |
+| catch-up | 5 | 5 | 297,940 | 304,852 | 16.2 | 4.9 |
+| partition | 168 | 15,963 | 471,645,724 | 482,571,472 | 4,602.8 | 109.2 |
 
 ## Cost
 
@@ -67,10 +67,10 @@ maximum resident set size during the build (DuckDB memory limit 1GB).
 
 | Step | Seconds |
 |---|---|
-| silver build | 2,861.1 |
-| counts, evaluation and storage | 61.2 |
+| silver build | 4,652.2 |
+| counts, evaluation and storage | 62.3 |
 
-Peak RSS during the build: 2,235 MB.
+Peak RSS during the build: 2,057 MB.
 
-Iceberg commits rejected and run again: 0 (a wall-clock step
+Iceberg commits rejected and run again: 1 (a wall-clock step
 makes DuckDB 1.5.x build on a stale snapshot; see `lake.catalog.write`).

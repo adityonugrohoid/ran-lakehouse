@@ -13,16 +13,16 @@ faults, so only counts are reported here. Written by
 |---|---|
 | EUtranCellFDD | 852 |
 | EUtranCellTDD | 150 |
-| EUtranRelation | 3,365 |
+| EUtranRelation | 4,181 |
 | GsmCell | 132 |
 | GsmRelation | 710 |
 
-Snapshot rows per day: 5,208 to 5,209 (neighbour relations come and go).
+Snapshot rows per day: 6,023 to 6,025 (neighbour relations come and go).
 
 | Change log entries by attribute | Count |
 |---|---|
 | electricalTiltDeg | 13 |
-| relation | 4 |
+| relation | 8 |
 | txPowerDbm | 8 |
 
 | Alarm notifications by type and probable cause | Count |
@@ -34,12 +34,12 @@ Snapshot rows per day: 5,208 to 5,209 (neighbour relations come and go).
 
 | Consistency with the planted schedule | Exported | Implied |
 |---|---|---|
-| change log entries, exported / implied by the schedule | 25 | 25 |
+| change log entries, exported / implied by the schedule | 29 | 29 |
 | alarm notifications, exported / implied by the schedule | 14 | 14 |
 
 | Gzip size over the run | MB |
 |---|---|
-| CM | 5.6 |
+| CM | 6.37 |
 | CMLOG | 0.01 |
 | FM | 0.0 |
 
@@ -49,16 +49,15 @@ Snapshot rows per day: 5,208 to 5,209 (neighbour relations come and go).
 |---|---|
 | EUtranCellFDD | 414 |
 | EUtranCellTDD | 36 |
-| EUtranRelation | 2,134 |
+| EUtranRelation | 2,469 |
 | GsmCell | 132 |
 | GsmRelation | 750 |
 
-Snapshot rows per day: 3,465 to 3,466 (neighbour relations come and go).
+Snapshot rows per day: 3,801 to 3,801 (neighbour relations come and go).
 
 | Change log entries by attribute | Count |
 |---|---|
 | electricalTiltDeg | 2 |
-| relation | 4 |
 | txPowerDbm | 6 |
 
 | Alarm notifications by type and probable cause | Count |
@@ -68,12 +67,12 @@ Snapshot rows per day: 3,465 to 3,466 (neighbour relations come and go).
 
 | Consistency with the planted schedule | Exported | Implied |
 |---|---|---|
-| change log entries, exported / implied by the schedule | 12 | 12 |
+| change log entries, exported / implied by the schedule | 8 | 8 |
 | alarm notifications, exported / implied by the schedule | 2 | 2 |
 
 | Gzip size over the run | MB |
 |---|---|
-| CM | 3.36 |
+| CM | 3.67 |
 | CMLOG | 0.0 |
 | FM | 0.0 |
 
@@ -83,4 +82,4 @@ Measured on the build machine; varies run to run.
 
 | Step | Seconds |
 |---|---|
-| network, schedule and 12 weeks of exports | 53.2 |
+| network, schedule and 12 weeks of exports | 57.3 |

@@ -15,8 +15,8 @@ it into its hour and gold rebuilt the day.
 
 | LTE_RRC_SSR v1, ENB0001_B3_1, hour from 2026-02-13T23:00:00+00:00 | Value | Coverage | Periods |
 |---|---|---|---|
-| as of the first publication (2026-09-30T06:42:39.909656+00:00) | 99.6310 | 0.75 | 3 |
-| now | 99.7319 | 1.0 | 4 |
+| as of the first publication (2026-09-30T15:22:27.939071+00:00) | 99.6656 | 0.75 | 3 |
+| now | 99.7573 | 1.0 | 4 |
 
 gold.lte_kpi_hour held 9 snapshots after the staging.
 
@@ -62,19 +62,19 @@ Worked examples on the demo warehouse:
 
 | KPI | Cell | Period | Value | Silver rows | Bronze rows | Files | Releases | Vendor counters | Derived | Suspect | Late | Conflict |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| LTE_ERAB_DROP v1 | ENB0001_B3_1 | day 2026-02-10 | 0.4534 | 192 | 192 | 96 | HW-R1 | L.E-RAB.AbnormRel, L.E-RAB.SuccEst | 0 | 0 | 0 | 0 |
-| GSM_TCH_BLOCK v1 | BTS0001_G900_1 | day 2026-02-10 | 1.1444 | 192 | 192 | 96 | HW-R1 | K3010A, K3011A | 0 | 0 | 0 | 0 |
-| LTE_PRB_UTIL v1 | ENB0001_B3_1 | 15m 2026-02-10T04:00:00+00:00 | 23.0000 | 1 | 2 | 1 | HW-R1 | L.ChMeas.PRB.DL.Avail, L.ChMeas.PRB.DL.Used.Avg | 2 | 0 | 0 | 0 |
+| LTE_ERAB_DROP v1 | ENB0001_B3_1 | day 2026-02-10 | 0.4107 | 192 | 192 | 96 | HW-R1 | L.E-RAB.AbnormRel, L.E-RAB.SuccEst | 0 | 0 | 0 | 0 |
+| GSM_TCH_BLOCK v1 | BTS0001_G900_1 | day 2026-02-10 | 0.9781 | 192 | 192 | 96 | HW-R1 | K3010A, K3011A | 0 | 0 | 0 | 0 |
+| LTE_PRB_UTIL v1 | ENB0001_B3_1 | 15m 2026-02-10T04:00:00+00:00 | 21.0000 | 1 | 2 | 1 | HW-R1 | L.ChMeas.PRB.DL.Avail, L.ChMeas.PRB.DL.Used.Avg | 2 | 0 | 0 | 0 |
 
 First row of each walk:
 
-- LTE_ERAB_DROP v1: measurement ERAB.EstabInitSuccNbr.sum; silver_value 227.0; dictionary_release HW-R1; bronze_counter L.E-RAB.SuccEst; bronze_value 227.0; managed_element ManagedElement=ENB0001; file_name B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-09 17:17:16.270532+00:00
-- GSM_TCH_BLOCK v1: measurement attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState; silver_value 47.0; dictionary_release HW-R1; bronze_counter K3010A; bronze_value 47.0; managed_element ManagedElement=BSC01; file_name B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-09 17:17:16.270532+00:00
-- LTE_PRB_UTIL v1: measurement RRU.PrbTotDl; silver_value 23.0; dictionary_release HW-R1; bronze_counter L.ChMeas.PRB.DL.Avail; bronze_value 100.0; managed_element ManagedElement=ENB0001; file_name B20260210.1100+0700-1115+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-10 04:20:30.334709+00:00
+- LTE_ERAB_DROP v1: measurement ERAB.EstabInitSuccNbr.sum; silver_value 211.0; dictionary_release HW-R1; bronze_counter L.E-RAB.SuccEst; bronze_value 211.0; managed_element ManagedElement=ENB0001; file_name B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-09 17:17:16.270532+00:00
+- GSM_TCH_BLOCK v1: measurement attTCHSeizures + attTCHSeizuresMeetingTCHBlockedState; silver_value 45.0; dictionary_release HW-R1; bronze_counter K3010A; bronze_value 45.0; managed_element ManagedElement=BSC01; file_name B20260210.0000+0700-0015+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-09 17:17:16.270532+00:00
+- LTE_PRB_UTIL v1: measurement RRU.PrbTotDl; silver_value 21.0; dictionary_release HW-R1; bronze_counter L.ChMeas.PRB.DL.Avail; bronze_value 100.0; managed_element ManagedElement=ENB0001; file_name B20260210.1100+0700-1115+0700_EMS-HW-01.xml.gz; arrival_time 2026-02-10 04:20:30.334709+00:00
 
 ## Cost
 
 | Step | Seconds |
 |---|---|
-| time travel staging | 74.5 |
-| lineage walks | 9.4 |
+| time travel staging | 86.9 |
+| lineage walks | 10.4 |

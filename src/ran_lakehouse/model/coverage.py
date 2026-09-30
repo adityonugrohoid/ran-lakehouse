@@ -84,6 +84,8 @@ class LayerCoverage:
         second_level_dbm: Level of the second server.
         sinr_db: Signal to interference plus noise ratio.
         distance_km: Distance to the best server.
+        second_distance_km: Distance to the second server (the timing advance
+            of the users the soft split of rule M3 gives it).
     """
 
     band: str
@@ -94,6 +96,7 @@ class LayerCoverage:
     second_level_dbm: np.ndarray
     sinr_db: np.ndarray
     distance_km: np.ndarray
+    second_distance_km: np.ndarray
 
 
 def environment_weights(density: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -215,6 +218,7 @@ def empty_layer(band: str, technology: str, n: int) -> LayerCoverage:
         second_level_dbm=np.full(n, -np.inf),
         sinr_db=np.full(n, -np.inf),
         distance_km=np.full(n, np.nan),
+        second_distance_km=np.full(n, np.nan),
     )
 
 
@@ -246,6 +250,7 @@ def fill_points(
     second_level = layer.second_level_dbm.copy()
     sinr = layer.sinr_db.copy()
     distance = layer.distance_km.copy()
+    second_distance = layer.second_distance_km.copy()
     for start in range(0, points.size, POINT_CHUNK):
         chunk = points[start : start + POINT_CHUNK]
         level, d_km = received_dbm(state, cells, grid, chunk, band)
@@ -277,10 +282,22 @@ def fill_points(
             runner = order[:, 1]
             second[chunk] = np.where(covered, cells[runner], -1)
             second_level[chunk] = level[rows, runner]
+            second_distance[chunk] = d_km[rows, runner]
         else:
             second[chunk] = -1
             second_level[chunk] = -np.inf
-    return LayerCoverage(band, technology, best, best_level, second, second_level, sinr, distance)
+            second_distance[chunk] = np.nan
+    return LayerCoverage(
+        band,
+        technology,
+        best,
+        best_level,
+        second,
+        second_level,
+        sinr,
+        distance,
+        second_distance,
+    )
 
 
 def layer_coverage(state: CellState, grid: Grid, band: str) -> LayerCoverage:

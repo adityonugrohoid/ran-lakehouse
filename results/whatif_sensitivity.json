@@ -18,630 +18,713 @@
   ],
   "layer split": {
     "margin to the strongest layer, dB": 8.0,
-    "minimum RSRP, dBm": -110.0
+    "minimum RSRP, dBm": -110.0,
+    "logistic scale, dB": 3.0,
+    "server split logistic scale, dB": 3.0
   },
   "changed cell": {
     "cases": 400,
     "DL IP throughput (kbit/s)": {
       "relative, %": {
-        "median": 5.29,
-        "p90": 18.86,
-        "max": 599.76,
-        "count": 398
+        "median": 4.08,
+        "p90": 15.69,
+        "p99": 49.51,
+        "max": 85.06,
+        "count": 400
       },
       "absolute": {
-        "median": 972.71,
-        "p90": 3474.17,
-        "max": 46684.28,
-        "count": 398
+        "median": 858.44,
+        "p90": 2476.64,
+        "p99": 5276.37,
+        "max": 8255.9,
+        "count": 400
       },
-      "share moved > 10%": 0.291
+      "share moved > 10%": 0.185
     },
     "Mean DL PRB use (%)": {
       "relative, %": {
-        "median": 5.42,
-        "p90": 18.85,
-        "max": 95.01,
+        "median": 6.42,
+        "p90": 15.43,
+        "p99": 33.01,
+        "max": 78.27,
         "count": 400
       },
       "absolute": {
-        "median": 0.76,
-        "p90": 4.43,
-        "max": 27.36,
+        "median": 0.89,
+        "p90": 3.64,
+        "p99": 9.31,
+        "max": 13.41,
         "count": 400
       },
-      "share moved > 10%": 0.292
+      "share moved > 10%": 0.275
     },
     "E-RAB drop rate (%)": {
       "relative, %": {
-        "median": 11.29,
-        "p90": 106.63,
-        "max": 2367.74,
-        "count": 398
+        "median": 11.37,
+        "p90": 72.54,
+        "p99": 430.77,
+        "max": 2442.05,
+        "count": 400
       },
       "absolute": {
         "median": 0.06,
-        "p90": 0.57,
-        "max": 3.75,
-        "count": 398
+        "p90": 0.39,
+        "p99": 1.72,
+        "max": 4.04,
+        "count": 400
       },
-      "share moved > 10%": 0.533
+      "share moved > 10%": 0.54
     },
     "E-RAB accessibility (%)": {
       "relative, %": {
-        "median": 0.1,
-        "p90": 0.87,
-        "max": 3.0,
-        "count": 398
+        "median": 0.11,
+        "p90": 0.51,
+        "p99": 1.22,
+        "max": 2.04,
+        "count": 400
       },
       "absolute": {
-        "median": 0.1,
-        "p90": 0.86,
-        "max": 2.9,
-        "count": 398
+        "median": 0.11,
+        "p90": 0.5,
+        "p99": 1.2,
+        "max": 1.97,
+        "count": 400
       },
       "share moved > 10%": 0.0
     },
     "subscribers, relative %": {
-      "median": 10.26,
-      "p90": 26.2,
-      "max": 142.67,
+      "median": 11.82,
+      "p90": 21.03,
+      "p99": 42.04,
+      "max": 70.83,
       "count": 400
     }
   },
   "touched neighbours": {
-    "cases": 1541,
+    "cases": 1713,
     "DL IP throughput (kbit/s)": {
       "relative, %": {
-        "median": 2.2,
-        "p90": 8.11,
-        "max": 79.41,
-        "count": 1541
+        "median": 1.34,
+        "p90": 5.03,
+        "p99": 12.61,
+        "max": 39.42,
+        "count": 1713
       },
       "absolute": {
-        "median": 425.68,
-        "p90": 1440.56,
-        "max": 7811.72,
-        "count": 1541
+        "median": 252.8,
+        "p90": 648.57,
+        "p99": 1706.9,
+        "max": 4071.93,
+        "count": 1713
       },
-      "share moved > 10%": 0.076
+      "share moved > 10%": 0.02
     },
     "Mean DL PRB use (%)": {
       "relative, %": {
-        "median": 1.35,
-        "p90": 6.68,
-        "max": 74.16,
-        "count": 1541
+        "median": 1.12,
+        "p90": 3.5,
+        "p99": 8.45,
+        "max": 20.1,
+        "count": 1713
       },
       "absolute": {
-        "median": 0.26,
-        "p90": 1.27,
-        "max": 21.34,
-        "count": 1541
+        "median": 0.17,
+        "p90": 0.93,
+        "p99": 2.02,
+        "max": 6.51,
+        "count": 1713
       },
-      "share moved > 10%": 0.039
+      "share moved > 10%": 0.006
     },
     "E-RAB drop rate (%)": {
       "relative, %": {
-        "median": 1.08,
-        "p90": 39.59,
-        "max": 2118.95,
-        "count": 1541
+        "median": 1.54,
+        "p90": 20.04,
+        "p99": 372.23,
+        "max": 1762.24,
+        "count": 1713
       },
       "absolute": {
         "median": 0.01,
-        "p90": 0.23,
-        "max": 4.1,
-        "count": 1541
+        "p90": 0.13,
+        "p99": 1.19,
+        "max": 4.07,
+        "count": 1713
       },
-      "share moved > 10%": 0.212
+      "share moved > 10%": 0.153
     },
     "E-RAB accessibility (%)": {
       "relative, %": {
         "median": 0.01,
-        "p90": 0.31,
-        "max": 1.57,
-        "count": 1541
+        "p90": 0.18,
+        "p99": 0.55,
+        "max": 1.24,
+        "count": 1713
       },
       "absolute": {
         "median": 0.01,
-        "p90": 0.3,
-        "max": 1.51,
-        "count": 1541
+        "p90": 0.17,
+        "p99": 0.54,
+        "max": 1.23,
+        "count": 1713
       },
       "share moved > 10%": 0.0
     },
     "subscribers, relative %": {
-      "median": 1.33,
-      "p90": 9.04,
-      "max": 94.87,
-      "count": 1541
+      "median": 1.67,
+      "p90": 4.55,
+      "p99": 8.87,
+      "max": 21.06,
+      "count": 1713
     }
   },
   "neighbours by relation": {
     "same band": {
-      "cases": 1270,
+      "cases": 1194,
       "DL IP throughput (kbit/s)": {
         "relative, %": {
-          "median": 2.24,
-          "p90": 7.98,
-          "max": 79.41,
-          "count": 1270
+          "median": 1.43,
+          "p90": 4.87,
+          "p99": 12.21,
+          "max": 39.42,
+          "count": 1194
         },
         "absolute": {
-          "median": 426.65,
-          "p90": 1547.08,
-          "max": 7811.72,
-          "count": 1270
+          "median": 277.28,
+          "p90": 706.95,
+          "p99": 1834.93,
+          "max": 4071.93,
+          "count": 1194
         },
-        "share moved > 10%": 0.076
+        "share moved > 10%": 0.021
       },
       "Mean DL PRB use (%)": {
         "relative, %": {
-          "median": 1.2,
-          "p90": 6.83,
-          "max": 46.34,
-          "count": 1270
+          "median": 0.97,
+          "p90": 3.61,
+          "p99": 8.75,
+          "max": 20.1,
+          "count": 1194
         },
         "absolute": {
-          "median": 0.2,
-          "p90": 1.21,
-          "max": 16.05,
-          "count": 1270
+          "median": 0.14,
+          "p90": 0.89,
+          "p99": 2.08,
+          "max": 6.51,
+          "count": 1194
         },
-        "share moved > 10%": 0.041
+        "share moved > 10%": 0.008
       },
       "E-RAB drop rate (%)": {
         "relative, %": {
-          "median": 1.21,
-          "p90": 61.22,
-          "max": 2118.95,
-          "count": 1270
+          "median": 2.68,
+          "p90": 33.37,
+          "p99": 407.22,
+          "max": 1762.24,
+          "count": 1194
         },
         "absolute": {
           "median": 0.01,
-          "p90": 0.34,
-          "max": 4.1,
-          "count": 1270
+          "p90": 0.18,
+          "p99": 1.45,
+          "max": 4.07,
+          "count": 1194
         },
-        "share moved > 10%": 0.236
+        "share moved > 10%": 0.216
       },
       "E-RAB accessibility (%)": {
         "relative, %": {
-          "median": 0.01,
-          "p90": 0.35,
-          "max": 1.57,
-          "count": 1270
+          "median": 0.02,
+          "p90": 0.23,
+          "p99": 0.66,
+          "max": 1.24,
+          "count": 1194
         },
         "absolute": {
-          "median": 0.01,
-          "p90": 0.34,
-          "max": 1.51,
-          "count": 1270
+          "median": 0.02,
+          "p90": 0.22,
+          "p99": 0.65,
+          "max": 1.23,
+          "count": 1194
         },
         "share moved > 10%": 0.0
       },
       "subscribers, relative %": {
-        "median": 0.67,
-        "p90": 8.79,
-        "max": 39.65,
-        "count": 1270
+        "median": 1.69,
+        "p90": 5.12,
+        "p99": 9.68,
+        "max": 21.06,
+        "count": 1194
       }
     },
     "other band, same site": {
-      "cases": 76,
+      "cases": 211,
       "DL IP throughput (kbit/s)": {
         "relative, %": {
-          "median": 2.08,
-          "p90": 8.33,
-          "max": 73.02,
-          "count": 76
+          "median": 0.76,
+          "p90": 3.02,
+          "p99": 15.39,
+          "max": 18.6,
+          "count": 211
         },
         "absolute": {
-          "median": 483.59,
-          "p90": 1220.57,
-          "max": 5573.24,
-          "count": 76
+          "median": 149.9,
+          "p90": 485.02,
+          "p99": 1217.67,
+          "max": 1315.82,
+          "count": 211
         },
-        "share moved > 10%": 0.092
+        "share moved > 10%": 0.033
       },
       "Mean DL PRB use (%)": {
         "relative, %": {
-          "median": 2.72,
-          "p90": 9.13,
-          "max": 74.16,
-          "count": 76
+          "median": 1.17,
+          "p90": 3.41,
+          "p99": 5.85,
+          "max": 6.79,
+          "count": 211
         },
         "absolute": {
-          "median": 0.35,
-          "p90": 1.84,
-          "max": 21.34,
-          "count": 76
-        },
-        "share moved > 10%": 0.105
-      },
-      "E-RAB drop rate (%)": {
-        "relative, %": {
-          "median": 2.69,
-          "p90": 11.97,
-          "max": 175.59,
-          "count": 76
-        },
-        "absolute": {
-          "median": 0.01,
-          "p90": 0.11,
-          "max": 0.42,
-          "count": 76
-        },
-        "share moved > 10%": 0.171
-      },
-      "E-RAB accessibility (%)": {
-        "relative, %": {
-          "median": 0.03,
-          "p90": 0.2,
-          "max": 0.8,
-          "count": 76
-        },
-        "absolute": {
-          "median": 0.03,
-          "p90": 0.2,
-          "max": 0.8,
-          "count": 76
-        },
-        "share moved > 10%": 0.0
-      },
-      "subscribers, relative %": {
-        "median": 2.94,
-        "p90": 9.73,
-        "max": 94.87,
-        "count": 76
-      }
-    },
-    "other band, other site": {
-      "cases": 195,
-      "DL IP throughput (kbit/s)": {
-        "relative, %": {
-          "median": 2.09,
-          "p90": 8.14,
-          "max": 19.72,
-          "count": 195
-        },
-        "absolute": {
-          "median": 386.42,
-          "p90": 1308.65,
-          "max": 2267.19,
-          "count": 195
-        },
-        "share moved > 10%": 0.072
-      },
-      "Mean DL PRB use (%)": {
-        "relative, %": {
-          "median": 2.2,
-          "p90": 5.87,
-          "max": 9.23,
-          "count": 195
-        },
-        "absolute": {
-          "median": 0.36,
-          "p90": 1.34,
-          "max": 2.69,
-          "count": 195
+          "median": 0.17,
+          "p90": 0.87,
+          "p99": 1.97,
+          "max": 2.13,
+          "count": 211
         },
         "share moved > 10%": 0.0
       },
       "E-RAB drop rate (%)": {
         "relative, %": {
-          "median": 0.77,
-          "p90": 7.09,
-          "max": 20.23,
-          "count": 195
+          "median": 0.72,
+          "p90": 2.44,
+          "p99": 3.76,
+          "max": 5.64,
+          "count": 211
         },
         "absolute": {
           "median": 0.0,
-          "p90": 0.04,
-          "max": 0.12,
-          "count": 195
+          "p90": 0.02,
+          "p99": 0.04,
+          "max": 0.07,
+          "count": 211
         },
-        "share moved > 10%": 0.072
+        "share moved > 10%": 0.0
       },
       "E-RAB accessibility (%)": {
         "relative, %": {
           "median": 0.01,
-          "p90": 0.08,
-          "max": 0.23,
-          "count": 195
+          "p90": 0.03,
+          "p99": 0.08,
+          "max": 0.1,
+          "count": 211
         },
         "absolute": {
           "median": 0.01,
-          "p90": 0.08,
-          "max": 0.23,
-          "count": 195
+          "p90": 0.03,
+          "p99": 0.08,
+          "max": 0.1,
+          "count": 211
         },
         "share moved > 10%": 0.0
       },
       "subscribers, relative %": {
-        "median": 2.73,
-        "p90": 8.96,
-        "max": 21.39,
-        "count": 195
+        "median": 1.6,
+        "p90": 3.77,
+        "p99": 5.05,
+        "max": 6.31,
+        "count": 211
+      }
+    },
+    "other band, other site": {
+      "cases": 308,
+      "DL IP throughput (kbit/s)": {
+        "relative, %": {
+          "median": 1.51,
+          "p90": 5.68,
+          "p99": 9.27,
+          "max": 12.63,
+          "count": 308
+        },
+        "absolute": {
+          "median": 222.93,
+          "p90": 478.97,
+          "p99": 1393.4,
+          "max": 1983.8,
+          "count": 308
+        },
+        "share moved > 10%": 0.006
+      },
+      "Mean DL PRB use (%)": {
+        "relative, %": {
+          "median": 1.45,
+          "p90": 2.88,
+          "p99": 5.95,
+          "max": 12.24,
+          "count": 308
+        },
+        "absolute": {
+          "median": 0.35,
+          "p90": 0.98,
+          "p99": 1.78,
+          "max": 1.97,
+          "count": 308
+        },
+        "share moved > 10%": 0.003
+      },
+      "E-RAB drop rate (%)": {
+        "relative, %": {
+          "median": 0.71,
+          "p90": 2.92,
+          "p99": 12.93,
+          "max": 25.94,
+          "count": 308
+        },
+        "absolute": {
+          "median": 0.0,
+          "p90": 0.01,
+          "p99": 0.08,
+          "max": 0.17,
+          "count": 308
+        },
+        "share moved > 10%": 0.013
+      },
+      "E-RAB accessibility (%)": {
+        "relative, %": {
+          "median": 0.01,
+          "p90": 0.07,
+          "p99": 0.23,
+          "max": 0.31,
+          "count": 308
+        },
+        "absolute": {
+          "median": 0.01,
+          "p90": 0.07,
+          "p99": 0.22,
+          "max": 0.3,
+          "count": 308
+        },
+        "share moved > 10%": 0.0
+      },
+      "subscribers, relative %": {
+        "median": 1.72,
+        "p90": 2.94,
+        "p99": 5.42,
+        "max": 10.07,
+        "count": 308
       }
     }
   },
   "neighbours by change": {
     "tilt +1": {
-      "cases": 348,
+      "cases": 391,
       "DL IP throughput (kbit/s)": {
         "relative, %": {
-          "median": 2.37,
-          "p90": 8.6,
-          "max": 73.02,
-          "count": 348
+          "median": 1.64,
+          "p90": 5.41,
+          "p99": 14.43,
+          "max": 18.69,
+          "count": 391
         },
         "absolute": {
-          "median": 442.3,
-          "p90": 1607.69,
-          "max": 6931.87,
-          "count": 348
+          "median": 296.31,
+          "p90": 711.78,
+          "p99": 1720.7,
+          "max": 3438.19,
+          "count": 391
         },
-        "share moved > 10%": 0.08
-      },
-      "Mean DL PRB use (%)": {
-        "relative, %": {
-          "median": 1.59,
-          "p90": 7.13,
-          "max": 74.16,
-          "count": 348
-        },
-        "absolute": {
-          "median": 0.3,
-          "p90": 1.38,
-          "max": 21.34,
-          "count": 348
-        },
-        "share moved > 10%": 0.057
-      },
-      "E-RAB drop rate (%)": {
-        "relative, %": {
-          "median": 1.09,
-          "p90": 31.01,
-          "max": 1094.4,
-          "count": 348
-        },
-        "absolute": {
-          "median": 0.0,
-          "p90": 0.19,
-          "max": 2.49,
-          "count": 348
-        },
-        "share moved > 10%": 0.21
-      },
-      "E-RAB accessibility (%)": {
-        "relative, %": {
-          "median": 0.01,
-          "p90": 0.33,
-          "max": 1.23,
-          "count": 348
-        },
-        "absolute": {
-          "median": 0.01,
-          "p90": 0.32,
-          "max": 1.22,
-          "count": 348
-        },
-        "share moved > 10%": 0.0
-      },
-      "subscribers, relative %": {
-        "median": 1.53,
-        "p90": 9.18,
-        "max": 92.91,
-        "count": 348
-      }
-    },
-    "tilt -1": {
-      "cases": 342,
-      "DL IP throughput (kbit/s)": {
-        "relative, %": {
-          "median": 2.38,
-          "p90": 8.12,
-          "max": 79.41,
-          "count": 342
-        },
-        "absolute": {
-          "median": 432.17,
-          "p90": 1284.54,
-          "max": 7811.72,
-          "count": 342
-        },
-        "share moved > 10%": 0.082
-      },
-      "Mean DL PRB use (%)": {
-        "relative, %": {
-          "median": 1.37,
-          "p90": 6.04,
-          "max": 35.3,
-          "count": 342
-        },
-        "absolute": {
-          "median": 0.26,
-          "p90": 1.37,
-          "max": 12.23,
-          "count": 342
-        },
-        "share moved > 10%": 0.026
-      },
-      "E-RAB drop rate (%)": {
-        "relative, %": {
-          "median": 1.03,
-          "p90": 20.24,
-          "max": 1945.9,
-          "count": 342
-        },
-        "absolute": {
-          "median": 0.0,
-          "p90": 0.18,
-          "max": 4.04,
-          "count": 342
-        },
-        "share moved > 10%": 0.19
-      },
-      "E-RAB accessibility (%)": {
-        "relative, %": {
-          "median": 0.01,
-          "p90": 0.28,
-          "max": 1.57,
-          "count": 342
-        },
-        "absolute": {
-          "median": 0.01,
-          "p90": 0.26,
-          "max": 1.51,
-          "count": 342
-        },
-        "share moved > 10%": 0.0
-      },
-      "subscribers, relative %": {
-        "median": 1.35,
-        "p90": 7.58,
-        "max": 39.65,
-        "count": 342
-      }
-    },
-    "power +1": {
-      "cases": 448,
-      "DL IP throughput (kbit/s)": {
-        "relative, %": {
-          "median": 2.1,
-          "p90": 7.65,
-          "max": 72.86,
-          "count": 448
-        },
-        "absolute": {
-          "median": 415.04,
-          "p90": 1329.2,
-          "max": 7166.76,
-          "count": 448
-        },
-        "share moved > 10%": 0.076
+        "share moved > 10%": 0.02
       },
       "Mean DL PRB use (%)": {
         "relative, %": {
           "median": 1.23,
-          "p90": 6.21,
-          "max": 32.8,
-          "count": 448
+          "p90": 3.85,
+          "p99": 8.65,
+          "max": 20.1,
+          "count": 391
         },
         "absolute": {
           "median": 0.21,
-          "p90": 1.22,
-          "max": 11.36,
-          "count": 448
+          "p90": 1.06,
+          "p99": 2.14,
+          "max": 3.43,
+          "count": 391
         },
-        "share moved > 10%": 0.029
+        "share moved > 10%": 0.01
       },
       "E-RAB drop rate (%)": {
         "relative, %": {
-          "median": 1.03,
-          "p90": 27.04,
-          "max": 2118.95,
-          "count": 448
+          "median": 1.78,
+          "p90": 19.23,
+          "p99": 248.69,
+          "max": 379.07,
+          "count": 391
         },
         "absolute": {
-          "median": 0.0,
-          "p90": 0.2,
-          "max": 4.1,
-          "count": 448
+          "median": 0.01,
+          "p90": 0.13,
+          "p99": 1.02,
+          "max": 1.94,
+          "count": 391
         },
-        "share moved > 10%": 0.194
+        "share moved > 10%": 0.156
       },
       "E-RAB accessibility (%)": {
         "relative, %": {
           "median": 0.01,
-          "p90": 0.28,
-          "max": 1.4,
-          "count": 448
+          "p90": 0.17,
+          "p99": 0.53,
+          "max": 1.08,
+          "count": 391
         },
         "absolute": {
           "median": 0.01,
-          "p90": 0.27,
-          "max": 1.35,
-          "count": 448
+          "p90": 0.16,
+          "p99": 0.53,
+          "max": 1.06,
+          "count": 391
         },
         "share moved > 10%": 0.0
       },
       "subscribers, relative %": {
-        "median": 1.25,
-        "p90": 7.91,
-        "max": 29.52,
-        "count": 448
+        "median": 1.73,
+        "p90": 4.6,
+        "p99": 8.71,
+        "max": 15.11,
+        "count": 391
       }
     },
-    "power -1": {
-      "cases": 403,
+    "tilt -1": {
+      "cases": 361,
       "DL IP throughput (kbit/s)": {
         "relative, %": {
-          "median": 2.12,
-          "p90": 7.88,
-          "max": 71.92,
-          "count": 403
+          "median": 1.61,
+          "p90": 5.29,
+          "p99": 14.63,
+          "max": 39.32,
+          "count": 361
         },
         "absolute": {
-          "median": 416.96,
-          "p90": 1693.86,
-          "max": 6979.75,
-          "count": 403
+          "median": 288.96,
+          "p90": 631.46,
+          "p99": 1467.41,
+          "max": 4060.84,
+          "count": 361
         },
-        "share moved > 10%": 0.067
+        "share moved > 10%": 0.03
       },
       "Mean DL PRB use (%)": {
         "relative, %": {
-          "median": 1.3,
-          "p90": 7.14,
-          "max": 72.43,
-          "count": 403
+          "median": 1.2,
+          "p90": 3.43,
+          "p99": 8.11,
+          "max": 19.13,
+          "count": 361
         },
         "absolute": {
-          "median": 0.25,
-          "p90": 1.11,
-          "max": 20.84,
-          "count": 403
+          "median": 0.21,
+          "p90": 0.99,
+          "p99": 2.06,
+          "max": 6.49,
+          "count": 361
         },
-        "share moved > 10%": 0.045
+        "share moved > 10%": 0.006
       },
       "E-RAB drop rate (%)": {
         "relative, %": {
-          "median": 1.33,
-          "p90": 113.92,
-          "max": 1791.7,
-          "count": 403
+          "median": 1.38,
+          "p90": 12.67,
+          "p99": 144.03,
+          "max": 1225.35,
+          "count": 361
         },
         "absolute": {
           "median": 0.01,
-          "p90": 0.68,
-          "max": 3.47,
-          "count": 403
+          "p90": 0.09,
+          "p99": 0.79,
+          "max": 1.75,
+          "count": 361
         },
-        "share moved > 10%": 0.253
+        "share moved > 10%": 0.122
       },
       "E-RAB accessibility (%)": {
         "relative, %": {
-          "median": 0.01,
-          "p90": 0.34,
-          "max": 1.41,
-          "count": 403
+          "median": 0.02,
+          "p90": 0.15,
+          "p99": 0.36,
+          "max": 0.5,
+          "count": 361
         },
         "absolute": {
-          "median": 0.01,
-          "p90": 0.32,
-          "max": 1.4,
-          "count": 403
+          "median": 0.02,
+          "p90": 0.15,
+          "p99": 0.35,
+          "max": 0.48,
+          "count": 361
         },
         "share moved > 10%": 0.0
       },
       "subscribers, relative %": {
-        "median": 1.25,
-        "p90": 9.86,
-        "max": 94.87,
-        "count": 403
+        "median": 1.56,
+        "p90": 4.3,
+        "p99": 7.32,
+        "max": 15.52,
+        "count": 361
+      }
+    },
+    "power +1": {
+      "cases": 507,
+      "DL IP throughput (kbit/s)": {
+        "relative, %": {
+          "median": 1.12,
+          "p90": 4.39,
+          "p99": 12.11,
+          "max": 39.42,
+          "count": 507
+        },
+        "absolute": {
+          "median": 209.42,
+          "p90": 584.31,
+          "p99": 1437.1,
+          "max": 4071.93,
+          "count": 507
+        },
+        "share moved > 10%": 0.018
+      },
+      "Mean DL PRB use (%)": {
+        "relative, %": {
+          "median": 0.95,
+          "p90": 3.23,
+          "p99": 6.93,
+          "max": 19.19,
+          "count": 507
+        },
+        "absolute": {
+          "median": 0.14,
+          "p90": 0.79,
+          "p99": 1.82,
+          "max": 6.51,
+          "count": 507
+        },
+        "share moved > 10%": 0.006
+      },
+      "E-RAB drop rate (%)": {
+        "relative, %": {
+          "median": 1.43,
+          "p90": 18.76,
+          "p99": 415.49,
+          "max": 987.05,
+          "count": 507
+        },
+        "absolute": {
+          "median": 0.01,
+          "p90": 0.13,
+          "p99": 1.22,
+          "max": 4.07,
+          "count": 507
+        },
+        "share moved > 10%": 0.146
+      },
+      "E-RAB accessibility (%)": {
+        "relative, %": {
+          "median": 0.01,
+          "p90": 0.18,
+          "p99": 0.59,
+          "max": 0.69,
+          "count": 507
+        },
+        "absolute": {
+          "median": 0.01,
+          "p90": 0.18,
+          "p99": 0.58,
+          "max": 0.68,
+          "count": 507
+        },
+        "share moved > 10%": 0.0
+      },
+      "subscribers, relative %": {
+        "median": 1.69,
+        "p90": 4.32,
+        "p99": 8.11,
+        "max": 15.55,
+        "count": 507
+      }
+    },
+    "power -1": {
+      "cases": 454,
+      "DL IP throughput (kbit/s)": {
+        "relative, %": {
+          "median": 1.22,
+          "p90": 4.9,
+          "p99": 10.32,
+          "max": 19.35,
+          "count": 454
+        },
+        "absolute": {
+          "median": 221.23,
+          "p90": 672.68,
+          "p99": 1841.35,
+          "max": 3377.58,
+          "count": 454
+        },
+        "share moved > 10%": 0.013
+      },
+      "Mean DL PRB use (%)": {
+        "relative, %": {
+          "median": 1.05,
+          "p90": 3.49,
+          "p99": 8.72,
+          "max": 11.6,
+          "count": 454
+        },
+        "absolute": {
+          "median": 0.16,
+          "p90": 0.81,
+          "p99": 1.67,
+          "max": 3.0,
+          "count": 454
+        },
+        "share moved > 10%": 0.004
+      },
+      "E-RAB drop rate (%)": {
+        "relative, %": {
+          "median": 1.69,
+          "p90": 38.63,
+          "p99": 407.73,
+          "max": 1762.24,
+          "count": 454
+        },
+        "absolute": {
+          "median": 0.01,
+          "p90": 0.2,
+          "p99": 1.45,
+          "max": 2.51,
+          "count": 454
+        },
+        "share moved > 10%": 0.183
+      },
+      "E-RAB accessibility (%)": {
+        "relative, %": {
+          "median": 0.01,
+          "p90": 0.19,
+          "p99": 0.68,
+          "max": 1.24,
+          "count": 454
+        },
+        "absolute": {
+          "median": 0.01,
+          "p90": 0.18,
+          "p99": 0.67,
+          "max": 1.23,
+          "count": 454
+        },
+        "share moved > 10%": 0.0
+      },
+      "subscribers, relative %": {
+        "median": 1.76,
+        "p90": 4.77,
+        "p99": 9.96,
+        "max": 21.06,
+        "count": 454
       }
     }
   },
@@ -653,6 +736,79 @@
     "their SINR before, dB (median)": -1.4,
     "their SINR after, dB (median)": -2.8,
     "neighbour state": {
+      "subscribers": [
+        908,
+        926
+      ],
+      "spectral efficiency, bit/s/Hz": [
+        1.491,
+        1.491
+      ],
+      "edge share": [
+        0.172,
+        0.152
+      ],
+      "DL IP throughput, kbit/s": [
+        18503,
+        18292
+      ],
+      "load": {
+        "before": {
+          "PRB use mean, %": 24.6,
+          "PRB use p95, %": 46.0,
+          "PRB use max, %": 71.0
+        },
+        "after": {
+          "PRB use mean, %": 25.0,
+          "PRB use p95, %": 47.0,
+          "PRB use max, %": 72.0
+        }
+      }
+    }
+  },
+  "layer case": {
+    "change": "ENB0238_B3_2 power -1",
+    "co-sited cell": "ENB0238_B28_2",
+    "its subscribers": [
+      1524,
+      1590
+    ],
+    "its DL IP throughput, kbit/s": [
+      5047,
+      4798
+    ],
+    "own-layer points changing best server": 38,
+    "points of the co-sited cell whose layer share changed": 272,
+    "its layer share at them, median": [
+      0.454,
+      0.493
+    ],
+    "subscribers the share change moves": 68
+  },
+  "before": {
+    "neighbour throughput, relative %": {
+      "median": 2.2,
+      "p90": 8.11,
+      "p99": 28.48,
+      "max": 79.41,
+      "count": 1541
+    },
+    "neighbour throughput, share moved > 10%": 0.076,
+    "co-sited layer subscribers, relative %": {
+      "median": 2.94,
+      "p90": 9.73,
+      "p99": 93.4,
+      "max": 94.87,
+      "count": 76
+    },
+    "changed cell subscribers, relative %": {
+      "median": 10.26,
+      "p90": 26.2,
+      "p99": 100.0,
+      "max": 142.67,
+      "count": 400
+    },
+    "smoke case neighbour": {
       "subscribers": [
         963,
         1091
@@ -683,27 +839,8 @@
       }
     }
   },
-  "layer case": {
-    "change": "ENB0238_B3_2 power -1",
-    "co-sited cell": "ENB0238_B28_2",
-    "its subscribers": [
-      1208,
-      2330
-    ],
-    "its DL IP throughput, kbit/s": [
-      9318,
-      3745
-    ],
-    "own-layer points changing best server": 38,
-    "points of the co-sited cell whose layer share changed": 258,
-    "its layer share at them, median": [
-      0.333,
-      1.0
-    ],
-    "subscribers the share change moves": 1122
-  },
   "resources": {
-    "wall time of the whole report, s": 759.9,
-    "peak resident set, MB": 669
+    "wall time of the whole report, s": 890.3,
+    "peak resident set, MB": 642
   }
 }

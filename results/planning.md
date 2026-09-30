@@ -105,6 +105,6 @@ The gold table uses the 0.6 F1 clearance; the 1.0 F1 count is beside it.
 
 | Step | Value |
 |---|---|
-| seconds, network model and plan | 28.3 |
-| seconds, total | 39.5 |
-| peak RSS (MB) | 744 |
+| seconds, network model and plan | 29.7 |
+| seconds, total | 41.9 |
+| peak RSS (MB) | 747 |

@@ -34,25 +34,25 @@ D5 counts the network elements moved to the renamed dictionary release.
 
 | Table | Rows | Data files | MB |
 |---|---|---|---|
-| bronze.pm_values | 457,253,306 | 527 | 1,904.0 |
-| bronze.file_arrivals | 16,680 | 449 | 2.6 |
-| bronze.cm_records | 728,723 | 87 | 21.0 |
+| bronze.pm_values | 475,816,636 | 555 | 2,177.3 |
+| bronze.file_arrivals | 16,680 | 469 | 2.6 |
+| bronze.cm_records | 825,407 | 85 | 23.5 |
 | bronze.fm_records | 16 | 12 | 0.0 |
 | evaluation.delivery_anomalies | 284 | 1 | 0.0 |
-| total | | | 1,927.6 |
+| total | | | 2,203.4 |
 
 | PM rows by granularity (rule P1, P4) | Rows |
 |---|---|
-| 15 min | 366,554,126 |
+| 15 min | 385,117,456 |
 | 60 min | 90,699,180 |
 
 | PM rows by dictionary release (rule D5) | Rows |
 |---|---|
-| HW-R1 | 228,442,949 |
-| HW-R2 | 75,710,677 |
-| none declared (OMeS) | 153,099,680 |
+| HW-R1 | 238,043,669 |
+| HW-R2 | 79,268,837 |
+| none declared (OMeS) | 158,504,130 |
 
-Landing at the end keeps 3 days: 599 files, 43.9 MB.
+Landing at the end keeps 3 days: 599 files, 46.9 MB.
 
 ## Cost
 
@@ -61,12 +61,12 @@ maximum resident set size.
 
 | Step | Seconds |
 |---|---|
-| simulate | 94.6 |
-| render | 832.0 |
-| collect | 1,927.4 |
-| total | 2,880.8 |
+| simulate | 102.6 |
+| render | 887.2 |
+| collect | 2,073.0 |
+| total | 3,090.6 |
 
-Peak RSS: 2,773 MB.
+Peak RSS: 2,856 MB.
 
 | Machine | |
 |---|---|

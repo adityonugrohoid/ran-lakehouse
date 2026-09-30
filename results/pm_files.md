@@ -9,21 +9,21 @@ from `pm_files.json`.
 
 ## EMS-HW-01 (3gpp-xml)
 
-Sample file name: `B20260105.1200+0700-1215+0700_EMS-HW-01.xml.gz`. 96 files per day, 184 network elements or objects per file, 1134 cells in the region, 3,621,264 values per day.
+Sample file name: `B20260105.1200+0700-1215+0700_EMS-HW-01.xml.gz`. 96 files per day, 184 network elements or objects per file, 1134 cells in the region, 3,777,936 values per day.
 
 | Size | MB |
 |---|---|
-| gzip, total per day | 7.17 |
-| gzip, mean per file | 0.075 |
-| xml, total per day | 96.05 |
-| gzip ratio | 13.4 |
+| gzip, total per day | 7.87 |
+| gzip, mean per file | 0.082 |
+| xml, total per day | 106.47 |
+| gzip ratio | 13.5 |
 
 | Speed | Value |
 |---|---|
-| write, s per day | 3.8 |
-| write, values per s | 958,996 |
-| parse and check, s per day | 6.0 |
-| parse, values per s | 600,579 |
+| write, s per day | 4.2 |
+| write, values per s | 908,179 |
+| parse and check, s per day | 6.9 |
+| parse, values per s | 549,998 |
 
 Dictionary release HW-R1: 69 counters in LTE.Cell, LTE.CQI, LTE.TA, LTE.NCell, GSM.Cell, GSM.NCell.
 
@@ -35,21 +35,21 @@ Dictionary release HW-R1: 69 counters in LTE.Cell, LTE.CQI, LTE.TA, LTE.NCell, G
 
 ## EMS-NK-01 (omes)
 
-Sample file name: `OMeS_EMS-NK-01_20260105T0500Z.xml.gz`. 96 files per day, 3424 network elements or objects per file, 582 cells in the region, 1,822,800 values per day.
+Sample file name: `OMeS_EMS-NK-01_20260105T0500Z.xml.gz`. 96 files per day, 3759 network elements or objects per file, 582 cells in the region, 1,887,120 values per day.
 
 | Size | MB |
 |---|---|
-| gzip, total per day | 6.87 |
-| gzip, mean per file | 0.072 |
-| xml, total per day | 127.97 |
-| gzip ratio | 18.6 |
+| gzip, total per day | 7.15 |
+| gzip, mean per file | 0.074 |
+| xml, total per day | 133.93 |
+| gzip ratio | 18.7 |
 
 | Speed | Value |
 |---|---|
-| write, s per day | 5.1 |
-| write, values per s | 357,779 |
-| parse and check, s per day | 6.4 |
-| parse, values per s | 285,745 |
+| write, s per day | 5.6 |
+| write, values per s | 337,477 |
+| parse and check, s per day | 6.9 |
+| parse, values per s | 273,003 |
 
 Dictionary release NK-R1: 66 counters in LTE_Signalling, LTE_EPS_Bearer, LTE_Cell_Throughput, LTE_Cell_Resource, LTE_Cell_Load, LTE_Cell_Avail, LTE_Intra_Freq_HO, LTE_Power_Quality_UL, LTE_Quality_DL, LTE_Timing_Advance, LTE_Neighb_Cell_HO, BSC_Traffic, BSC_Handover, BSC_Adjacent_HO.
 

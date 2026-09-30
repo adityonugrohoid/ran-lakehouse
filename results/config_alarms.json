@@ -7,17 +7,17 @@
       "snapshot_objects_first_day_by_class": {
         "EUtranCellFDD": 852,
         "EUtranCellTDD": 150,
-        "EUtranRelation": 3365,
+        "EUtranRelation": 4181,
         "GsmCell": 132,
         "GsmRelation": 710
       },
       "snapshot_rows_per_day_min_max": [
-        5208,
-        5209
+        6023,
+        6025
       ],
       "change_log_entries_by_attribute": {
         "electricalTiltDeg": 13,
-        "relation": 4,
+        "relation": 8,
         "txPowerDbm": 8
       },
       "alarm_notifications_by_type_and_cause": {
@@ -27,14 +27,14 @@
         "notifyNewAlarm: Transmitter Failure": 4
       },
       "gzip_mb_over_the_run": {
-        "CM": 5.6,
+        "CM": 6.37,
         "CMLOG": 0.01,
         "FM": 0.0
       },
       "consistency": {
         "change log entries, exported / implied by the schedule": [
-          25,
-          25
+          29,
+          29
         ],
         "alarm notifications, exported / implied by the schedule": [
           14,
@@ -48,17 +48,16 @@
       "snapshot_objects_first_day_by_class": {
         "EUtranCellFDD": 414,
         "EUtranCellTDD": 36,
-        "EUtranRelation": 2134,
+        "EUtranRelation": 2469,
         "GsmCell": 132,
         "GsmRelation": 750
       },
       "snapshot_rows_per_day_min_max": [
-        3465,
-        3466
+        3801,
+        3801
       ],
       "change_log_entries_by_attribute": {
         "electricalTiltDeg": 2,
-        "relation": 4,
         "txPowerDbm": 6
       },
       "alarm_notifications_by_type_and_cause": {
@@ -66,14 +65,14 @@
         "notifyNewAlarm: Transmitter Failure": 1
       },
       "gzip_mb_over_the_run": {
-        "CM": 3.36,
+        "CM": 3.67,
         "CMLOG": 0.0,
         "FM": 0.0
       },
       "consistency": {
         "change log entries, exported / implied by the schedule": [
-          12,
-          12
+          8,
+          8
         ],
         "alarm notifications, exported / implied by the schedule": [
           2,
@@ -83,6 +82,6 @@
     }
   },
   "timing_s": {
-    "network, schedule and 12 weeks of exports": 53.2
+    "network, schedule and 12 weeks of exports": 57.3
   }
 }

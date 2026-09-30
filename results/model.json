@@ -7,20 +7,19 @@
     "weeks": 12,
     "cell_periods": 13837824,
     "gsm_trx": {
-      "1": 89,
-      "2": 92,
-      "3": 27,
-      "4": 17,
-      "5": 14,
-      "6": 12,
-      "7": 6,
-      "8": 3,
-      "9": 1,
-      "10": 2,
-      "11": 1
+      "1": 77,
+      "2": 97,
+      "3": 33,
+      "4": 21,
+      "5": 8,
+      "6": 16,
+      "7": 8,
+      "8": 1,
+      "9": 2,
+      "10": 1
     },
     "unserved_persons": 0,
-    "neighbour_relations": 6959,
+    "neighbour_relations": 8110,
     "coverage": {
       "B1": {
         "technology": "LTE",
@@ -129,43 +128,43 @@
       }
     },
     "kpis": {
-      "LTE E-RAB accessibility, TS 32.450 6.1.1 (%)": 97.888,
-      "LTE RRC setup success rate, operator-defined (%)": 98.651,
-      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 1.0958,
-      "LTE E-RAB drop rate, operator-defined (%)": 0.622,
-      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 6037.0,
+      "LTE E-RAB accessibility, TS 32.450 6.1.1 (%)": 98.314,
+      "LTE RRC setup success rate, operator-defined (%)": 98.949,
+      "LTE E-RAB retainability R2, TS 32.450 6.2.1 (releases per session hour)": 0.989,
+      "LTE E-RAB drop rate, operator-defined (%)": 0.559,
+      "LTE DL IP throughput, TS 32.450 6.3.1 (kbit/s)": 7296.8,
       "LTE cell availability, TS 32.450 6.4.1 (%)": 100.0,
-      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.684,
-      "LTE mean DL PRB use, operator-defined (%)": 18.53,
-      "GSM service access success, TS 32.410 7.4 (%)": 97.907,
-      "GSM TCH blocking, vendor-style (%)": 0.601,
-      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.107,
-      "GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%)": 2.612
+      "LTE intra-frequency handover success, HO.IntraFreqOut* (%)": 98.714,
+      "LTE mean DL PRB use, operator-defined (%)": 19.01,
+      "GSM service access success, TS 32.410 7.4 (%)": 97.895,
+      "GSM TCH blocking, vendor-style (%)": 0.49,
+      "GSM handover success per cell, TS 32.410 9.5 (%)": 96.1,
+      "GSM abnormal release rate, TS 32.410 8.2 without intra-cell terms (%)": 2.62
     },
     "peak_congestion_by_class": {
       "urban": {
         "busiest_slot": "Tue 11:30",
-        "mean_prb_pct": 25.8,
-        "share_above_80_pct": 0.027,
-        "max_share_above_80_pct_any_slot": 0.036
+        "mean_prb_pct": 26.5,
+        "share_above_80_pct": 0.013,
+        "max_share_above_80_pct_any_slot": 0.03
       },
       "suburban": {
         "busiest_slot": "Fri 20:30",
-        "mean_prb_pct": 48.7,
-        "share_above_80_pct": 0.194,
-        "max_share_above_80_pct_any_slot": 0.194
+        "mean_prb_pct": 50.0,
+        "share_above_80_pct": 0.185,
+        "max_share_above_80_pct_any_slot": 0.185
       },
       "rural": {
         "busiest_slot": "Fri 20:30",
-        "mean_prb_pct": 37.3,
-        "share_above_80_pct": 0.127,
-        "max_share_above_80_pct_any_slot": 0.128
+        "mean_prb_pct": 40.8,
+        "share_above_80_pct": 0.168,
+        "max_share_above_80_pct_any_slot": 0.172
       }
     },
     "subscribers_per_lte_cell_by_class": {
-      "urban": 400,
-      "suburban": 1148,
-      "rural": 615
+      "urban": 403,
+      "suburban": 1127,
+      "rural": 645
     },
     "invariant_violations": {
       "RRC.ConnEstabSucc.sum > RRC.ConnEstabAtt.sum": 0,
@@ -183,28 +182,28 @@
       {
         "check": "IP throughput falls as PRB use rises",
         "statistic": "Spearman",
-        "value": -0.5943,
+        "value": -0.6138,
         "expected": "< 0",
         "pass": true
       },
       {
         "check": "RRC setup success lower at PRB >= 95% than below 80%",
         "statistic": "success rate below 80% minus at >= 95%",
-        "value": 0.0369,
+        "value": 0.027,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "E-RAB drop rate rises with cell-edge share",
         "statistic": "Spearman",
-        "value": 0.9183,
+        "value": 0.9887,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "Mean CQI rises with mean SINR",
         "statistic": "Spearman",
-        "value": 0.9962,
+        "value": 0.9953,
         "expected": "> 0",
         "pass": true
       },
@@ -212,9 +211,9 @@
         "check": "Median TA distance grows urban < suburban < rural",
         "statistic": "median mean TA step per class",
         "value": [
-          3.702,
-          11.138,
-          25.889
+          3.993,
+          12.234,
+          29.052
         ],
         "expected": "increasing",
         "pass": true
@@ -222,14 +221,14 @@
       {
         "check": "PRB use rises with connected users",
         "statistic": "Spearman",
-        "value": 0.9691,
+        "value": 0.9693,
         "expected": "> 0",
         "pass": true
       },
       {
         "check": "TCH blocking higher at TCH occupancy >= 0.8 than below 0.5",
         "statistic": "blocking share at >= 0.8 minus below 0.5",
-        "value": 0.0819,
+        "value": 0.0801,
         "expected": "> 0",
         "pass": true
       }
@@ -238,11 +237,11 @@
   "tiny": {
     "cells": 27,
     "days": 2,
-    "rrc_attempts": 2739741
+    "rrc_attempts": 2739774
   },
   "timing_s": {
-    "demo model build (coverage and serving)": 26.2,
-    "demo 12 weeks of counters": 12.5,
+    "demo model build (coverage and serving)": 30.9,
+    "demo 12 weeks of counters": 17.0,
     "tiny build and 2 days": 0.0
   }
 }

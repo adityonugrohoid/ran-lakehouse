@@ -131,8 +131,8 @@
     "backhaul_power_options": 300
   },
   "timing_s": {
-    "network model and plan": 28.3,
-    "total": 39.5
+    "network model and plan": 29.7,
+    "total": 41.9
   },
-  "peak_rss_mb": 744
+  "peak_rss_mb": 747
 }
