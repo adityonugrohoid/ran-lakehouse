@@ -6,6 +6,8 @@ no value (NULL), never 0. Each value carries its coverage (reported / expected
 15-minute periods; hourly periods for the CQI KPI) and its suspect share (suspect /
 reported periods), so gaps (rule D3) and suspect data (rule D4) stay visible.
 Granularities: 15 minutes and hours in UTC, days and weeks (from Monday) in WIB.
+Values are per cell. Over several cells, ratio KPIs sum their counters first; PRB
+utilization is weighted by each cell's N_RB (gold.cells, TS 36.101 Table 5.6-1).
 Counter names: TS 32.425 (LTE) and TS 52.402 (GSM). Breach thresholds drive the
 weekly worst-cell ranking (rule L5): a day is judged when its coverage is at least
 0.75; a cell is persistent when it breaches on 3 of the week's 7 days. Thresholds, N and the coverage floor are START values.
@@ -79,7 +81,7 @@ Which release causes count as drops (ERAB.RelActNbr counts abnormal releases wit
 
 `sum of RRU.PrbTotDl [%] / reported periods`
 
-Mean over all periods or over the busy hour only; DL only or DL and UL.
+Mean over all periods or over the busy hour only; DL only or DL and UL. Gold's values are per cell; over several cells (an area or the network) PRB utilization is weighted by each cell's downlink resource blocks: sum(RRU.PrbTotDl * N_RB) / sum(N_RB), N_RB from the cell's bandwidth (TS 36.101 Table 5.6-1, gold.cells).
 
 ### LTE_CQI_MEAN v1: Mean downlink wideband CQI
 

@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+import pyarrow as pa
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -77,8 +78,41 @@ SELECT CAST(period_start + INTERVAL 7 HOUR AS DATE) AS day,
     100 * (sum(rrc_succ) / sum(rrc_att)) * (sum(s1_succ) / sum(s1_att)) AS rrc_v2,
     100 * sum(erab_rel) / sum(erab_succ) AS erab_drop,
     sum(ip_vol_kbit) / sum(ip_time_ms) AS thp_mbit,
-    avg(prb_pct) AS prb
-FROM lk.gold.lte_cell_15m GROUP BY 1 ORDER BY 1
+    sum(prb_pct * n_rb) / sum(n_rb) FILTER (WHERE prb_pct IS NOT NULL) AS prb
+FROM lk.gold.lte_cell_15m JOIN lk.gold.cells USING (cell_name) GROUP BY 1 ORDER BY 1
+"""
+# Weekday against weekend (WIB) per area class, for the traffic-mix check.
+MIX = """
+WITH w AS (
+    SELECT g.*, dayofweek(period_start + INTERVAL 7 HOUR) IN (0, 6) AS weekend,
+        CAST(period_start + INTERVAL 7 HOUR AS DATE) AS day
+    FROM lk.gold.lte_cell_15m g
+)
+SELECT c.area, w.weekend, sum(ip_vol_kbit) / sum(ip_time_ms) AS thp_mbit,
+    sum(ip_vol_kbit) AS volume,
+    sum(prb_pct * n_rb) / sum(n_rb) FILTER (WHERE prb_pct IS NOT NULL) AS prb
+FROM w JOIN area_class c USING (cell_name) JOIN lk.gold.cells USING (cell_name)
+WHERE w.day IN (SELECT day FROM complete)
+GROUP BY ALL ORDER BY ALL
+"""
+MIX_CQI = """
+SELECT c.area, dayofweek(period_start + INTERVAL 7 HOUR) IN (0, 6) AS weekend,
+    sum(cqi_weighted) / sum(cqi_samples) AS cqi
+FROM lk.gold.lte_cell_60m JOIN area_class c USING (cell_name)
+WHERE CAST(period_start + INTERVAL 7 HOUR AS DATE) IN (SELECT day FROM complete)
+GROUP BY ALL ORDER BY ALL
+"""
+MIX_CELLS = """
+WITH per AS (
+    SELECT cell_name, dayofweek(period_start + INTERVAL 7 HOUR) IN (0, 6) AS weekend,
+        sum(ip_vol_kbit) / sum(ip_time_ms) AS thp, avg(prb_pct) AS prb
+    FROM lk.gold.lte_cell_15m
+    WHERE CAST(period_start + INTERVAL 7 HOUR AS DATE) IN (SELECT day FROM complete)
+    GROUP BY ALL
+)
+SELECT count(*), count(*) FILTER (WHERE e.thp >= d.thp),
+    count(*) FILTER (WHERE e.thp < d.thp AND e.prb < d.prb)
+FROM per d JOIN per e ON d.cell_name = e.cell_name AND NOT d.weekend AND e.weekend
 """
 NETWORK_GSM = """
 SELECT CAST(period_start + INTERVAL 7 HOUR AS DATE) AS day,
@@ -116,6 +150,7 @@ def build(warehouse: str) -> dict[str, Any]:
         RuntimeError: If gold was already built there.
     """
     target = Target("lake", warehouse)
+    model = default_model(build_world(PROFILE))
     con = target.connect()
     has_gold = scalar(
         con,
@@ -173,11 +208,11 @@ def build(warehouse: str) -> dict[str, Any]:
     complete = complete_days(con)
     network_lte = [r for r in con.execute(NETWORK_LTE).fetchall() if r[0] in complete]
     network_gsm = [r for r in con.execute(NETWORK_GSM).fetchall() if r[0] in complete]
+    mix = traffic_mix(con, model, complete)
     revision = con.execute(
         "SELECT kpi_id, from_version, to_version, effective_day, detail "
         "FROM lk.evaluation.kpi_revisions"
     ).fetchall()
-    model = default_model(build_world(PROFILE))
     faults = plan_faults(model, WEEKS)
     plan = plan_delivery(model, EMS_LIST, 7 * WEEKS)
     started = time.perf_counter()
@@ -243,6 +278,50 @@ def build(warehouse: str) -> dict[str, Any]:
         "model_check_seconds": round(check_s, 1),
         "model_check_wib_days": len(complete),
         "figures": {"faulted_cell": fault_note, "worst_cells": worst_note},
+        "weekend_traffic_mix": mix,
+    }
+
+
+def traffic_mix(con: Any, model: Any, complete: set[Any]) -> dict[str, Any]:
+    """Weekday against weekend per area class, and per cell (complete WIB days).
+
+    Args:
+        con: DuckDB with gold.
+        model: The network (area class per cell).
+        complete: Complete WIB days.
+
+    Returns:
+        Per class and day type: DL IP throughput, share of DL volume,
+        N_RB-weighted PRB utilization and mean CQI; and the count of cells
+        whose weekend throughput is at least their weekday one.
+    """
+    con.register(
+        "area_class",
+        pa.table(
+            {
+                "cell_name": [c.cell_name for c in model.world.cells],
+                "area": [str(a) for a in model.state.area_class],
+            }
+        ),
+    )
+    con.register("complete", pa.table({"day": pa.array(sorted(complete), pa.date32())}))
+    rows = con.execute(MIX).fetchall()
+    cqi = {(a, w): v for a, w, v in con.execute(MIX_CQI).fetchall()}
+    cells, not_lower, lower_both = con.execute(MIX_CELLS).fetchone() or (0, 0, 0)
+    total = {w: sum(r[3] for r in rows if r[1] == w) for w in (False, True)}
+    out: dict[str, Any] = {}
+    for area, weekend, thp, volume, prb in rows:
+        out.setdefault(area, {})["weekend" if weekend else "weekday"] = {
+            "dl_ip_throughput_mbit_s": round(thp, 2),
+            "share_of_dl_volume_pct": round(100 * volume / total[weekend], 1),
+            "prb_utilization_pct": round(prb, 1),
+            "mean_cqi": round(cqi[(area, weekend)], 2),
+        }
+    return {
+        "by_area_class": out,
+        "cells": int(cells),
+        "cells_weekend_throughput_not_lower": int(not_lower),
+        "cells_lower_throughput_and_lower_prb": int(lower_both),
     }
 
 
@@ -263,7 +342,7 @@ def plot_trends(lte: list[tuple[Any, ...]], gsm: list[tuple[Any, ...]], revision
         ),
         ("LTE E-RAB drop rate (%)", [(days, [r[4] for r in lte], None)]),
         ("LTE DL IP throughput (Mbit/s)", [(days, [r[5] for r in lte], None)]),
-        ("LTE DL PRB utilization (%)", [(days, [r[6] for r in lte], None)]),
+        ("LTE DL PRB utilization, N_RB-weighted (%)", [(days, [r[6] for r in lte], None)]),
         ("GSM service access success (%)", [([r[0] for r in gsm], [r[1] for r in gsm], None)]),
         ("GSM TCH blocking (%)", [([r[0] for r in gsm], [r[2] for r in gsm], None)]),
     ]
@@ -467,6 +546,8 @@ def render_catalog(record: dict[str, Any]) -> str:
         "15-minute periods; hourly periods for the CQI KPI) and its suspect share (suspect /",
         "reported periods), so gaps (rule D3) and suspect data (rule D4) stay visible.",
         "Granularities: 15 minutes and hours in UTC, days and weeks (from Monday) in WIB.",
+        "Values are per cell. Over several cells, ratio KPIs sum their counters first; PRB",
+        "utilization is weighted by each cell's N_RB (gold.cells, TS 36.101 Table 5.6-1).",
         "Counter names: TS 32.425 (LTE) and TS 52.402 (GSM). Breach thresholds drive the",
         "weekly worst-cell ranking (rule L5): a day is judged when its coverage is at least",
         f"{record['min_coverage']}; a cell is persistent when it breaches on "
@@ -581,6 +662,28 @@ def render_markdown(record: dict[str, Any]) -> str:
         *[
             f"| {k} | {v['weeks']} | {v['persistent_cell_weeks']} | {v['most_in_a_week']} |"
             for k, v in record["worst_cells"].items()
+        ],
+        "",
+        "## Weekend throughput: a traffic-mix effect",
+        "",
+        "Network DL IP throughput is lower at weekends although PRB use is lower too. Cell by",
+        f"cell it is not: {record['weekend_traffic_mix']['cells_weekend_throughput_not_lower']:,}"
+        f" of {record['weekend_traffic_mix']['cells']:,} LTE cells have a weekend throughput at",
+        "least their weekday one, and "
+        f"{record['weekend_traffic_mix']['cells_lower_throughput_and_lower_prb']} have both lower "
+        "throughput and lower PRB use.",
+        "At weekends traffic moves from the urban business areas, where the radio is best, to",
+        "residential and suburban cells, so the network mean falls (complete WIB days,",
+        "weekday against Saturday and Sunday):",
+        "",
+        "| Area class | Day | DL IP throughput (Mbit/s) | Share of DL volume (%) | "
+        "PRB utilization, N_RB-weighted (%) | Mean CQI |",
+        "|---|---|---|---|---|---|",
+        *[
+            f"| {area} | {day} | {v['dl_ip_throughput_mbit_s']} | "
+            f"{v['share_of_dl_volume_pct']} | {v['prb_utilization_pct']} | {v['mean_cqi']} |"
+            for area, days in record["weekend_traffic_mix"]["by_area_class"].items()
+            for day, v in sorted(days.items())
         ],
         "",
         "## A faulted cell",

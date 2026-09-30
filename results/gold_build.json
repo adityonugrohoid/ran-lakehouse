@@ -12,15 +12,15 @@
   ],
   "build": {
     "utc_days_built": 84,
-    "dbt_runs": 96,
-    "dbt_runs_rerun_after_clock_step": 4,
-    "seconds_days": 1510.3,
-    "seconds_reprocess": 112.9,
-    "seconds_total": 1634.3
+    "dbt_runs": 98,
+    "dbt_runs_rerun_after_clock_step": 6,
+    "seconds_days": 1518.7,
+    "seconds_reprocess": 119.1,
+    "seconds_total": 1648.7
   },
   "peak_rss": {
-    "python_mb": 258,
-    "largest_dbt_run_mb": 1045
+    "python_mb": 748,
+    "largest_dbt_run_mb": 1038
   },
   "rows": {
     "cells": 1716,
@@ -35,70 +35,70 @@
     "gsm_kpi_hour": 3166416,
     "gsm_kpi_day": 133056,
     "gsm_kpi_week": 19008,
-    "worst_cells_week": 1317,
+    "worst_cells_week": 834,
     "kpi_catalog": 17,
     "loads": 174
   },
   "storage": {
     "cells": {
-      "data_files": 88,
-      "bytes": 2577450
+      "data_files": 89,
+      "bytes": 2672454
     },
     "lte_cell_15m": {
       "data_files": 84,
-      "bytes": 333876427
+      "bytes": 334633975
     },
     "lte_cell_60m": {
-      "data_files": 86,
-      "bytes": 36104308
+      "data_files": 84,
+      "bytes": 35161941
     },
     "gsm_cell_15m": {
-      "data_files": 86,
-      "bytes": 26133944
+      "data_files": 84,
+      "bytes": 25494681
     },
     "lte_kpi_15m": {
       "data_files": 140,
-      "bytes": 691850926
+      "bytes": 695373378
     },
     "lte_kpi_hour": {
-      "data_files": 140,
-      "bytes": 287281837
+      "data_files": 141,
+      "bytes": 288235753
     },
     "lte_kpi_day": {
       "data_files": 182,
-      "bytes": 34006680
+      "bytes": 33984535
     },
     "lte_kpi_week": {
       "data_files": 110,
-      "bytes": 20082232
+      "bytes": 20101525
     },
     "gsm_kpi_15m": {
-      "data_files": 86,
-      "bytes": 50140150
+      "data_files": 84,
+      "bytes": 49129313
     },
     "gsm_kpi_hour": {
-      "data_files": 86,
-      "bytes": 18383108
+      "data_files": 84,
+      "bytes": 17948717
     },
     "gsm_kpi_day": {
-      "data_files": 168,
-      "bytes": 3583263
+      "data_files": 167,
+      "bytes": 3545020
     },
     "gsm_kpi_week": {
       "data_files": 95,
-      "bytes": 2219051
+      "bytes": 2225212
     },
     "worst_cells_week": {
       "data_files": 121,
-      "bytes": 367294
+      "bytes": 342615
     },
     "kpi_catalog": {
       "data_files": 2,
-      "bytes": 13480
+      "bytes": 13891
     },
     "loads": {
       "data_files": 85,
-      "bytes": 97079
+      "bytes": 97095
     }
   },
   "coverage": {
@@ -136,13 +136,13 @@
     },
     "LTE_ERAB_ACC v1": {
       "weeks": 12,
-      "persistent_cell_weeks": 230,
-      "most_in_a_week": 68
+      "persistent_cell_weeks": 95,
+      "most_in_a_week": 12
     },
     "LTE_ERAB_DROP v1": {
       "weeks": 12,
-      "persistent_cell_weeks": 174,
-      "most_in_a_week": 29
+      "persistent_cell_weeks": 135,
+      "most_in_a_week": 14
     },
     "LTE_MOB_HOSR v1": {
       "weeks": 9,
@@ -156,13 +156,13 @@
     },
     "LTE_RRC_SSR v1": {
       "weeks": 12,
-      "persistent_cell_weeks": 283,
-      "most_in_a_week": 81
+      "persistent_cell_weeks": 131,
+      "most_in_a_week": 16
     },
     "LTE_RRC_SSR v2": {
       "weeks": 12,
-      "persistent_cell_weeks": 294,
-      "most_in_a_week": 84
+      "persistent_cell_weeks": 137,
+      "most_in_a_week": 17
     }
   },
   "persistence": {
@@ -173,8 +173,8 @@
   "network_days": {
     "first": "2026-01-05",
     "last": "2026-03-28",
-    "rrc_v1_mean": 98.54,
-    "rrc_v2_mean": 98.433
+    "rrc_v1_mean": 98.638,
+    "rrc_v2_mean": 98.531
   },
   "model_check": {
     "GSM_ABN_REL v1": {
@@ -284,10 +284,59 @@
     "relative": 1e-06,
     "availability_pct": 0.556
   },
-  "model_check_seconds": 95.5,
+  "model_check_seconds": 94.7,
   "model_check_wib_days": 83,
   "figures": {
     "faulted_cell": "one planted F1e fault lasting 84 h, two days either side",
-    "worst_cells": "LTE_RRC_SSR v2, week of 2026-01-19, top 10 persistent cells"
+    "worst_cells": "LTE_RRC_SSR v2, week of 2026-01-26, top 10 persistent cells"
+  },
+  "weekend_traffic_mix": {
+    "by_area_class": {
+      "rural": {
+        "weekday": {
+          "dl_ip_throughput_mbit_s": 4.39,
+          "share_of_dl_volume_pct": 13.2,
+          "prb_utilization_pct": 19.0,
+          "mean_cqi": 9.88
+        },
+        "weekend": {
+          "dl_ip_throughput_mbit_s": 4.23,
+          "share_of_dl_volume_pct": 15.7,
+          "prb_utilization_pct": 19.4,
+          "mean_cqi": 9.88
+        }
+      },
+      "suburban": {
+        "weekday": {
+          "dl_ip_throughput_mbit_s": 6.57,
+          "share_of_dl_volume_pct": 52.5,
+          "prb_utilization_pct": 26.6,
+          "mean_cqi": 9.66
+        },
+        "weekend": {
+          "dl_ip_throughput_mbit_s": 6.24,
+          "share_of_dl_volume_pct": 62.4,
+          "prb_utilization_pct": 27.3,
+          "mean_cqi": 9.66
+        }
+      },
+      "urban": {
+        "weekday": {
+          "dl_ip_throughput_mbit_s": 6.85,
+          "share_of_dl_volume_pct": 34.3,
+          "prb_utilization_pct": 14.8,
+          "mean_cqi": 8.94
+        },
+        "weekend": {
+          "dl_ip_throughput_mbit_s": 4.9,
+          "share_of_dl_volume_pct": 22.0,
+          "prb_utilization_pct": 10.9,
+          "mean_cqi": 8.43
+        }
+      }
+    },
+    "cells": 1452,
+    "cells_weekend_throughput_not_lower": 1021,
+    "cells_lower_throughput_and_lower_prb": 20
   }
 }

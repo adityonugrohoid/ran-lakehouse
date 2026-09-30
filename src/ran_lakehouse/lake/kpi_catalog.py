@@ -196,7 +196,10 @@ KPIS = (
         "lower",
         80.0,
         None,
-        "Mean over all periods or over the busy hour only; DL only or DL and UL.",
+        "Mean over all periods or over the busy hour only; DL only or DL and UL. Gold's "
+        "values are per cell; over several cells (an area or the network) PRB utilization "
+        "is weighted by each cell's downlink resource blocks: sum(RRU.PrbTotDl * N_RB) / "
+        "sum(N_RB), N_RB from the cell's bandwidth (TS 36.101 Table 5.6-1, gold.cells).",
     ),
     Kpi(
         "LTE_CQI_MEAN",

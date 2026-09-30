@@ -255,3 +255,14 @@ def test_dbt_runs_again_only_after_a_clock_step(
     else:
         with pytest.raises(RuntimeError, match="column not found"):
             build.dbt(window, {}, "", [])
+
+
+def test_cells_carry_the_resource_blocks_of_their_bandwidth(
+    con: duckdb.DuckDBPyConnection, tiny: NetworkModel
+) -> None:
+    stored = dict(rows(con, "SELECT cell_name, n_rb FROM lk.gold.cells"))
+    for cell, technology, n_rb in zip(
+        tiny.world.cells, tiny.state.technology, tiny.state.n_rb, strict=True
+    ):
+        expected = int(n_rb) if technology == "LTE" else None
+        assert stored[cell.cell_name] == expected, cell.cell_name
