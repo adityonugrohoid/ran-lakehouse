@@ -1,0 +1,36 @@
+# Targets are chosen by ran_lakehouse.lake.gold: "lake" attaches the
+# Lakekeeper warehouse (rule S1), "file" a DuckDB file (tests without the
+# compose stack). DuckDB settings match lake.catalog.connect, except that
+# dbt's DuckDB spills next to its own file under data/dbt (dbt-duckdb sets
+# the settings on every cursor, and DuckDB cannot move a spill directory in
+# use).
+ran_gold:
+  target: lake
+  outputs:
+    lake:
+      type: duckdb
+      path: "{{ env_var('RANLAKE_DBT_DATABASE') }}"
+      extensions: [httpfs, iceberg]
+      settings: &settings
+        TimeZone: UTC
+        memory_limit: "{{ env_var('RANLAKE_MEMORY_LIMIT') }}"
+        preserve_insertion_order: false
+        # Fallback without vended credentials: the local store (lake.catalog).
+        s3_endpoint: "localhost:8333"
+        s3_url_style: path
+        s3_use_ssl: false
+        s3_region: local-01
+      attach:
+        - path: "{{ env_var('RANLAKE_WAREHOUSE') }}"
+          alias: lk
+          type: iceberg
+          options:
+            endpoint: "http://127.0.0.1:18181/catalog"
+            authorization_type: none
+    file:
+      type: duckdb
+      path: "{{ env_var('RANLAKE_DBT_DATABASE') }}"
+      settings: *settings
+      attach:
+        - path: "{{ env_var('RANLAKE_DUCKDB_FILE') }}"
+          alias: lk

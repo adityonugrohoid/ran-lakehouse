@@ -46,3 +46,4 @@ node_modules/
 
 # dbt writes an anonymous user id next to the project
 stackcheck/dbt/.user.yml
+transform/.user.yml

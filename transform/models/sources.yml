@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: silver
+    database: lk
+    schema: silver
+    tables:
+      - name: pm_measurements
+  - name: bronze
+    database: lk
+    schema: bronze
+    tables:
+      - name: cm_records
+  - name: gold_static
+    description: Written by ran_lakehouse.lake.gold before dbt runs.
+    database: lk
+    schema: gold
+    tables:
+      - name: kpi_catalog

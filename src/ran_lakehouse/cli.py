@@ -51,6 +51,10 @@ def build_parser() -> argparse.ArgumentParser:
         "silver", help="build silver from bronze: every partition whose cutoff has passed"
     )
     build_silver.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    build_gold = commands.add_parser(
+        "gold", help="build gold KPIs from silver through dbt, one UTC day at a time"
+    )
+    build_gold.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
     return parser
 
 
@@ -98,6 +102,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         silver.create_tables(con, True)
         load_id = f"silver-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
         print(json.dumps(silver.SilverBuild(con, load_id, silver.GRACE).run(None), indent=2))
+        return 0
+    if args.command == "gold":
+        from datetime import UTC, datetime
+
+        from ran_lakehouse.lake.gold import KPI_REVISION, GoldBuild, Target
+
+        load_id = f"gold-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
+        build = GoldBuild(Target("lake", args.warehouse), load_id, KPI_REVISION)
+        print(json.dumps(build.run(), indent=2))
         return 0
     if args.command == "backfill":
         stats = drive(

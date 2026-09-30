@@ -1,0 +1,19 @@
+# Gold (rules L3, L5, D6): KPIs from silver, built by ran_lakehouse.lake.gold
+# one UTC day at a time. Incremental merge models only, keyed with the
+# formula version (rule S2).
+name: ran_gold
+version: "1.0.0"
+config-version: 2
+profile: ran_gold
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+flags:
+  send_anonymous_usage_stats: false
+
+models:
+  ran_gold:
+    +database: lk
+    +schema: gold
+    +materialized: incremental
+    +incremental_strategy: merge
