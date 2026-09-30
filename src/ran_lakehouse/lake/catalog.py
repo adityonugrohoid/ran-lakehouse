@@ -7,8 +7,11 @@ bucket without keys of their own (results/stack_spike.md).
 """
 
 import json
+import logging
+import time
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any
 
 import duckdb
@@ -22,6 +25,16 @@ S3_SECRET_KEY = "local-dev-secret-not-a-real-credential"
 DEFAULT_PROJECT_ID = "00000000-0000-0000-0000-000000000000"
 CATALOG_ALIAS = "lk"
 DUCKDB_MEMORY_LIMIT = "1GB"
+# DuckDB spills past its memory limit here (rule 6: generated data in data/).
+SPILL_DIR = Path(__file__).resolve().parents[3] / "data" / "duckdb-spill"
+# Commit conflicts from a wall-clock step (see write()): wait longer than the
+# steps seen on the build machine (about 1.5 s, WSL2 time sync), bounded.
+COMMIT_RETRY_WAIT_S = 2.0  # ASSUMPTION
+COMMIT_ATTEMPTS = 5  # ASSUMPTION
+COMMIT_CONFLICT = "CatalogCommitConflicts"
+
+logger = logging.getLogger(__name__)
+commit_retries = {"count": 0}
 
 
 def management(method: str, path: str, body: dict[str, Any] | None) -> Any:
@@ -106,6 +119,7 @@ def connect(warehouse: str) -> duckdb.DuckDBPyConnection:
     con.execute("SET TimeZone = 'UTC'")
     # Keep a laptop-scale run well inside memory (ASSUMPTION: 1 GB for DuckDB).
     con.execute(f"SET memory_limit = '{DUCKDB_MEMORY_LIMIT}'")
+    con.execute(f"SET temp_directory = '{SPILL_DIR}'")
     # Bronze and silver rows carry their own keys; insertion order is not kept.
     con.execute("SET preserve_insertion_order = false")
     con.execute(
@@ -127,3 +141,43 @@ def pyiceberg(warehouse: str) -> Any:
     return load_catalog(
         CATALOG_ALIAS, type="rest", uri=f"{CATALOG_URL}/catalog", warehouse=warehouse
     )
+
+
+def write(con: duckdb.DuckDBPyConnection, sql: str) -> None:
+    """Run one writing statement, retrying a rejected Iceberg commit.
+
+    DuckDB 1.5.x (iceberg extension 890b78a9c) reads a table as of the
+    transaction's start time: when the wall clock steps back (WSL2 time sync
+    steps it back by about 1.5 s every 30 s on the build machine), a new
+    transaction sees its own last commit as "in the future", builds on the
+    snapshot before it, and the catalog rejects the commit with 409
+    CatalogCommitConflicts. A rejected commit applies nothing, so the
+    statement is run again once the clock has passed the step. Each retry
+    is logged and counted; after COMMIT_ATTEMPTS the error is raised.
+    Upstream DuckDB adds commit retries after 1.5.x (duckdb-iceberg #1115).
+
+    Args:
+        con: DuckDB connection.
+        sql: An INSERT, MERGE, UPDATE or DELETE statement.
+
+    Raises:
+        duckdb.TransactionException: If the commit is still rejected after
+            COMMIT_ATTEMPTS, or fails for another reason.
+    """
+    for attempt in range(1, COMMIT_ATTEMPTS + 1):
+        try:
+            con.execute(sql)
+            return
+        except duckdb.TransactionException as exc:
+            if COMMIT_CONFLICT not in str(exc) or attempt == COMMIT_ATTEMPTS:
+                raise
+            commit_retries["count"] += 1
+            logger.warning(
+                "commit rejected (%s), attempt %d of %d; retrying in %.1f s: %s",
+                COMMIT_CONFLICT,
+                attempt,
+                COMMIT_ATTEMPTS,
+                COMMIT_RETRY_WAIT_S,
+                sql.split("\n", 1)[0][:80],
+            )
+            time.sleep(COMMIT_RETRY_WAIT_S)

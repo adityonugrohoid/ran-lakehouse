@@ -21,6 +21,8 @@ import duckdb
 import numpy as np
 import pyarrow as pa
 
+from ran_lakehouse.lake.catalog import write
+
 BRONZE = "lk.bronze"
 EVALUATION = "lk.evaluation"
 
@@ -129,7 +131,7 @@ def append(con: duckdb.DuckDBPyConnection, table: str, data: pa.Table) -> None:
         for f in data.schema
     )
     try:
-        con.execute(f"INSERT INTO {table} SELECT {columns} FROM incoming")
+        write(con, f"INSERT INTO {table} SELECT {columns} FROM incoming")
     finally:
         con.unregister("incoming")
 
