@@ -96,7 +96,9 @@ measured scale test, rule E1).
   change, ASSUMPTION) and replay the next week with the same random
   noise (common random numbers), for the changed cell and every cell whose
   load or interference it touches. Output: next week's counters and KPIs
-  for those cells, before and after.
+  for those cells, before and after. Limitation: the replay reports LTE
+  KPIs only, so what-if takes changes on LTE cells and refuses a change on
+  a GSM cell.
 - M7 Stated simplifications: no terrain in the served region, no
   scheduler, fading or mobility traces; grid-level coverage, load and
   interference.
