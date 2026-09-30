@@ -1,0 +1,109 @@
+{
+  "profile": "demo",
+  "weeks": 12,
+  "grace_min": 30.0,
+  "partitions_built": 168,
+  "late_files_merged": 5,
+  "rows": {
+    "silver.pm_measurements": 464354374,
+    "silver.pm_files": 15968,
+    "silver.pm_gaps": 4164,
+    "silver.counter_map": 204,
+    "silver.loads": 173
+  },
+  "loads": {
+    "catch-up": {
+      "loads": 5,
+      "files": 5,
+      "bronze_rows": 286810,
+      "silver_rows": 293722,
+      "seconds_total": 12.7,
+      "seconds_max": 3.7
+    },
+    "partition": {
+      "loads": 168,
+      "files": 15963,
+      "bronze_rows": 453245164,
+      "silver_rows": 464198538,
+      "seconds_total": 2181.6,
+      "seconds_max": 52.1
+    }
+  },
+  "flags": {
+    "derived": 11592768,
+    "suspect": 4405,
+    "conflict": 1819,
+    "late": 2204188,
+    "15 min": 374510422,
+    "60 min": 89843952
+  },
+  "counter_map": {
+    "HW-R1: labelled vendor-style": 23,
+    "HW-R1: 3GPP name": 46,
+    "HW-R2: labelled vendor-style": 23,
+    "HW-R2: 3GPP name": 46,
+    "NK-R1: labelled vendor-style": 18,
+    "NK-R1: 3GPP name": 48
+  },
+  "anomalies": {
+    "D1": {
+      "planted": 71,
+      "found": 71,
+      "matched": 71
+    },
+    "D2_same": {
+      "planted": 48,
+      "found": 48,
+      "matched": 48
+    },
+    "D2_conflict": {
+      "planted": 24,
+      "found": 24,
+      "matched": 24
+    },
+    "D3": {
+      "planted": 24,
+      "found": 24,
+      "matched": 24
+    },
+    "D4": {
+      "planted": 24,
+      "found": 24,
+      "matched": 24
+    },
+    "D5": {
+      "planted": 92,
+      "found": 92,
+      "matched": 92
+    }
+  },
+  "storage": {
+    "silver.pm_measurements": {
+      "data_files": 176,
+      "bytes": 1618920181
+    },
+    "silver.pm_files": {
+      "data_files": 173,
+      "bytes": 1893258
+    },
+    "silver.pm_gaps": {
+      "data_files": 28,
+      "bytes": 65920
+    },
+    "silver.counter_map": {
+      "data_files": 1,
+      "bytes": 5055
+    },
+    "silver.loads": {
+      "data_files": 173,
+      "bytes": 385419
+    }
+  },
+  "timing_s": {
+    "silver build": 2222.9,
+    "counts, evaluation and storage": 60.7
+  },
+  "peak_rss_mb_during_build": 2240,
+  "commit_retries": 0,
+  "duckdb_memory_limit": "1GB"
+}

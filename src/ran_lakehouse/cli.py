@@ -47,6 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="simulated seconds per wall second: 1 is the real 15-minute cadence",
     )
+    build_silver = commands.add_parser(
+        "silver", help="build silver from bronze: every partition whose cutoff has passed"
+    )
+    build_silver.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
     return parser
 
 
@@ -84,6 +88,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     # Imported here so that `ranlake version` does not load the lake stack.
     from ran_lakehouse.collect.backfill import Clock, Pacer, drive
 
+    if args.command == "silver":
+        from datetime import UTC, datetime
+
+        from ran_lakehouse.lake import silver
+        from ran_lakehouse.lake.catalog import connect
+
+        con = connect(args.warehouse)
+        silver.create_tables(con, True)
+        load_id = f"silver-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
+        print(json.dumps(silver.SilverBuild(con, load_id, silver.GRACE).run(None), indent=2))
+        return 0
     if args.command == "backfill":
         stats = drive(
             args.profile, args.run_weeks, 0, 7 * args.weeks, args.warehouse, args.landing, None

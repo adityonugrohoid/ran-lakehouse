@@ -19,6 +19,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import duckdb
 import pyarrow as pa
 
 from ran_lakehouse.collect.collector import Collector
@@ -251,11 +252,6 @@ def drive(
 ) -> dict[str, Any]:
     """Simulate days of a run, deliver their files and collect them into bronze.
 
-    The run's fault and delivery plans are drawn for all its weeks, so a
-    live run continuing a backfill sees the same plans. A run starting at
-    day 0 needs an empty bronze; a later start continues the run in the
-    warehouse. Loads are idempotent by file hash.
-
     Args:
         profile: World profile.
         weeks: Weeks in the run (the plans' length).
@@ -263,6 +259,41 @@ def drive(
         n_days: Days to simulate.
         warehouse: Lakekeeper warehouse.
         landing: Landing root; files land in <landing>/<warehouse>/<EMS>/.
+        pacer: None to deliver as fast as possible (backfill), else the
+            paced clock.
+
+    Returns:
+        Counts and timings of the run.
+    """
+    con = connect(warehouse)
+    create_tables(con)
+    stats = drive_into(con, profile, weeks, first_day, n_days, landing / warehouse, pacer)
+    return {"warehouse": warehouse} | stats
+
+
+def drive_into(
+    con: duckdb.DuckDBPyConnection,
+    profile: str,
+    weeks: int,
+    first_day: int,
+    n_days: int,
+    landing: Path,
+    pacer: Pacer | None,
+) -> dict[str, Any]:
+    """Simulate days of a run, deliver their files and collect them into bronze.
+
+    The run's fault and delivery plans are drawn for all its weeks, so a
+    live run continuing a backfill sees the same plans. A run starting at
+    day 0 needs an empty bronze; a later start continues the run in the
+    warehouse. Loads are idempotent by EMS, file name and hash.
+
+    Args:
+        con: DuckDB with the bronze and evaluation tables in catalog "lk".
+        profile: World profile.
+        weeks: Weeks in the run (the plans' length).
+        first_day: First day to simulate.
+        n_days: Days to simulate.
+        landing: Landing folder; files land in <landing>/<EMS>/.
         pacer: None to deliver as fast as possible (backfill), else the
             paced clock.
 
@@ -278,8 +309,6 @@ def drive(
     base = default_model(build_world(profile))
     faults = plan_faults(base, weeks)
     plan = plan_delivery(base, EMS_LIST, 7 * weeks)
-    con = connect(warehouse)
-    create_tables(con)
     if first_day == 0:
         require_empty(con)
         append(con, f"{EVALUATION}.delivery_anomalies", anomalies_table(plan))
@@ -287,7 +316,7 @@ def drive(
         require_started(con, len(plan.anomalies))
     kind = "backfill" if pacer is None else "run"
     load_id = f"{kind}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
-    collector = Collector(con, landing / warehouse, load_id)
+    collector = Collector(con, landing, load_id)
 
     def release(e: Event) -> None:
         if pacer is not None:
@@ -332,7 +361,6 @@ def drive(
         "run_weeks": weeks,
         "first_day": first_day,
         "days": n_days,
-        "warehouse": warehouse,
         "clock": "none: as fast as possible" if pacer is None else pacer.clock.label,
         "files_rendered": rendered,
         "collector": collector.stats,
