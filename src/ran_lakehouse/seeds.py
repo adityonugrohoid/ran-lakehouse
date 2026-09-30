@@ -30,6 +30,8 @@ class Purpose(IntEnum):
     DELIVERY = 50
     FAULT_PLAN = 40
     FAULT_DETAIL = 41
+    TERRAIN = 60
+    PLANNING_LINES = 61
 
 
 def rng(purpose: Purpose, entity_id: int) -> np.random.Generator:

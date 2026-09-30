@@ -1,0 +1,128 @@
+{
+  "profile": "demo",
+  "sources": {
+    "diffraction": "ITU-R P.526-16 (11/2025) Annex 1 clause 4.5.1 (Bullington model), eqs (49) to (57), with J(v) from clause 4.1 eq (31)",
+    "fresnel": "ITU-R P.530-19 (09/2025) clause 2.2.1 eq (3)",
+    "clearance": "ITU-R P.526-16 clause 2.3 and P.530-19 clause 2.2.2: 60% of the first Fresnel zone gives free-space conditions; P.530-19 clause 2.2.2.1 plans for 1.0 F1 at median k",
+    "thresholds": "3GPP sets no planning threshold: TS 36.133 V19.5.0 clause 9.1.4 gives the RSRP reporting range (-156 to -44 dBm); TS 45.005 V19.0.0 clause 6.2 the GSM 900 reference sensitivity (-104 dBm BTS, -102 dBm small MS)",
+    "indoor margin context, ITU-R P.2109-2 median at 0.9 GHz (dB)": {
+      "traditional": 14.2,
+      "thermally-efficient": 31.2
+    }
+  },
+  "parameters": {
+    "relief_m (START)": [
+      200.0,
+      600.0
+    ],
+    "terrain spectral exponent (START)": 3.2,
+    "terrain grid km (ASSUMPTION)": 0.1,
+    "persons per school (START)": 1500,
+    "school from persons (START)": 500,
+    "candidate sites (START)": 60,
+    "candidate spacing km (START)": 2.0,
+    "candidate near a village within km (START)": 3.0,
+    "mast height m (START)": 30.0,
+    "LTE B8 power dBm, N_RB (rule M)": [
+      46.0,
+      50
+    ],
+    "GSM 900 BCCH power dBm (rule M)": 43.0,
+    "LTE RSRP threshold dBm (START)": -110.0,
+    "GSM RxLev threshold dBm (START)": -100.0,
+    "indoor margin dB (START, ASSUMPTION)": 10.0,
+    "microwave GHz (START)": 8.0,
+    "Fresnel clearance used (START)": 0.6,
+    "hub zone km, hub antenna m, max hop km (START)": [
+      4.0,
+      40.0,
+      30.0
+    ],
+    "grid power within km (START)": 5.0,
+    "satellite Mbps (START)": 8.0,
+    "costs IDR (ASSUMPTION)": {
+      "build base": 1800000000,
+      "access road per km": 120000000,
+      "fiber per km": 150000000,
+      "microwave link": 350000000,
+      "satellite terminal": 150000000,
+      "satellite monthly": 25000000,
+      "grid line per km": 250000000,
+      "solar and battery": 650000000
+    }
+  },
+  "counts": {
+    "villages": 150,
+    "persons": 176284,
+    "schools": 143,
+    "served_today": {
+      "outdoor LTE (RSRP at threshold)": 23,
+      "outdoor GSM (RxLev at threshold)": 60,
+      "indoor LTE (covered_today_lte)": 8,
+      "indoor GSM (covered_today_gsm)": 42,
+      "persons without indoor LTE": 169505,
+      "persons without indoor GSM": 125740
+    },
+    "candidates": 60,
+    "candidate_elevation_m": [
+      335.4,
+      458.5,
+      576.9
+    ],
+    "build_cost_idr": [
+      1809046186.0,
+      1914276094.5,
+      2112228296.0
+    ],
+    "villages_served_by_some_candidate": {
+      "LTE indoor": 143,
+      "GSM indoor": 146
+    },
+    "villages_per_candidate_lte_indoor": [
+      3.0,
+      9.0,
+      17.0
+    ],
+    "backhaul": {
+      "fiber spur km": [
+        0.08,
+        9.97,
+        22.59
+      ],
+      "microwave clear at 0.6 F1 (used)": 52,
+      "microwave clear at 1.0 F1 (P.530-19 2.2.2.1)": 50,
+      "microwave hop km": [
+        2.95,
+        12.15,
+        22.2
+      ],
+      "satellite": 60,
+      "hubs": 11
+    },
+    "power": {
+      "grid": 16,
+      "solar": 44
+    }
+  },
+  "coverage_area": {
+    "area_share_indoor_lte": 0.909,
+    "area_share_outdoor_lte": 0.963
+  },
+  "los_example": {
+    "site": "C26",
+    "hub": "SITE0277",
+    "hop_km": 22.201,
+    "clears_full_fresnel": true
+  },
+  "rows": {
+    "villages": 150,
+    "candidate_sites": 60,
+    "coverage": 18000,
+    "backhaul_power_options": 300
+  },
+  "timing_s": {
+    "network model and plan": 28.4,
+    "total": 40.0
+  },
+  "peak_rss_mb": 745
+}

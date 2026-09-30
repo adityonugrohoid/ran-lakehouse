@@ -53,6 +53,13 @@ uv run ranlake lineage --warehouse demo --kpi LTE_ERAB_DROP --version 1 \
   --cell ENB0001_B3_1 --granularity day --period 2026-02-10
 ```
 
+Generate the planning data of the expansion area (terrain, villages,
+candidate sites, coverage, backhaul and power options) into gold:
+
+```bash
+uv run ranlake planning --warehouse demo
+```
+
 The API lands in the next pull requests.
 
 ## License
