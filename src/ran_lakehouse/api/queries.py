@@ -10,6 +10,8 @@ from typing import Any
 
 import duckdb
 
+from ran_lakehouse.lake.catalog import read
+
 GRANULARITIES = ("15m", "hour", "day", "week")
 PERIOD_COLUMN = {"15m": "period_start", "hour": "period_start", "day": "day", "week": "week_start"}
 # Largest KPI answer served in one response (ASSUMPTION); a wider query is
@@ -161,7 +163,7 @@ def rows(con: duckdb.DuckDBPyConnection, sql: str, params: dict[str, Any]) -> li
     Returns:
         Rows.
     """
-    result = con.execute(sql, params)
+    result = read(con, sql, params)
     names = [d[0] for d in result.description]
     return [dict(zip(names, row, strict=True)) for row in result.fetchall()]
 
@@ -340,13 +342,13 @@ def lake_clock(con: duckdb.DuckDBPyConnection) -> dict[str, Any]:
         Latest bronze arrival, silver window end and gold day (WIB).
     """
     return {
-        "bronze_latest_arrival": con.execute(
-            "SELECT max(arrival_time) FROM lk.bronze.file_arrivals"
+        "bronze_latest_arrival": read(
+            con, "SELECT max(arrival_time) FROM lk.bronze.file_arrivals", {}
         ).fetchone()[0],  # type: ignore[index]
-        "silver_complete_to": con.execute("SELECT max(window_end) FROM lk.silver.loads").fetchone()[
-            0
-        ],  # type: ignore[index]
-        "gold_latest_day": con.execute("SELECT max(day) FROM lk.gold.lte_kpi_day").fetchone()[0],  # type: ignore[index]
+        "silver_complete_to": read(
+            con, "SELECT max(window_end) FROM lk.silver.loads", {}
+        ).fetchone()[0],  # type: ignore[index]
+        "gold_latest_day": read(con, "SELECT max(day) FROM lk.gold.lte_kpi_day", {}).fetchone()[0],  # type: ignore[index]
     }
 
 
@@ -439,11 +441,11 @@ def status(con: duckdb.DuckDBPyConnection) -> dict[str, Any]:
         {
             "layer": schema,
             "table": table,
-            "rows": con.execute(f"SELECT count(*) FROM lk.{schema}.{table}").fetchone()[0],  # type: ignore[index]
+            "rows": read(con, f"SELECT count(*) FROM lk.{schema}.{table}", {}).fetchone()[0],  # type: ignore[index]
         }
         for schema, table in LAYER_TABLES
     ]
-    end = con.execute("SELECT max(period_end) FROM lk.silver.pm_files").fetchone()[0]  # type: ignore[index]
+    end = read(con, "SELECT max(period_end) FROM lk.silver.pm_files", {}).fetchone()[0]  # type: ignore[index]
     events = [] if end is None else quality_events(con, end - timedelta(days=1), end)
     return {
         "files": rows(con, FILES_SQL, {}),
