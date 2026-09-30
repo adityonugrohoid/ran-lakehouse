@@ -46,3 +46,13 @@ def test_other_failures_are_not_retried() -> None:
     with pytest.raises(duckdb.TransactionException, match="500"):
         catalog.write(con, "INSERT INTO t VALUES (1)")  # type: ignore[arg-type]
     assert con.runs == 1
+
+
+def test_a_read_without_credentials_stays_local() -> None:
+    con = duckdb.connect()
+    catalog.use_local_s3(con)
+    with pytest.raises(duckdb.Error) as failure:
+        con.execute("SELECT * FROM read_parquet('s3://warehouse/missing/file.parquet')")
+    message = str(failure.value)
+    assert "localhost:8333" in message
+    assert "amazonaws" not in message
