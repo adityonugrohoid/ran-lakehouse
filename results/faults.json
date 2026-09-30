@@ -46,7 +46,7 @@
     },
     "F1e": {
       "cause": "external uplink interference source",
-      "change_in_model": "uplink source 15 dBm, 0.3-0.8 km along the azimuth",
+      "change_in_model": "uplink source 0.1-0.3 km along the azimuth, raising the cell's uplink noise by 15 dB",
       "duration_h": [
         48,
         168
@@ -543,9 +543,9 @@
             "RRC connections, mean": 3.204
           },
           "faulty": {
-            "E-RAB accessibility (%)": 68.717,
-            "RRC setup success (%)": 76.21,
-            "E-RAB drop rate (%)": 3.337,
+            "E-RAB accessibility (%)": 69.17,
+            "RRC setup success (%)": 76.587,
+            "E-RAB drop rate (%)": 3.296,
             "DL IP throughput (kbit/s)": 21727.49,
             "Handover success (%)": 98.682,
             "Cell availability (%)": 100.0,
@@ -553,9 +553,9 @@
             "RRC connections, mean": 3.204
           },
           "fixed": {
-            "E-RAB accessibility (%)": 68.717,
-            "RRC setup success (%)": 76.21,
-            "E-RAB drop rate (%)": 3.337,
+            "E-RAB accessibility (%)": 69.17,
+            "RRC setup success (%)": 76.587,
+            "E-RAB drop rate (%)": 3.296,
             "DL IP throughput (kbit/s)": 21727.49,
             "Handover success (%)": 98.682,
             "Cell availability (%)": 100.0,
@@ -575,9 +575,9 @@
             "RRC connections, mean": 3.204
           },
           "faulty": {
-            "E-RAB accessibility (%)": 68.717,
-            "RRC setup success (%)": 76.21,
-            "E-RAB drop rate (%)": 3.337,
+            "E-RAB accessibility (%)": 69.17,
+            "RRC setup success (%)": 76.587,
+            "E-RAB drop rate (%)": 3.296,
             "DL IP throughput (kbit/s)": 21727.49,
             "Handover success (%)": 98.682,
             "Cell availability (%)": 100.0,
@@ -585,9 +585,9 @@
             "RRC connections, mean": 3.204
           },
           "fixed": {
-            "E-RAB accessibility (%)": 68.717,
-            "RRC setup success (%)": 76.21,
-            "E-RAB drop rate (%)": 3.337,
+            "E-RAB accessibility (%)": 69.17,
+            "RRC setup success (%)": 76.587,
+            "E-RAB drop rate (%)": 3.296,
             "DL IP throughput (kbit/s)": 21727.49,
             "Handover success (%)": 98.682,
             "Cell availability (%)": 100.0,
@@ -602,10 +602,10 @@
           393
         ],
         "cells touched": 1,
-        "uplink noise rise at the cell, dB": 16.2,
+        "uplink noise rise at the cell, dB": 15.0,
         "UL interference per PRB, dBm (vendor-style), week mean": [
           -116.2,
-          -100.0
+          -101.2
         ]
       },
       "cm": [],
@@ -630,7 +630,7 @@
         },
         {
           "change": "tilt -2",
-          "recovery": -0.015
+          "recovery": -0.016
         },
         {
           "change": "power +3",
@@ -642,11 +642,11 @@
         },
         {
           "change": "cio -3",
-          "recovery": 0.013
+          "recovery": 0.014
         },
         {
           "change": "cio +3",
-          "recovery": -0.038
+          "recovery": -0.04
         }
       ]
     },
@@ -834,9 +834,9 @@
     "F1e": {
       "evaluated": 6,
       "recovery_min_median_max": [
-        0.001,
-        0.009,
-        0.029
+        0.0,
+        0.008,
+        0.028
       ],
       "area_recovery_min_median_max": null
     },
@@ -854,6 +854,177 @@
       ]
     }
   },
+  "locality": {
+    "affected_points": 1.0,
+    "max_share": 0.02,
+    "reach": [
+      {
+        "kind": "F1d",
+        "cells": 2,
+        "share_pct": 1.29
+      },
+      {
+        "kind": "F1e",
+        "cells": 3,
+        "share_pct": 0.5
+      },
+      {
+        "kind": "F1f",
+        "cells": 4,
+        "share_pct": 0.3
+      },
+      {
+        "kind": "F1e",
+        "cells": 3,
+        "share_pct": 0.28
+      },
+      {
+        "kind": "F1e",
+        "cells": 9,
+        "share_pct": 0.27
+      },
+      {
+        "kind": "F1e",
+        "cells": 10,
+        "share_pct": 0.26
+      },
+      {
+        "kind": "F1d",
+        "cells": 2,
+        "share_pct": 0.25
+      },
+      {
+        "kind": "F1b",
+        "cells": 1,
+        "share_pct": 0.25
+      },
+      {
+        "kind": "F1e",
+        "cells": 5,
+        "share_pct": 0.17
+      },
+      {
+        "kind": "F1c",
+        "cells": 3,
+        "share_pct": 0.13
+      },
+      {
+        "kind": "F1f",
+        "cells": 1,
+        "share_pct": 0.12
+      },
+      {
+        "kind": "F1a",
+        "cells": 2,
+        "share_pct": 0.11
+      },
+      {
+        "kind": "F1a",
+        "cells": 3,
+        "share_pct": 0.1
+      },
+      {
+        "kind": "F1b",
+        "cells": 1,
+        "share_pct": 0.09
+      },
+      {
+        "kind": "F1b",
+        "cells": 1,
+        "share_pct": 0.08
+      },
+      {
+        "kind": "F1c",
+        "cells": 1,
+        "share_pct": 0.08
+      },
+      {
+        "kind": "F1d",
+        "cells": 1,
+        "share_pct": 0.08
+      },
+      {
+        "kind": "F1e",
+        "cells": 3,
+        "share_pct": 0.07
+      },
+      {
+        "kind": "F1c",
+        "cells": 1,
+        "share_pct": 0.07
+      },
+      {
+        "kind": "F1c",
+        "cells": 1,
+        "share_pct": 0.05
+      },
+      {
+        "kind": "F1c",
+        "cells": 2,
+        "share_pct": 0.05
+      },
+      {
+        "kind": "F1f",
+        "cells": 1,
+        "share_pct": 0.05
+      },
+      {
+        "kind": "F1a",
+        "cells": 1,
+        "share_pct": 0.04
+      },
+      {
+        "kind": "F1f",
+        "cells": 2,
+        "share_pct": 0.04
+      },
+      {
+        "kind": "F1b",
+        "cells": 1,
+        "share_pct": 0.03
+      },
+      {
+        "kind": "F1c",
+        "cells": 1,
+        "share_pct": 0.02
+      },
+      {
+        "kind": "F1a",
+        "cells": 1,
+        "share_pct": 0.02
+      },
+      {
+        "kind": "F1a",
+        "cells": 1,
+        "share_pct": 0.02
+      },
+      {
+        "kind": "F1a",
+        "cells": 1,
+        "share_pct": 0.01
+      },
+      {
+        "kind": "F1a",
+        "cells": 2,
+        "share_pct": 0.01
+      },
+      {
+        "kind": "F1c",
+        "cells": 1,
+        "share_pct": 0.01
+      },
+      {
+        "kind": "F1a",
+        "cells": 1,
+        "share_pct": 0.0
+      },
+      {
+        "kind": "F1f",
+        "cells": 1,
+        "share_pct": 0.0
+      }
+    ]
+  },
   "twelve_weeks": {
     "clean": {
       "E-RAB accessibility (%)": 97.888,
@@ -866,9 +1037,9 @@
       "RRC connections, mean": 8834.189
     },
     "with_faults": {
-      "E-RAB accessibility (%)": 97.744,
-      "RRC setup success (%)": 98.543,
-      "E-RAB drop rate (%)": 0.633,
+      "E-RAB accessibility (%)": 97.875,
+      "RRC setup success (%)": 98.64,
+      "E-RAB drop rate (%)": 0.623,
       "DL IP throughput (kbit/s)": 6033.981,
       "Handover success (%)": 98.684,
       "Cell availability (%)": 99.999,
@@ -1018,22 +1189,22 @@
         99.368
       ],
       "faulty": [
-        76.314,
-        76.053,
-        76.321,
-        75.87,
-        76.381,
-        76.395,
-        76.375
+        76.702,
+        76.436,
+        76.674,
+        76.257,
+        76.76,
+        76.713,
+        76.785
       ],
       "fixed": [
-        76.314,
-        76.053,
-        76.321,
-        75.87,
-        76.381,
-        76.395,
-        76.375
+        76.702,
+        76.436,
+        76.674,
+        76.257,
+        76.76,
+        76.713,
+        76.785
       ]
     },
     "F1f": {
@@ -1068,13 +1239,14 @@
     }
   },
   "timing_s": {
-    "demo network and fault plan": 25.6,
-    "six demonstrations": 85.5,
-    "recovery of every planted fault": 187.7,
-    "12 weeks of counters with faults": 70.4
+    "demo network and fault plan": 27.0,
+    "six demonstrations": 86.6,
+    "recovery of every planted fault": 192.1,
+    "reach of every planted fault": 27.6,
+    "12 weeks of counters with faults": 75.1
   },
   "resources": {
-    "wall time of the whole report, s": 380.7,
-    "peak resident set, MB": 1276
+    "wall time of the whole report, s": 420.2,
+    "peak resident set, MB": 1257
   }
 }

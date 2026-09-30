@@ -83,4 +83,4 @@ Measured on the build machine; varies run to run.
 
 | Step | Seconds |
 |---|---|
-| network, schedule and 12 weeks of exports | 52.2 |
+| network, schedule and 12 weeks of exports | 53.2 |

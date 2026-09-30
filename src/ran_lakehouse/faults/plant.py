@@ -23,10 +23,12 @@ MISTAKEN_TILT_DEG = 0.0
 POWER_DROP_DB = -6.0  # F1c (START)
 SURGE_FACTOR = 2.5  # F1d: persons multiplied around the cell (START)
 SURGE_RADIUS_KM = 0.6
-# F1e: interference source power per PRB-wide band, dBm, at ground level
-# (START), placed this far along the cell's azimuth.
-INTERFERER_DBM = 15.0
-INTERFERER_DISTANCE_KM = (0.3, 0.8)
+# F1e: an interference source this far along the cell's azimuth, at ground
+# level, whose strength gives the faulty cell this uplink noise rise
+# (START); every other cell hears it through its own antenna and path loss,
+# so the rise at the neighbours scales from the faulty cell's.
+TARGET_RISE_DB = 15.0
+INTERFERER_DISTANCE_KM = (0.1, 0.3)
 INTERFERER_ANGLE_DEG = 20.0
 # Durations in hours (START): (minimum, maximum).
 DURATION_H = {
@@ -292,9 +294,11 @@ def detail(
 def uplink_rise_db(model: NetworkModel, fault: Fault) -> np.ndarray:
     """Uplink noise rise an interference source causes at every cell.
 
-    Only cells of the faulty cell's band hear the source (a narrowband
-    source in that uplink band, ASSUMPTION). The uplink path loss uses the
-    band's downlink centre frequency (ASSUMPTION).
+    The source is as strong as it takes to raise the faulty cell's uplink
+    noise by TARGET_RISE_DB (rule F1). Only cells of the faulty cell's band
+    hear the source (a narrowband source in that uplink band, ASSUMPTION).
+    The uplink path loss uses the band's downlink centre frequency
+    (ASSUMPTION).
 
     Args:
         model: The network.
@@ -322,7 +326,12 @@ def uplink_rise_db(model: NetworkModel, fault: Fault) -> np.ndarray:
         np.full(cells.size, grid.urban_weight[point]),
         np.full(cells.size, grid.suburban_weight[point]),
     )
-    received = INTERFERER_DBM + gain - loss
+    # Source strength: the received level at the faulty cell that gives it
+    # TARGET_RISE_DB over the noise floor; the others keep their gain and
+    # loss relative to it.
+    own = int(np.flatnonzero(cells == fault.cell)[0])
+    needed = UL_NOISE_FLOOR_DBM + 10.0 * np.log10(10.0 ** (TARGET_RISE_DB / 10.0) - 1.0)
+    received = gain - loss + (needed - (gain[own] - loss[own]))
     rise = np.zeros(len(state.cell_names))
     rise[cells] = 10.0 * np.log10(1.0 + 10.0 ** ((received - UL_NOISE_FLOOR_DBM) / 10.0))
     return rise

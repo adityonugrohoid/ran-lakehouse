@@ -115,6 +115,14 @@ measured scale test, rule E1).
 | F1e | External interference | uplink interference source added | no parameter fix, field visit |
 | F1f | Outage | cell down for hours | no parameter fix, alarm-driven |
 
+  Faults stay local: a fault changes the KPIs (more than START 1 point)
+  of only its cell and nearby cells, which carry at most START 2% of a
+  technology's access attempts in a day; a report lists every scheduled
+  fault's reach and a test enforces the limit. F1e: the interference
+  source sits START 0.1 to 0.3 km along the cell's azimuth and is as
+  strong as it takes to raise the faulty cell's uplink noise by START
+  15 dB; the other cells hear it through their own antenna gain and path
+  loss.
 - F2 Each fault leaves its trace in CM (config change log for F1a-F1c),
   FM (alarms for F1f, and for F1e where a vendor raises one) and PM.
 - F3 Faults are scheduled per seed across the 12 weeks, with overlap in
