@@ -55,6 +55,10 @@ def build_parser() -> argparse.ArgumentParser:
         "gold", help="build gold KPIs from silver through dbt, one UTC day at a time"
     )
     build_gold.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    planning = commands.add_parser(
+        "planning", help="generate the expansion area's planning data into gold tables"
+    )
+    planning.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
     trace = commands.add_parser(
         "lineage",
         help="trace one gold KPI value to its silver rows, bronze rows and source files",
@@ -116,6 +120,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         silver.create_tables(con, True)
         load_id = f"silver-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
         print(json.dumps(silver.SilverBuild(con, load_id, silver.GRACE).run(None), indent=2))
+        return 0
+    if args.command == "planning":
+        from ran_lakehouse.lake.catalog import connect
+        from ran_lakehouse.model import default_model
+        from ran_lakehouse.planning.build import build_plan, tables, write_gold
+        from ran_lakehouse.world import build_world
+
+        data = tables(build_plan(default_model(build_world("demo"))))
+        write_gold(connect(args.warehouse), data)
+        print(json.dumps({name: table.num_rows for name, table in data.items()}, indent=2))
         return 0
     if args.command == "lineage":
         from datetime import date, datetime

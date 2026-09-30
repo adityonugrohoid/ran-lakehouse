@@ -255,21 +255,37 @@ the property breaks:
 
 ## 9. Planning geography (rule G)
 
-- G1 Expansion area on the same map (rule W3), uncovered today, WIB (rule W5).
+- G1 Expansion area on the same map (rule W3), WIB (rule W5), with little or
+  no usable indoor service today; some villages see weak outdoor coverage
+  from the served edge (computed with the same propagation as G5, reported
+  per technology).
 - G2 Terrain: synthetic height map for the expansion area only (spectral
   method, written fresh; START relief and roughness judged by eye and
   rendered).
-- G3 Villages: id, x_km, y_km, population, schools, covered_today.
+- G3 Villages: id, x_km, y_km, population, schools, the served network's
+  outdoor level per technology, covered_today_lte and covered_today_gsm.
+  Service coverage is indoor: the outdoor level clears the threshold plus
+  the median building entry loss of ITU-R P.2109-2 (08/2023) Annex 1
+  clause 3 at 0.9 GHz for traditional buildings (about 14.2 dB); village
+  housing is modelled as the traditional class (ASSUMPTION).
 - G4 Candidate sites: id, x_km, y_km, elevation, build cost, grid
-  distance, fiber distance. Costs in IDR, ASSUMPTION, stated.
-- G5 Coverage: Hata for 900 and 1800 MHz plus Bullington diffraction
-  (ITU-R P.526, cite edition and clause) on the terrain profile. Coverage
-  thresholds for LTE (RSRP) and GSM (RxLev) each carry a cited source or
-  are labelled ASSUMPTION.
+  distance, fiber distance. Costs in IDR, ASSUMPTION, stated. Candidates
+  are each village's highest local hilltop within START 3 km, kept START
+  1.5 km apart, up to START 60 by persons nearby.
+- G5 Coverage: Hata (rule M) for the 900 MHz rural layers (LTE B8, GSM
+  900; START 30 m masts) plus Bullington diffraction on the terrain
+  profile, ITU-R P.526-16 (11/2025) Annex 1 clause 4.5.1 eqs (49) to (57)
+  with J(v) from clause 4.1 eq (31), effective earth radius 8 500 km
+  (clause 1). Coverage thresholds LTE RSRP -110 dBm and GSM RxLev -100 dBm
+  are START (3GPP sets no planning threshold).
 - G6 Backhaul and power options per candidate site: fiber (distance,
   cost), microwave (to a hub, line of sight with 60% first Fresnel zone
   clearance, cost), satellite (always available, about 8 Mbps cap,
   monthly cost), power (grid if within a distance, else solar, cost).
+  First Fresnel radius per ITU-R P.530-19 (09/2025) clause 2.2.1 eq (3);
+  the 60% clearance (START) is the free-space criterion of P.526-16
+  clause 2.3 and P.530-19 clause 2.2.2, and the 1.0 F1 count of P.530-19
+  clause 2.2.2.1 is reported beside it.
 - G7 Gold tables: villages, candidate_sites, coverage (site x village,
   signal_dBm, covered), backhaul_power_options.
 - G8 Planning scenarios: scenario cards (id, area, written request, the
