@@ -14,15 +14,18 @@ the cheapest plan at that optimum, then each constraint relaxed in turn to price
 HiGHS and SCIP get each row divided by its largest coefficient (unscaled IDR rows
 near 1e10 made SCIP stop 40 persons short on S16); CP-SAT solves in integers. Every
 plan returned is checked against the unscaled integer rows.
-Median of 3 runs per card; time limit 60 s per solve.
+Median of 3 runs per card; time limit 60 s per solve; 1 thread for CP-SAT
+and SCIP (HiGHS takes no thread count through MathOpt), so the pick holds on any
+machine: CP-SAT proved every card with 16 workers on the build machine but not
+with 4 on the CI runner.
 
 | Back end | Total s | Largest card s | Proven (optimal or infeasible) | Time limit |
 |---|---|---|---|---|
-| highs | 3.717 | 1.787 | 20 of 20 | 0 |
-| cpsat | 3.111 | 0.808 | 20 of 20 | 0 |
-| scip | 3.458 | 1.542 | 20 of 20 | 0 |
+| highs | 3.651 | 1.766 | 20 of 20 | 0 |
+| cpsat | 253.371 | 65.049 | 18 of 20 | 2 |
+| scip | 3.411 | 1.529 | 20 of 20 | 0 |
 
-All back ends agree on every card's status and objective: yes. Chosen: **cpsat** (every card proven, least total time); it serves both the stored optima and the plan solve.
+The back ends that prove every card agree on each card's status and objective: yes. Chosen: **scip** (every card proven, least total time); it serves both the stored optima and the plan solve.
 
 ## Scenarios
 
@@ -104,8 +107,8 @@ Plan: 5 sites, 33 villages and 68,846 persons covered, capital cost 14,476,089,5
 
 | Site | Backhaul | Hub | Power |
 |---|---|---|---|
-| C01 | satellite |  | solar |
-| C07 | microwave | SITE0277 | solar |
+| C01 | microwave | SITE0279 | solar |
+| C07 | satellite |  | solar |
 | C09 | microwave | SITE0278 | solar |
 | C18 | microwave | SITE0280 | solar |
 | C31 | microwave | SITE0281 | solar |
@@ -123,5 +126,5 @@ with whole sites it can bind while the plan leaves some of it unused:
 
 ## Cost
 
-Report run 66.5 s, peak RSS 772 MB (network model, planning data, every card solved by every back end). Solves rerun after a
-wall-clock step of the build machine: 1.
+Report run 819.9 s, peak RSS 772 MB (network model, planning data, every card solved by every back end). Solves rerun after a
+wall-clock step of the build machine: 5.

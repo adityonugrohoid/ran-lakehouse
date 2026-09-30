@@ -43,8 +43,12 @@ from ortools.math_opt.python import mathopt
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "contract" / "plan_constraints.schema.json"
-BACKEND = "cpsat"  # chosen by measurement, see results/planning_scenarios.md
+BACKEND = "scip"  # chosen by measurement, see results/planning_scenarios.md
 TIME_LIMIT_S = 60.0  # per solve (ASSUMPTION)
+# One thread for the solvers that take a count (CP-SAT, SCIP), so the measured
+# pick holds on any machine: CP-SAT with 16 workers proved every card, with
+# 4 it ran out of time. HiGHS takes no thread count through MathOpt.
+THREADS = 1
 CLOCK_STEP_ERROR = "solve_time must be non-negative"
 CLOCK_STEP_ATTEMPTS = 3
 clock_step_reruns = {"count": 0}
@@ -220,6 +224,7 @@ def solve_mathopt(model: Model, solver_type: Any) -> Solution:
         time_limit=timedelta(seconds=TIME_LIMIT_S),
         relative_gap_tolerance=0.0,
         absolute_gap_tolerance=0.0,
+        threads=None if solver_type == mathopt.SolverType.HIGHS else THREADS,
     )
     result = solve_through_clock_steps(m, solver_type, parameters)
     seconds = time.perf_counter() - started
@@ -231,9 +236,13 @@ def solve_mathopt(model: Model, solver_type: Any) -> Solution:
     if reason == mathopt.TerminationReason.INFEASIBLE:
         return Solution("infeasible", math.nan, np.zeros(0), seconds)
     limit = result.termination.limit
+    # MathOpt's CP-SAT reports its time limit as UNDETERMINED.
+    timed_out = limit == mathopt.Limit.TIME or (
+        limit == mathopt.Limit.UNDETERMINED and seconds >= TIME_LIMIT_S
+    )
     if (
         reason in (mathopt.TerminationReason.FEASIBLE, mathopt.TerminationReason.NO_SOLUTION_FOUND)
-        and limit == mathopt.Limit.TIME
+        and timed_out
     ):
         return Solution("time_limit", math.nan, np.zeros(0), seconds)
     raise RuntimeError(

@@ -207,7 +207,7 @@ def test_each_card_behaves_as_its_difficulty_says(
 ) -> None:
     data, cards = demo
     for card in cards:
-        results = {b: solve_plan(data, card.constraints, b) for b in ("highs", "cpsat")}
+        results = {b: solve_plan(data, card.constraints, b) for b in ("highs", "scip")}
         statuses = {r["status"] for r in results.values()}
         assert statuses == {"infeasible" if card.difficulty == "infeasible" else "optimal"}, (
             card.scenario_id,

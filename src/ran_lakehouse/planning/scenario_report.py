@@ -64,7 +64,8 @@ def compare(data: solver.PlanningData, cards: list[Scenario]) -> dict[str, Any]:
     Returns:
         Per back end: total and largest median seconds, cards proven
         (optimal or infeasible) and cards stopped at the time limit; and
-        whether all back ends agree on every card's status and objective.
+        whether the back ends that prove every card agree on each card's
+        status and objective.
     """
     out: dict[str, Any] = {}
     answers: dict[str, list[tuple[str, Any]]] = {}
@@ -84,12 +85,13 @@ def compare(data: solver.PlanningData, cards: list[Scenario]) -> dict[str, Any]:
             "proven": proven,
             "time_limit": limited,
         }
-    first = next(iter(answers.values()))
+    complete = [answers[b] for b, v in out.items() if v["proven"] == len(cards)]
     return {
         "backends": out,
-        "agree": all(a == first for a in answers.values()),
+        "agree": bool(complete) and all(a == complete[0] for a in complete),
         "repeats": REPEATS,
         "time_limit_s": solver.TIME_LIMIT_S,
+        "threads": solver.THREADS,
     }
 
 
@@ -318,7 +320,10 @@ def render_markdown(record: dict[str, Any]) -> str:
         "near 1e10 made SCIP stop 40 persons short on S16); CP-SAT solves in integers. Every",
         "plan returned is checked against the unscaled integer rows.",
         f"Median of {comparison['repeats']} runs per card; time limit "
-        f"{comparison['time_limit_s']:g} s per solve.",
+        f"{comparison['time_limit_s']:g} s per solve; {comparison['threads']} thread for CP-SAT",
+        "and SCIP (HiGHS takes no thread count through MathOpt), so the pick holds on any",
+        "machine: CP-SAT proved every card with 16 workers on the build machine but not",
+        "with 4 on the CI runner.",
         "",
         "| Back end | Total s | Largest card s | Proven (optimal or infeasible) | Time limit |",
         "|---|---|---|---|---|",
@@ -328,7 +333,7 @@ def render_markdown(record: dict[str, Any]) -> str:
             for b, v in comparison["backends"].items()
         ],
         "",
-        f"All back ends agree on every card's status and objective: "
+        f"The back ends that prove every card agree on each card's status and objective: "
         f"{'yes' if comparison['agree'] else 'NO'}. Chosen: **{record['backend']}** (every "
         "card proven, least total time); it serves both the stored optima and the plan solve.",
         "",

@@ -4,29 +4,30 @@
   "solver_comparison": {
     "backends": {
       "highs": {
-        "total_s": 3.717,
-        "largest_s": 1.787,
+        "total_s": 3.651,
+        "largest_s": 1.766,
         "proven": 20,
         "time_limit": 0
       },
       "cpsat": {
-        "total_s": 3.111,
-        "largest_s": 0.808,
-        "proven": 20,
-        "time_limit": 0
+        "total_s": 253.371,
+        "largest_s": 65.049,
+        "proven": 18,
+        "time_limit": 2
       },
       "scip": {
-        "total_s": 3.458,
-        "largest_s": 1.542,
+        "total_s": 3.411,
+        "largest_s": 1.529,
         "proven": 20,
         "time_limit": 0
       }
     },
     "agree": true,
     "repeats": 3,
-    "time_limit_s": 60.0
+    "time_limit_s": 60.0,
+    "threads": 1
   },
-  "backend": "cpsat",
+  "backend": "scip",
   "counts": {
     "easy / optimal": 5,
     "hard / optimal": 5,
@@ -95,20 +96,20 @@
       "min_persons_share": null
     },
     "plan": {
-      "backend": "cpsat",
+      "backend": "scip",
       "status": "optimal",
       "objective": 14476089570,
       "sites": [
         {
           "site_id": "C01",
-          "backhaul": "satellite",
-          "hub": "",
+          "backhaul": "microwave",
+          "hub": "SITE0279",
           "power": "solar"
         },
         {
           "site_id": "C07",
-          "backhaul": "microwave",
-          "hub": "SITE0277",
+          "backhaul": "satellite",
+          "hub": "",
           "power": "solar"
         },
         {
@@ -184,7 +185,7 @@
           "objective_gain_without_it": 800000000
         }
       ],
-      "solve_seconds": 0.105
+      "solve_seconds": 0.038
     }
   },
   "cards": [
@@ -289,7 +290,7 @@
       "request": "Every village with a school must get indoor 4G. Find the cheapest plan."
     }
   ],
-  "solves_rerun_after_clock_step": 1,
-  "timing_s": 66.5,
+  "solves_rerun_after_clock_step": 5,
+  "timing_s": 819.9,
   "peak_rss_mb": 772
 }
