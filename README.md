@@ -28,8 +28,15 @@ uv run ranlake run --profile demo --warehouse demo --weeks 13 --first-day 84 --d
 ```
 
 `--speedup 1` is the real 15-minute cadence. A live run writes its clock
-label and progress to `runs/<warehouse>/status.json`. The silver and gold
-layers and the API land in the next pull requests.
+label and progress to `runs/<warehouse>/status.json`. Then build silver:
+every UTC day whose files are in, per EMS, with late files merged into
+their own hour:
+
+```bash
+uv run ranlake silver --warehouse demo
+```
+
+The gold layer and the API land in the next pull requests.
 
 ## License
 
