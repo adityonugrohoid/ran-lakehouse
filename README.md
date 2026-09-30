@@ -70,7 +70,61 @@ uv run python -m ran_lakehouse.planning.scenario_report --warehouse demo
 uv run ranlake plan --warehouse demo --constraints my_constraints.json
 ```
 
-The API lands in the next pull requests.
+Plans are solved by SCIP 10 (Apache-2.0) through OR-Tools 9.15 MathOpt
+(Apache-2.0), chosen by the measurement in
+`results/planning_scenarios.md`.
+
+## API
+
+Serve the lake over HTTP. Startup builds the run's network once, for
+what-if:
+
+```bash
+uv run ranlake serve --warehouse demo --profile demo --run-weeks 13 --host 127.0.0.1 --port 8000
+```
+
+The contract is `contract/openapi.json` (generated from the code; a test
+fails when they drift) with `contract/plan_constraints.schema.json`, both
+at one semver version. Every response, errors included, carries it in the
+`X-Contract-Version` header and the `contract_version` field, beside the
+synthetic-data notice. Endpoints, all under `/v1`:
+
+| Endpoint | What it serves |
+|---|---|
+| `GET /clock` | the live run's clock (if one is running) and how far bronze, silver and gold have got |
+| `GET /topology` | sites, their cells and the neighbour relations of the latest CM snapshot |
+| `GET /cells`, `GET /cells/{cell_name}` | cells with vendor, technology, band, N_RB and DN |
+| `GET /kpi-catalog` | every KPI formula version |
+| `GET /kpis` | one cell's KPI values by KPI id, formula version and range, at 15m, hour, day or week, with coverage and suspect share |
+| `GET /worst-cells` | a week's worst-cell ranking for one KPI |
+| `GET /cm/snapshot`, `GET /cm/changes` | one cell's CM at a time, and the change log |
+| `GET /alarms` | alarm notifications |
+| `GET /quality-events` | missing periods, late files and redeliveries the pipeline recorded |
+| `GET /lineage` | the silver rows and source files behind one KPI value |
+| `GET /planning/villages`, `/candidate-sites`, `/coverage`, `/backhaul-power-options` | the planning tables |
+| `GET /planning/scenarios` | scenario cards: id, area and the request as written |
+| `POST /plan` | a constraint set in, a plan out, from the same solver as the stored optima |
+| `POST /what-if` | bounded changes in (rule M6), next week's LTE KPIs before and after for the changed and touched cells, replayed with common random numbers |
+
+Out-of-bound what-if changes are refused with a 422 that names the bound.
+The evaluation-only tables (planted answers) are never served; a test
+walks every route to prove it.
+
+Write the recorded sample for downstream tests:
+
+```bash
+uv run ranlake export-sample --warehouse demo --profile demo --run-weeks 13 --out data/sample
+```
+
+It holds about 30 cells around three planted faults of different kinds
+over two weeks (daily and hourly KPIs, CM snapshot and changes, alarms,
+worst cells) as Parquet, plus recorded responses at the current contract
+version: every read route, five scenario cards, five plan solves on
+constraint sets written for the sample, and five what-if calls (one out of
+bound). Nothing in it says which cells are faulty or what fixes them, and
+no plan-solve call uses a card's implied constraints; the export fails if
+either would. `manifest.json` lists every file with its rows, size and
+SHA-256.
 
 ## License
 

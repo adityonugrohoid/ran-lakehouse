@@ -64,6 +64,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     solve.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
     solve.add_argument("--constraints", required=True, type=Path, help="constraint set, JSON")
+    serve = commands.add_parser("serve", help="run the HTTP API against a warehouse")
+    add_api_arguments(serve)
+    serve.add_argument("--host", required=True, help="address to listen on, e.g. 127.0.0.1")
+    serve.add_argument("--port", type=int, required=True, help="port to listen on")
+    sample = commands.add_parser(
+        "export-sample",
+        help="write a small fixed dataset and recorded API responses (rule A4)",
+    )
+    add_api_arguments(sample)
+    sample.add_argument("--out", type=Path, required=True, help="directory to write the sample to")
     trace = commands.add_parser(
         "lineage",
         help="trace one gold KPI value to its silver rows, bronze rows and source files",
@@ -79,6 +89,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="UTC start (ISO, with offset) for 15m and hour; WIB date for day and week",
     )
     return parser
+
+
+def add_api_arguments(parser: argparse.ArgumentParser) -> None:
+    """Arguments shared by serve and export-sample.
+
+    Args:
+        parser: The subcommand parser.
+    """
+    parser.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    parser.add_argument("--profile", required=True, help="world profile of the run")
+    parser.add_argument("--run-weeks", type=int, required=True, help="weeks in the whole run")
 
 
 def add_run_arguments(parser: argparse.ArgumentParser) -> None:
@@ -147,6 +168,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         constraints = json.loads(args.constraints.read_text())
         print(json.dumps(solve_plan(planning_data, constraints, BACKEND), indent=2))
+        return 0
+    if args.command == "serve":
+        import uvicorn
+
+        from ran_lakehouse.api.serve import app_for
+
+        app = app_for(args.warehouse, args.profile, args.run_weeks, RUNS)
+        uvicorn.run(app, host=args.host, port=args.port)
+        return 0
+    if args.command == "export-sample":
+        from ran_lakehouse.api.sample import export_sample
+
+        summary = export_sample(args.warehouse, args.profile, args.run_weeks, RUNS, args.out)
+        print(json.dumps(summary, indent=2))
         return 0
     if args.command == "lineage":
         from datetime import date, datetime

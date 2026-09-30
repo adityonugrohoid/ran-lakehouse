@@ -1,0 +1,3816 @@
+{
+  "components": {
+    "schemas": {
+      "Alarm": {
+        "additionalProperties": false,
+        "description": "One alarm notification.",
+        "properties": {
+          "alarm_id": {
+            "title": "Alarm Id",
+            "type": "string"
+          },
+          "alarm_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alarm Type"
+          },
+          "cell_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cell Name"
+          },
+          "cleared_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cleared Time"
+          },
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "event_time": {
+            "format": "date-time",
+            "title": "Event Time",
+            "type": "string"
+          },
+          "notification_id": {
+            "title": "Notification Id",
+            "type": "string"
+          },
+          "notification_type": {
+            "title": "Notification Type",
+            "type": "string"
+          },
+          "object_instance": {
+            "title": "Object Instance",
+            "type": "string"
+          },
+          "perceived_severity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Perceived Severity"
+          },
+          "probable_cause": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Probable Cause"
+          },
+          "raised_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raised Time"
+          },
+          "specific_problem": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Specific Problem"
+          }
+        },
+        "required": [
+          "notification_id",
+          "notification_type",
+          "alarm_id",
+          "event_time",
+          "raised_time",
+          "cleared_time",
+          "alarm_type",
+          "perceived_severity",
+          "probable_cause",
+          "specific_problem",
+          "cell_name",
+          "ems",
+          "object_instance"
+        ],
+        "title": "Alarm",
+        "type": "object"
+      },
+      "BackhaulPowerOption": {
+        "additionalProperties": false,
+        "description": "A backhaul or power option of a candidate site (rule G7).",
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "capacity_mbps": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity Mbps"
+          },
+          "capex_idr": {
+            "title": "Capex Idr",
+            "type": "integer"
+          },
+          "clears_full_fresnel": {
+            "title": "Clears Full Fresnel",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "distance_km": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance Km"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "monthly_idr": {
+            "title": "Monthly Idr",
+            "type": "integer"
+          },
+          "site_id": {
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "kind",
+          "available",
+          "distance_km",
+          "capacity_mbps",
+          "capex_idr",
+          "monthly_idr",
+          "detail",
+          "clears_full_fresnel"
+        ],
+        "title": "BackhaulPowerOption",
+        "type": "object"
+      },
+      "CandidateSite": {
+        "additionalProperties": false,
+        "description": "A candidate site (rule G7).",
+        "properties": {
+          "build_cost_idr": {
+            "title": "Build Cost Idr",
+            "type": "integer"
+          },
+          "elevation_m": {
+            "title": "Elevation M",
+            "type": "number"
+          },
+          "fiber_distance_km": {
+            "title": "Fiber Distance Km",
+            "type": "number"
+          },
+          "grid_distance_km": {
+            "title": "Grid Distance Km",
+            "type": "number"
+          },
+          "nearest_village_km": {
+            "title": "Nearest Village Km",
+            "type": "number"
+          },
+          "persons_nearby": {
+            "title": "Persons Nearby",
+            "type": "integer"
+          },
+          "site_id": {
+            "title": "Site Id",
+            "type": "string"
+          },
+          "x_km": {
+            "title": "X Km",
+            "type": "number"
+          },
+          "y_km": {
+            "title": "Y Km",
+            "type": "number"
+          }
+        },
+        "required": [
+          "site_id",
+          "x_km",
+          "y_km",
+          "elevation_m",
+          "nearest_village_km",
+          "persons_nearby",
+          "build_cost_idr",
+          "grid_distance_km",
+          "fiber_distance_km"
+        ],
+        "title": "CandidateSite",
+        "type": "object"
+      },
+      "Cell": {
+        "additionalProperties": false,
+        "description": "A cell as its CM and gold describe it.",
+        "properties": {
+          "band": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Band"
+          },
+          "bandwidth_mhz": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bandwidth Mhz"
+          },
+          "cell_name": {
+            "title": "Cell Name",
+            "type": "string"
+          },
+          "dn": {
+            "title": "Dn",
+            "type": "string"
+          },
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "n_rb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "LTE downlink resource blocks (TS 36.101 Table 5.6-1)",
+            "title": "N Rb"
+          },
+          "site": {
+            "title": "Site",
+            "type": "string"
+          },
+          "technology": {
+            "enum": [
+              "LTE",
+              "GSM"
+            ],
+            "title": "Technology",
+            "type": "string"
+          },
+          "vendor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor"
+          }
+        },
+        "required": [
+          "cell_name",
+          "site",
+          "ems",
+          "vendor",
+          "technology",
+          "band",
+          "bandwidth_mhz",
+          "n_rb",
+          "dn"
+        ],
+        "title": "Cell",
+        "type": "object"
+      },
+      "CellKpis": {
+        "additionalProperties": false,
+        "description": "Next-week LTE KPIs of one cell (or all touched cells), before and after.",
+        "properties": {
+          "after": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "After",
+            "type": "object"
+          },
+          "before": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Before",
+            "type": "object"
+          },
+          "cell_name": {
+            "title": "Cell Name",
+            "type": "string"
+          },
+          "changed": {
+            "title": "Changed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cell_name",
+          "changed",
+          "before",
+          "after"
+        ],
+        "title": "CellKpis",
+        "type": "object"
+      },
+      "ChangeIn": {
+        "additionalProperties": false,
+        "description": "One bounded change (rule M6).",
+        "properties": {
+          "cell": {
+            "title": "Cell",
+            "type": "string"
+          },
+          "delta": {
+            "description": "tilt within +/-2 deg, power within +/-3 dB, cio moved at most 3 dB and kept within +/-6 dB; 0 for neighbour changes",
+            "title": "Delta",
+            "type": "number"
+          },
+          "kind": {
+            "enum": [
+              "tilt",
+              "power",
+              "cio",
+              "add_neighbour",
+              "remove_neighbour"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Neighbour target for neighbour changes, else null",
+            "title": "Target"
+          }
+        },
+        "required": [
+          "kind",
+          "cell",
+          "delta",
+          "target"
+        ],
+        "title": "ChangeIn",
+        "type": "object"
+      },
+      "ClockStatus": {
+        "additionalProperties": false,
+        "description": "Where the run and each lake layer have got.",
+        "properties": {
+          "bronze_latest_arrival": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bronze Latest Arrival"
+          },
+          "gold_latest_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gold Latest Day"
+          },
+          "live_run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LiveRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "silver_complete_to": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Silver Complete To"
+          },
+          "what_if_week_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "First WIB day of the week a what-if replays (the day after gold ends)",
+            "title": "What If Week Start"
+          }
+        },
+        "required": [
+          "live_run",
+          "bronze_latest_arrival",
+          "silver_complete_to",
+          "gold_latest_day",
+          "what_if_week_start"
+        ],
+        "title": "ClockStatus",
+        "type": "object"
+      },
+      "CmChange": {
+        "additionalProperties": false,
+        "description": "One CM change log entry.",
+        "properties": {
+          "attribute": {
+            "title": "Attribute",
+            "type": "string"
+          },
+          "cell_name": {
+            "title": "Cell Name",
+            "type": "string"
+          },
+          "dn": {
+            "title": "Dn",
+            "type": "string"
+          },
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "new_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "New Value"
+          },
+          "object_class": {
+            "title": "Object Class",
+            "type": "string"
+          },
+          "old_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Old Value"
+          },
+          "time": {
+            "format": "date-time",
+            "title": "Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "time",
+          "cell_name",
+          "ems",
+          "object_class",
+          "dn",
+          "attribute",
+          "old_value",
+          "new_value"
+        ],
+        "title": "CmChange",
+        "type": "object"
+      },
+      "CmObject": {
+        "additionalProperties": false,
+        "description": "A managed object's attributes in a CM snapshot.",
+        "properties": {
+          "attributes": {
+            "additionalProperties": true,
+            "title": "Attributes",
+            "type": "object"
+          },
+          "dn": {
+            "title": "Dn",
+            "type": "string"
+          },
+          "object_class": {
+            "title": "Object Class",
+            "type": "string"
+          },
+          "snapshot_time": {
+            "format": "date-time",
+            "title": "Snapshot Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_time",
+          "object_class",
+          "dn",
+          "attributes"
+        ],
+        "title": "CmObject",
+        "type": "object"
+      },
+      "ConstraintCost": {
+        "additionalProperties": false,
+        "description": "What one constraint costs the objective (by solving again without it).",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "boolean"
+          },
+          "constraint": {
+            "title": "Constraint",
+            "type": "string"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit"
+          },
+          "objective_gain_without_it": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective Gain Without It"
+          },
+          "used": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Used"
+          }
+        },
+        "required": [
+          "constraint",
+          "limit",
+          "used",
+          "binding",
+          "objective_gain_without_it"
+        ],
+        "title": "ConstraintCost",
+        "type": "object"
+      },
+      "Coverage": {
+        "additionalProperties": false,
+        "description": "Indoor service of a village from a candidate site (rule G7).",
+        "properties": {
+          "covered": {
+            "title": "Covered",
+            "type": "boolean"
+          },
+          "diffraction_db": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Diffraction Db"
+          },
+          "distance_km": {
+            "title": "Distance Km",
+            "type": "number"
+          },
+          "hata_db": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hata Db"
+          },
+          "signal_dbm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signal Dbm"
+          },
+          "site_id": {
+            "title": "Site Id",
+            "type": "string"
+          },
+          "technology": {
+            "title": "Technology",
+            "type": "string"
+          },
+          "village_id": {
+            "title": "Village Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "site_id",
+          "village_id",
+          "technology",
+          "distance_km",
+          "hata_db",
+          "diffraction_db",
+          "signal_dbm",
+          "covered"
+        ],
+        "title": "Coverage",
+        "type": "object"
+      },
+      "Envelope_Cell_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Cell"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[Cell]",
+        "type": "object"
+      },
+      "Envelope_ClockStatus_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ClockStatus"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[ClockStatus]",
+        "type": "object"
+      },
+      "Envelope_KpiSeries_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/KpiSeries"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[KpiSeries]",
+        "type": "object"
+      },
+      "Envelope_Plan_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[Plan]",
+        "type": "object"
+      },
+      "Envelope_Topology_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Topology"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[Topology]",
+        "type": "object"
+      },
+      "Envelope_WhatIfResult_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WhatIfResult"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[WhatIfResult]",
+        "type": "object"
+      },
+      "Envelope_list_Alarm__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Alarm"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[Alarm]]",
+        "type": "object"
+      },
+      "Envelope_list_BackhaulPowerOption__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/BackhaulPowerOption"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[BackhaulPowerOption]]",
+        "type": "object"
+      },
+      "Envelope_list_CandidateSite__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CandidateSite"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[CandidateSite]]",
+        "type": "object"
+      },
+      "Envelope_list_Cell__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Cell"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[Cell]]",
+        "type": "object"
+      },
+      "Envelope_list_CmChange__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CmChange"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[CmChange]]",
+        "type": "object"
+      },
+      "Envelope_list_CmObject__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CmObject"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[CmObject]]",
+        "type": "object"
+      },
+      "Envelope_list_Coverage__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Coverage"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[Coverage]]",
+        "type": "object"
+      },
+      "Envelope_list_KpiDefinition__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/KpiDefinition"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[KpiDefinition]]",
+        "type": "object"
+      },
+      "Envelope_list_LineageRow__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/LineageRow"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[LineageRow]]",
+        "type": "object"
+      },
+      "Envelope_list_QualityEvent__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/QualityEvent"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[QualityEvent]]",
+        "type": "object"
+      },
+      "Envelope_list_ScenarioCard__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioCard"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[ScenarioCard]]",
+        "type": "object"
+      },
+      "Envelope_list_Village__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Village"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[Village]]",
+        "type": "object"
+      },
+      "Envelope_list_WorstCell__": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/WorstCell"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[list[WorstCell]]",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "additionalProperties": false,
+        "description": "What went wrong.",
+        "properties": {
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "status",
+          "error"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorEnvelope": {
+        "additionalProperties": false,
+        "description": "Every error response.",
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "error"
+        ],
+        "title": "ErrorEnvelope",
+        "type": "object"
+      },
+      "KpiDefinition": {
+        "additionalProperties": false,
+        "description": "One KPI formula version (rule L3).",
+        "properties": {
+          "better": {
+            "title": "Better",
+            "type": "string"
+          },
+          "breach_threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Breach Threshold"
+          },
+          "effective_from": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective From"
+          },
+          "formula": {
+            "title": "Formula",
+            "type": "string"
+          },
+          "formula_version": {
+            "title": "Formula Version",
+            "type": "integer"
+          },
+          "granularities": {
+            "title": "Granularities",
+            "type": "string"
+          },
+          "kpi_id": {
+            "title": "Kpi Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "operators_differ": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operators Differ"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "technology": {
+            "title": "Technology",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "vendors": {
+            "title": "Vendors",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kpi_id",
+          "formula_version",
+          "name",
+          "technology",
+          "formula",
+          "source",
+          "unit",
+          "granularities",
+          "vendors",
+          "better",
+          "breach_threshold",
+          "effective_from",
+          "operators_differ"
+        ],
+        "title": "KpiDefinition",
+        "type": "object"
+      },
+      "KpiSeries": {
+        "additionalProperties": false,
+        "description": "KPI values of one cell over a range.",
+        "properties": {
+          "cell_name": {
+            "title": "Cell Name",
+            "type": "string"
+          },
+          "formula_version": {
+            "title": "Formula Version",
+            "type": "integer"
+          },
+          "granularity": {
+            "enum": [
+              "15m",
+              "hour",
+              "day",
+              "week"
+            ],
+            "title": "Granularity",
+            "type": "string"
+          },
+          "kpi_id": {
+            "title": "Kpi Id",
+            "type": "string"
+          },
+          "values": {
+            "items": {
+              "$ref": "#/components/schemas/KpiValue"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "cell_name",
+          "kpi_id",
+          "formula_version",
+          "granularity",
+          "values"
+        ],
+        "title": "KpiSeries",
+        "type": "object"
+      },
+      "KpiValue": {
+        "additionalProperties": false,
+        "description": "One KPI value with how complete and trustworthy its inputs were.",
+        "properties": {
+          "coverage": {
+            "title": "Coverage",
+            "type": "number"
+          },
+          "denominator": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Denominator"
+          },
+          "numerator": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numerator"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "description": "UTC period start for 15m and hour; WIB date (Monday for week) otherwise",
+            "title": "Period"
+          },
+          "periods_expected": {
+            "title": "Periods Expected",
+            "type": "integer"
+          },
+          "periods_reported": {
+            "title": "Periods Reported",
+            "type": "integer"
+          },
+          "suspect_share": {
+            "title": "Suspect Share",
+            "type": "number"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "vendor": {
+            "title": "Vendor",
+            "type": "string"
+          }
+        },
+        "required": [
+          "period",
+          "vendor",
+          "value",
+          "numerator",
+          "denominator",
+          "periods_expected",
+          "periods_reported",
+          "coverage",
+          "suspect_share"
+        ],
+        "title": "KpiValue",
+        "type": "object"
+      },
+      "LineageRow": {
+        "additionalProperties": false,
+        "description": "One silver row and source counter behind a gold KPI value.",
+        "properties": {
+          "arrival_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrival Time"
+          },
+          "bin": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bin"
+          },
+          "bronze_counter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bronze Counter"
+          },
+          "bronze_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bronze Value"
+          },
+          "conflict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflict"
+          },
+          "coverage": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage"
+          },
+          "derived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Derived"
+          },
+          "dictionary_release": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dictionary Release"
+          },
+          "file_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Hash"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
+          },
+          "kpi_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kpi Value"
+          },
+          "late": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Late"
+          },
+          "load_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Load Id"
+          },
+          "managed_element": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Managed Element"
+          },
+          "measurement": {
+            "title": "Measurement",
+            "type": "string"
+          },
+          "object_dn": {
+            "title": "Object Dn",
+            "type": "string"
+          },
+          "parser_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parser Version"
+          },
+          "period_start": {
+            "format": "date-time",
+            "title": "Period Start",
+            "type": "string"
+          },
+          "silver_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Silver Value"
+          },
+          "size_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size Bytes"
+          },
+          "suspect": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suspect"
+          },
+          "suspect_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suspect Share"
+          },
+          "versions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Versions"
+          }
+        },
+        "required": [
+          "kpi_value",
+          "coverage",
+          "suspect_share",
+          "period_start",
+          "object_dn",
+          "measurement",
+          "bin",
+          "silver_value",
+          "derived",
+          "suspect",
+          "late",
+          "conflict",
+          "versions",
+          "dictionary_release",
+          "bronze_counter",
+          "bronze_value",
+          "managed_element",
+          "parser_version",
+          "load_id",
+          "file_name",
+          "file_hash",
+          "arrival_time",
+          "size_bytes"
+        ],
+        "title": "LineageRow",
+        "type": "object"
+      },
+      "LiveRun": {
+        "additionalProperties": false,
+        "description": "A live run's clock, from its status file.",
+        "properties": {
+          "accelerated": {
+            "title": "Accelerated",
+            "type": "boolean"
+          },
+          "clock": {
+            "title": "Clock",
+            "type": "string"
+          },
+          "simulated_time": {
+            "format": "date-time",
+            "title": "Simulated Time",
+            "type": "string"
+          },
+          "speedup": {
+            "title": "Speedup",
+            "type": "number"
+          },
+          "wall_time": {
+            "format": "date-time",
+            "title": "Wall Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "clock",
+          "accelerated",
+          "speedup",
+          "simulated_time",
+          "wall_time"
+        ],
+        "title": "LiveRun",
+        "type": "object"
+      },
+      "Plan": {
+        "additionalProperties": false,
+        "description": "A solved plan, or why there is none (rule G9).",
+        "properties": {
+          "backend": {
+            "title": "Backend",
+            "type": "string"
+          },
+          "capex_idr": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capex Idr"
+          },
+          "constraints": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ConstraintCost"
+            },
+            "title": "Constraints",
+            "type": "array"
+          },
+          "monthly_idr": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Monthly Idr"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          },
+          "persons_covered": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Persons Covered"
+          },
+          "relax_to_feasible": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Relaxation"
+            },
+            "title": "Relax To Feasible",
+            "type": "array"
+          },
+          "sites": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PlanSite"
+            },
+            "title": "Sites",
+            "type": "array"
+          },
+          "solve_seconds": {
+            "title": "Solve Seconds",
+            "type": "number"
+          },
+          "status": {
+            "enum": [
+              "optimal",
+              "infeasible",
+              "time_limit"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "villages_covered": {
+            "default": [],
+            "items": {
+              "type": "integer"
+            },
+            "title": "Villages Covered",
+            "type": "array"
+          }
+        },
+        "required": [
+          "backend",
+          "status",
+          "solve_seconds"
+        ],
+        "title": "Plan",
+        "type": "object"
+      },
+      "PlanConstraints": {
+        "$id": "ran-lakehouse/plan_constraints/1.0.0",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "description": "What a coverage plan for the synthetic expansion area must satisfy (rule G9). Part of the API contract (rule A1). Costs are IDR; distances km; coverage is indoor service (rule G3).",
+        "properties": {
+          "area": {
+            "additionalProperties": false,
+            "description": "Candidate sites and villages inside this box are in play.",
+            "properties": {
+              "x_max_km": {
+                "type": "number"
+              },
+              "x_min_km": {
+                "type": "number"
+              },
+              "y_max_km": {
+                "type": "number"
+              },
+              "y_min_km": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x_min_km",
+              "x_max_km",
+              "y_min_km",
+              "y_max_km"
+            ],
+            "type": "object"
+          },
+          "backhaul_rule": {
+            "additionalProperties": false,
+            "description": "Fiber when the fiber route is within fiber_within_km; microwave only where the hop clears this fraction of the first Fresnel zone; satellite always.",
+            "properties": {
+              "fiber_within_km": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "microwave_clearance": {
+                "enum": [
+                  0.6,
+                  1.0
+                ]
+              }
+            },
+            "required": [
+              "fiber_within_km",
+              "microwave_clearance"
+            ],
+            "type": "object"
+          },
+          "capex_budget_idr": {
+            "description": "Build, backhaul and power capital cost of all chosen sites.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "max_sites": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "min_persons_share": {
+            "description": "Share of the area's persons that must be covered.",
+            "maximum": 1,
+            "minimum": 0,
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "monthly_opex_limit_idr": {
+            "description": "Monthly backhaul and power cost of all chosen sites.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "must_cover": {
+            "additionalProperties": false,
+            "description": "Villages that must be covered: those with a school, those with at least min_persons, and the named ones.",
+            "properties": {
+              "min_persons": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "schools": {
+                "type": "boolean"
+              },
+              "village_ids": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array",
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "schools",
+              "min_persons",
+              "village_ids"
+            ],
+            "type": "object"
+          },
+          "objective": {
+            "description": "max_persons and max_villages count covered villages; min_capex minimizes capital cost subject to the other constraints.",
+            "enum": [
+              "max_persons",
+              "max_villages",
+              "min_capex"
+            ]
+          },
+          "power_rule": {
+            "additionalProperties": false,
+            "description": "A site takes grid power when the grid line is within grid_within_km, else solar.",
+            "properties": {
+              "grid_within_km": {
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "grid_within_km"
+            ],
+            "type": "object"
+          },
+          "schema_version": {
+            "const": "1.0.0"
+          },
+          "technology": {
+            "description": "Which service counts as covered; both needs LTE and GSM.",
+            "enum": [
+              "LTE",
+              "GSM",
+              "both"
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "area",
+          "objective",
+          "technology",
+          "must_cover",
+          "max_sites",
+          "capex_budget_idr",
+          "monthly_opex_limit_idr",
+          "power_rule",
+          "backhaul_rule",
+          "min_persons_share"
+        ],
+        "title": "Plan constraints",
+        "type": "object"
+      },
+      "PlanSite": {
+        "additionalProperties": false,
+        "description": "A chosen site with its backhaul and power.",
+        "properties": {
+          "backhaul": {
+            "title": "Backhaul",
+            "type": "string"
+          },
+          "hub": {
+            "title": "Hub",
+            "type": "string"
+          },
+          "power": {
+            "title": "Power",
+            "type": "string"
+          },
+          "site_id": {
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "backhaul",
+          "hub",
+          "power"
+        ],
+        "title": "PlanSite",
+        "type": "object"
+      },
+      "QualityEvent": {
+        "additionalProperties": false,
+        "description": "A delivery problem the pipeline recorded.",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
+          },
+          "kind": {
+            "enum": [
+              "missing_period",
+              "late_file",
+              "duplicate_delivery",
+              "changed_redelivery"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "managed_element": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Managed Element"
+          },
+          "period_end": {
+            "format": "date-time",
+            "title": "Period End",
+            "type": "string"
+          },
+          "period_start": {
+            "format": "date-time",
+            "title": "Period Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "ems",
+          "managed_element",
+          "period_start",
+          "period_end",
+          "file_name",
+          "detail"
+        ],
+        "title": "QualityEvent",
+        "type": "object"
+      },
+      "Relation": {
+        "additionalProperties": false,
+        "description": "A configured neighbour relation.",
+        "properties": {
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "target"
+        ],
+        "title": "Relation",
+        "type": "object"
+      },
+      "Relaxation": {
+        "additionalProperties": false,
+        "description": "A constraint whose relaxation makes an infeasible set feasible.",
+        "properties": {
+          "constraint": {
+            "title": "Constraint",
+            "type": "string"
+          },
+          "relax_to": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relax To"
+          },
+          "uncoverable_villages": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncoverable Villages"
+          }
+        },
+        "required": [
+          "constraint"
+        ],
+        "title": "Relaxation",
+        "type": "object"
+      },
+      "ScenarioCard": {
+        "additionalProperties": false,
+        "description": "A planning request as written, with its area (rule G8).",
+        "properties": {
+          "area": {
+            "title": "Area",
+            "type": "string"
+          },
+          "request": {
+            "title": "Request",
+            "type": "string"
+          },
+          "scenario_id": {
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "x_max_km": {
+            "title": "X Max Km",
+            "type": "number"
+          },
+          "x_min_km": {
+            "title": "X Min Km",
+            "type": "number"
+          },
+          "y_max_km": {
+            "title": "Y Max Km",
+            "type": "number"
+          },
+          "y_min_km": {
+            "title": "Y Min Km",
+            "type": "number"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "area",
+          "x_min_km",
+          "x_max_km",
+          "y_min_km",
+          "y_max_km",
+          "request"
+        ],
+        "title": "ScenarioCard",
+        "type": "object"
+      },
+      "Site": {
+        "additionalProperties": false,
+        "description": "A site and its cells.",
+        "properties": {
+          "cells": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Cells",
+            "type": "array"
+          },
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "site": {
+            "title": "Site",
+            "type": "string"
+          },
+          "vendor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor"
+          }
+        },
+        "required": [
+          "site",
+          "ems",
+          "vendor",
+          "cells"
+        ],
+        "title": "Site",
+        "type": "object"
+      },
+      "Topology": {
+        "additionalProperties": false,
+        "description": "Sites, cells and the neighbour relations of the latest CM snapshot.",
+        "properties": {
+          "relations": {
+            "items": {
+              "$ref": "#/components/schemas/Relation"
+            },
+            "title": "Relations",
+            "type": "array"
+          },
+          "sites": {
+            "items": {
+              "$ref": "#/components/schemas/Site"
+            },
+            "title": "Sites",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sites",
+          "relations"
+        ],
+        "title": "Topology",
+        "type": "object"
+      },
+      "Village": {
+        "additionalProperties": false,
+        "description": "A village of the expansion area (rule G7).",
+        "properties": {
+          "covered_today_gsm": {
+            "title": "Covered Today Gsm",
+            "type": "boolean"
+          },
+          "covered_today_lte": {
+            "title": "Covered Today Lte",
+            "type": "boolean"
+          },
+          "elevation_m": {
+            "title": "Elevation M",
+            "type": "number"
+          },
+          "population": {
+            "title": "Population",
+            "type": "integer"
+          },
+          "schools": {
+            "title": "Schools",
+            "type": "integer"
+          },
+          "served_gsm_rxlev_dbm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Served Gsm Rxlev Dbm"
+          },
+          "served_lte_rsrp_dbm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Served Lte Rsrp Dbm"
+          },
+          "village_id": {
+            "title": "Village Id",
+            "type": "integer"
+          },
+          "x_km": {
+            "title": "X Km",
+            "type": "number"
+          },
+          "y_km": {
+            "title": "Y Km",
+            "type": "number"
+          }
+        },
+        "required": [
+          "village_id",
+          "x_km",
+          "y_km",
+          "population",
+          "schools",
+          "elevation_m",
+          "served_lte_rsrp_dbm",
+          "served_gsm_rxlev_dbm",
+          "covered_today_lte",
+          "covered_today_gsm"
+        ],
+        "title": "Village",
+        "type": "object"
+      },
+      "WhatIfRequest": {
+        "additionalProperties": false,
+        "description": "Changes to replay.",
+        "properties": {
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/ChangeIn"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Changes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "changes"
+        ],
+        "title": "WhatIfRequest",
+        "type": "object"
+      },
+      "WhatIfResult": {
+        "additionalProperties": false,
+        "description": "The replayed week before and after the changes.",
+        "properties": {
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/CellKpis"
+            },
+            "title": "Cells",
+            "type": "array"
+          },
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/ChangeIn"
+            },
+            "title": "Changes",
+            "type": "array"
+          },
+          "touched_cells_total": {
+            "$ref": "#/components/schemas/CellKpis"
+          },
+          "week_start": {
+            "format": "date",
+            "title": "Week Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "week_start",
+          "changes",
+          "cells",
+          "touched_cells_total"
+        ],
+        "title": "WhatIfResult",
+        "type": "object"
+      },
+      "WorstCell": {
+        "additionalProperties": false,
+        "description": "One row of a week's worst-cell ranking.",
+        "properties": {
+          "better": {
+            "title": "Better",
+            "type": "string"
+          },
+          "breach_days": {
+            "title": "Breach Days",
+            "type": "integer"
+          },
+          "breach_threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Breach Threshold"
+          },
+          "cell_name": {
+            "title": "Cell Name",
+            "type": "string"
+          },
+          "days_judged": {
+            "title": "Days Judged",
+            "type": "integer"
+          },
+          "persistence_m": {
+            "title": "Persistence M",
+            "type": "integer"
+          },
+          "persistence_n": {
+            "title": "Persistence N",
+            "type": "integer"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "week_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Week Value"
+          }
+        },
+        "required": [
+          "rank",
+          "cell_name",
+          "week_value",
+          "breach_threshold",
+          "better",
+          "days_judged",
+          "breach_days",
+          "persistence_n",
+          "persistence_m"
+        ],
+        "title": "WorstCell",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "KPIs, configuration, alarms, topology, planning and what-if of a synthetic 4G and 2G network. synthetic data: a generated network, not a real operator.",
+    "title": "ran-lakehouse API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/alarms": {
+      "get": {
+        "operationId": "alarms_v1_alarms_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "Start",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "End",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cell",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cell"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_Alarm__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Alarm notifications in a time range"
+      }
+    },
+    "/v1/cells": {
+      "get": {
+        "operationId": "cells_v1_cells_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "technology",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "LTE",
+                    "GSM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Technology"
+            }
+          },
+          {
+            "in": "query",
+            "name": "vendor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vendor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "band",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Band"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_Cell__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Cells with vendor, technology, band, N_RB and DN"
+      }
+    },
+    "/v1/cells/{cell_name}": {
+      "get": {
+        "operationId": "cell_v1_cells__cell_name__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cell_name",
+            "required": true,
+            "schema": {
+              "title": "Cell Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_Cell_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "One cell"
+      }
+    },
+    "/v1/clock": {
+      "get": {
+        "operationId": "clock_v1_clock_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ClockStatus_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Clock status: the live run and how far each layer has got"
+      }
+    },
+    "/v1/cm/changes": {
+      "get": {
+        "operationId": "cm_changes_v1_cm_changes_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "Start",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "End",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cell",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cell"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_CmChange__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "CM change log in a time range"
+      }
+    },
+    "/v1/cm/snapshot": {
+      "get": {
+        "operationId": "cm_snapshot_v1_cm_snapshot_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cell",
+            "required": true,
+            "schema": {
+              "title": "Cell",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "at",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "At",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_CmObject__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "One cell's CM (and its relations) at a time"
+      }
+    },
+    "/v1/kpi-catalog": {
+      "get": {
+        "operationId": "catalog_v1_kpi_catalog_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_KpiDefinition__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Every KPI formula version (rule L3)"
+      }
+    },
+    "/v1/kpis": {
+      "get": {
+        "operationId": "kpis_v1_kpis_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cell",
+            "required": true,
+            "schema": {
+              "title": "Cell",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kpi_id",
+            "required": true,
+            "schema": {
+              "title": "Kpi Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "formula_version",
+            "required": true,
+            "schema": {
+              "title": "Formula Version",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "granularity",
+            "required": true,
+            "schema": {
+              "enum": [
+                "15m",
+                "hour",
+                "day",
+                "week"
+              ],
+              "title": "Granularity",
+              "type": "string"
+            }
+          },
+          {
+            "description": "First period, inclusive",
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "description": "First period, inclusive",
+              "title": "Start",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Last period, exclusive",
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "description": "Last period, exclusive",
+              "title": "End",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_KpiSeries_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "KPI values of one cell, KPI and formula version over a range"
+      }
+    },
+    "/v1/lineage": {
+      "get": {
+        "operationId": "trace_v1_lineage_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "kpi_id",
+            "required": true,
+            "schema": {
+              "title": "Kpi Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "formula_version",
+            "required": true,
+            "schema": {
+              "title": "Formula Version",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cell",
+            "required": true,
+            "schema": {
+              "title": "Cell",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "granularity",
+            "required": true,
+            "schema": {
+              "enum": [
+                "15m",
+                "hour",
+                "day",
+                "week"
+              ],
+              "title": "Granularity",
+              "type": "string"
+            }
+          },
+          {
+            "description": "UTC start (ISO, with offset) for 15m and hour; WIB date else",
+            "in": "query",
+            "name": "period_start",
+            "required": true,
+            "schema": {
+              "description": "UTC start (ISO, with offset) for 15m and hour; WIB date else",
+              "title": "Period Start",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_LineageRow__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "The silver rows and source files behind one KPI value"
+      }
+    },
+    "/v1/plan": {
+      "post": {
+        "operationId": "plan_v1_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanConstraints"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_Plan_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Solve a constraint set (contract/plan_constraints.schema.json)"
+      }
+    },
+    "/v1/planning/backhaul-power-options": {
+      "get": {
+        "operationId": "planning_backhaul_power_options_v1_planning_backhaul_power_options_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_BackhaulPowerOption__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Backhaul and power options"
+      }
+    },
+    "/v1/planning/candidate-sites": {
+      "get": {
+        "operationId": "planning_candidate_sites_v1_planning_candidate_sites_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_CandidateSite__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Candidate sites"
+      }
+    },
+    "/v1/planning/coverage": {
+      "get": {
+        "operationId": "planning_coverage_v1_planning_coverage_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_Coverage__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Indoor coverage of each village from each candidate"
+      }
+    },
+    "/v1/planning/scenarios": {
+      "get": {
+        "operationId": "scenarios_v1_planning_scenarios_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_ScenarioCard__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Scenario cards: id, area and the request as written"
+      }
+    },
+    "/v1/planning/villages": {
+      "get": {
+        "operationId": "planning_villages_v1_planning_villages_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_Village__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Villages of the expansion area"
+      }
+    },
+    "/v1/quality-events": {
+      "get": {
+        "operationId": "quality_v1_quality_events_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "Start",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "End",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_QualityEvent__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Delivery problems the pipeline recorded"
+      }
+    },
+    "/v1/topology": {
+      "get": {
+        "operationId": "topology_v1_topology_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_Topology_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Sites, their cells and the configured neighbour relations"
+      }
+    },
+    "/v1/what-if": {
+      "post": {
+        "operationId": "what_if_v1_what_if_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhatIfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_WhatIfResult_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Next week's KPIs before and after bounded changes (rule M6)"
+      }
+    },
+    "/v1/worst-cells": {
+      "get": {
+        "operationId": "worst_v1_worst_cells_get",
+        "parameters": [
+          {
+            "description": "Monday of the week (WIB date)",
+            "in": "query",
+            "name": "week_start",
+            "required": true,
+            "schema": {
+              "description": "Monday of the week (WIB date)",
+              "format": "date",
+              "title": "Week Start",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kpi_id",
+            "required": true,
+            "schema": {
+              "title": "Kpi Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "formula_version",
+            "required": true,
+            "schema": {
+              "title": "Formula Version",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_WorstCell__"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Worst-cell ranking of one week and KPI"
+      }
+    }
+  }
+}
