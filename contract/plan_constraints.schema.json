@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "ran-lakehouse/plan_constraints/1.0.0",
+  "$id": "ran-lakehouse/plan_constraints/1.1.0",
   "title": "Plan constraints",
   "description": "What a coverage plan for the synthetic expansion area must satisfy (rule G9). Part of the API contract (rule A1). Costs are IDR; distances km; coverage is indoor service (rule G3).",
   "type": "object",
@@ -19,7 +19,11 @@
     "min_persons_share"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {
+      "description": "Contract version the set was written for; any 1.x version is accepted (rule A1: only a major bump breaks).",
+      "type": "string",
+      "pattern": "^1\\.[0-9]+\\.[0-9]+$"
+    },
     "area": {
       "description": "Candidate sites and villages inside this box are in play.",
       "type": "object",

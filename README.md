@@ -87,11 +87,15 @@ The contract is `contract/openapi.json` (generated from the code; a test
 fails when they drift) with `contract/plan_constraints.schema.json`, both
 at one semver version. Every response, errors included, carries it in the
 `X-Contract-Version` header and the `contract_version` field, beside the
-synthetic-data notice. Endpoints, all under `/v1`:
+synthetic-data notice. Additions bump the minor version and only a
+breaking change bumps the major; a constraint set written for any 1.x
+version is accepted. Endpoints, all under `/v1` (the pipeline status is
+also a plain HTML page at `/status`):
 
 | Endpoint | What it serves |
 |---|---|
 | `GET /clock` | the live run's clock (if one is running) and how far bronze, silver and gold have got |
+| `GET /status` | pipeline status: files per EMS, rows per layer, the planted data-quality cases as the pipeline flagged them (kind and count), the latest quality events and the clock label |
 | `GET /topology` | sites, their cells and the neighbour relations of the latest CM snapshot |
 | `GET /cells`, `GET /cells/{cell_name}` | cells with vendor, technology, band, N_RB and DN |
 | `GET /kpi-catalog` | every KPI formula version |

@@ -410,6 +410,20 @@ def tables() -> dict[str, list[dict[str, Any]]]:
                 "load_id": LOAD,
             }
         ],
+        "silver.counter_map": [
+            {
+                "vendor": "huawei",
+                "release": release,
+                "meas_group": "G",
+                "vendor_counter": counter,
+                "rule": "sum",
+                "measurement": "ERAB.RelActNbr.sum",
+                "bin": -1,
+                "factor": 1.0,
+                "attestation": "modelled on public descriptions",
+            }
+            for release, counter in (("R1", "C1"), ("R2", "C1.Renamed"))
+        ],
         "gold.kpi_catalog": [
             {
                 "kpi_id": "LTE_ERAB_DROP",

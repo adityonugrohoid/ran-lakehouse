@@ -734,6 +734,31 @@
         "title": "Coverage",
         "type": "object"
       },
+      "DCase": {
+        "additionalProperties": false,
+        "description": "A planted data-quality case (rule D) as the pipeline flagged it.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "rule": {
+            "title": "Rule",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rule",
+          "kind",
+          "count"
+        ],
+        "title": "DCase",
+        "type": "object"
+      },
       "Envelope_Cell_": {
         "additionalProperties": false,
         "properties": {
@@ -824,6 +849,29 @@
           "data"
         ],
         "title": "Envelope[Plan]",
+        "type": "object"
+      },
+      "Envelope_Status_": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_version",
+          "notice",
+          "data"
+        ],
+        "title": "Envelope[Status]",
         "type": "object"
       },
       "Envelope_Topology_": {
@@ -1267,6 +1315,48 @@
         "title": "ErrorEnvelope",
         "type": "object"
       },
+      "FileArrivals": {
+        "additionalProperties": false,
+        "description": "Files one EMS delivered, of one kind.",
+        "properties": {
+          "ems": {
+            "title": "Ems",
+            "type": "string"
+          },
+          "files": {
+            "title": "Files",
+            "type": "integer"
+          },
+          "files_last_day": {
+            "description": "Files in the day before the latest arrival",
+            "title": "Files Last Day",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "latest_arrival": {
+            "format": "date-time",
+            "title": "Latest Arrival",
+            "type": "string"
+          },
+          "not_loaded": {
+            "title": "Not Loaded",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ems",
+          "kind",
+          "files",
+          "files_last_day",
+          "not_loaded",
+          "latest_arrival"
+        ],
+        "title": "FileArrivals",
+        "type": "object"
+      },
       "KpiDefinition": {
         "additionalProperties": false,
         "description": "One KPI formula version (rule L3).",
@@ -1492,6 +1582,36 @@
           "suspect_share"
         ],
         "title": "KpiValue",
+        "type": "object"
+      },
+      "LayerRows": {
+        "additionalProperties": false,
+        "description": "Rows of one lake table.",
+        "properties": {
+          "layer": {
+            "enum": [
+              "bronze",
+              "silver",
+              "gold"
+            ],
+            "title": "Layer",
+            "type": "string"
+          },
+          "rows": {
+            "title": "Rows",
+            "type": "integer"
+          },
+          "table": {
+            "title": "Table",
+            "type": "string"
+          }
+        },
+        "required": [
+          "layer",
+          "table",
+          "rows"
+        ],
+        "title": "LayerRows",
         "type": "object"
       },
       "LineageRow": {
@@ -1905,7 +2025,7 @@
         "type": "object"
       },
       "PlanConstraints": {
-        "$id": "ran-lakehouse/plan_constraints/1.0.0",
+        "$id": "ran-lakehouse/plan_constraints/1.1.0",
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "additionalProperties": false,
         "description": "What a coverage plan for the synthetic expansion area must satisfy (rule G9). Part of the API contract (rule A1). Costs are IDR; distances km; coverage is indoor service (rule G3).",
@@ -2040,7 +2160,9 @@
             "type": "object"
           },
           "schema_version": {
-            "const": "1.0.0"
+            "description": "Contract version the set was written for; any 1.x version is accepted (rule A1: only a major bump breaks).",
+            "pattern": "^1\\.[0-9]+\\.[0-9]+$",
+            "type": "string"
           },
           "technology": {
             "description": "Which service counts as covered; both needs LTE and GSM.",
@@ -2309,6 +2431,78 @@
         "title": "Site",
         "type": "object"
       },
+      "Status": {
+        "additionalProperties": false,
+        "description": "What the pipeline has taken in and what it flagged.",
+        "properties": {
+          "accelerated": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accelerated"
+          },
+          "clock": {
+            "title": "Clock",
+            "type": "string"
+          },
+          "d_cases": {
+            "items": {
+              "$ref": "#/components/schemas/DCase"
+            },
+            "title": "D Cases",
+            "type": "array"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/FileArrivals"
+            },
+            "title": "Files",
+            "type": "array"
+          },
+          "latest_quality_events": {
+            "items": {
+              "$ref": "#/components/schemas/QualityEvent"
+            },
+            "title": "Latest Quality Events",
+            "type": "array"
+          },
+          "layers": {
+            "items": {
+              "$ref": "#/components/schemas/LayerRows"
+            },
+            "title": "Layers",
+            "type": "array"
+          },
+          "simulated_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Simulated Time"
+          }
+        },
+        "required": [
+          "clock",
+          "accelerated",
+          "simulated_time",
+          "files",
+          "layers",
+          "d_cases",
+          "latest_quality_events"
+        ],
+        "title": "Status",
+        "type": "object"
+      },
       "Topology": {
         "additionalProperties": false,
         "description": "Sites, cells and the neighbour relations of the latest CM snapshot.",
@@ -2539,10 +2733,58 @@
   "info": {
     "description": "KPIs, configuration, alarms, topology, planning and what-if of a synthetic 4G and 2G network. synthetic data: a generated network, not a real operator.",
     "title": "ran-lakehouse API",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "openapi": "3.1.0",
   "paths": {
+    "/status": {
+      "get": {
+        "operationId": "status_html_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Pipeline status page (HTML of /v1/status)"
+      }
+    },
     "/v1/alarms": {
       "get": {
         "operationId": "alarms_v1_alarms_get",
@@ -3624,6 +3866,54 @@
           }
         },
         "summary": "Delivery problems the pipeline recorded"
+      }
+    },
+    "/v1/status": {
+      "get": {
+        "operationId": "status_v1_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_Status_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request outside what one answer serves"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "No such cell, KPI or value"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid or out-of-bound request"
+          }
+        },
+        "summary": "Pipeline status: files, rows per layer, flagged D cases, clock"
       }
     },
     "/v1/topology": {

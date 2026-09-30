@@ -64,6 +64,8 @@ def calls(tiny: NetworkModel) -> list[tuple[str, str, Any]]:
     t = "2026-01-05T17:00:00Z"
     return [
         ("GET", "/v1/clock", None),
+        ("GET", "/v1/status", None),
+        ("GET", "/status", None),
         ("GET", "/v1/topology", None),
         ("GET", "/v1/cells", None),
         ("GET", "/v1/cells/ENB0001_B3_1", None),
@@ -126,6 +128,11 @@ def test_every_route_answers_with_the_version_and_no_evaluation_data(
         r = client.request(method, url, json=body)
         assert r.status_code == 200, (url, r.text)
         assert r.headers[VERSION_HEADER] == CONTRACT_VERSION
+        assert SENTINEL not in r.text, url
+        if r.headers["content-type"].startswith("text/html"):
+            assert f"Contract version {CONTRACT_VERSION}" in r.text
+            assert "synthetic data" in r.text
+            continue
         payload = r.json()
         assert payload["contract_version"] == CONTRACT_VERSION
         assert payload["notice"].startswith("synthetic data")
@@ -266,3 +273,25 @@ def test_what_if_replays_with_common_noise(client: TestClient, tiny: NetworkMode
     assert [c["cell_name"] for c in changed] == [cell]
     assert changed[0]["before"] != changed[0]["after"]
     assert len(result["cells"]) > 1, "a power cut must touch the cells around it"
+
+
+def test_status_flags_the_d_cases_by_kind_and_count(client: TestClient) -> None:
+    status = client.get("/v1/status").json()["data"]
+    counts = {(d["rule"], d["kind"]): d["count"] for d in status["d_cases"]}
+    assert counts[("D1", "late files")] == 1
+    assert counts[("D2", "files redelivered with changed content")] == 1
+    assert counts[("D3", "missing periods per element")] == 1
+    assert counts[("D5", "counters mapped across a rename")] == 1
+    assert counts[("D6", "KPIs with more than one formula version")] == 0
+    assert status["clock"].startswith("accelerated x96")
+    assert {(f["ems"], f["kind"]) for f in status["files"]} == {("EMS-HW-01", "PM")}
+    rows = {(x["layer"], x["table"]): x["rows"] for x in status["layers"]}
+    assert rows[("silver", "pm_measurements")] == 2
+    assert status["latest_quality_events"]
+
+
+def test_plan_sets_of_any_minor_version_are_accepted(client: TestClient) -> None:
+    constraints = constraint_set("whole", "max_persons", "LTE", max_sites=1)
+    for version, status in (("1.0.0", 200), (CONTRACT_VERSION, 200), ("2.0.0", 422)):
+        r = client.post("/v1/plan", json=constraints | {"schema_version": version})
+        assert r.status_code == status, (version, r.text)
