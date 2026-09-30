@@ -43,15 +43,15 @@
   "storage": {
     "bronze.pm_values": {
       "data_files": 527,
-      "bytes": 1904795530
+      "bytes": 1903970210
     },
     "bronze.file_arrivals": {
       "data_files": 449,
-      "bytes": 2549205
+      "bytes": 2550221
     },
     "bronze.cm_records": {
       "data_files": 87,
-      "bytes": 21013105
+      "bytes": 21013692
     },
     "bronze.fm_records": {
       "data_files": 12,
@@ -68,12 +68,12 @@
     "bytes": 43865584
   },
   "timing_s": {
-    "simulate": 92.2,
-    "render": 818.5,
-    "collect": 1909.4,
-    "total": 2847.2
+    "simulate": 94.6,
+    "render": 832.0,
+    "collect": 1927.4,
+    "total": 2880.8
   },
-  "peak_rss_mb": 2784,
+  "peak_rss_mb": 2773,
   "machine": {
     "cpus": 16,
     "python": "3.12.3",

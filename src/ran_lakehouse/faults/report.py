@@ -30,15 +30,18 @@ from ran_lakehouse.faults.evaluate import (
     evaluate,
     right_fix,
 )
+from ran_lakehouse.faults.locality import AFFECTED_POINTS, MAX_SHARE, reach
 from ran_lakehouse.faults.plant import (
     CAUSE,
     DURATION_H,
+    INTERFERER_DISTANCE_KM,
     KINDS,
     MISTAKEN_TILT_DEG,
     POWER_DROP_DB,
     RIGHT_ANSWER,
     SURGE_FACTOR,
     SURGE_RADIUS_KM,
+    TARGET_RISE_DB,
     Fault,
     apply_faults,
     detail,
@@ -77,7 +80,10 @@ MAGNITUDE = {
     "F1b": "strongest neighbour relation deleted",
     "F1c": f"power {POWER_DROP_DB:g} dB",
     "F1d": f"persons x{SURGE_FACTOR:g} within {SURGE_RADIUS_KM:g} km (suburban cells)",
-    "F1e": "uplink source 15 dBm, 0.3-0.8 km along the azimuth",
+    "F1e": (
+        f"uplink source {INTERFERER_DISTANCE_KM[0]:g}-{INTERFERER_DISTANCE_KM[1]:g} km along the "
+        f"azimuth, raising the cell's uplink noise by {TARGET_RISE_DB:g} dB"
+    ),
     "F1f": "cell down",
 }
 KPI_ROWS = (
@@ -472,6 +478,9 @@ def build() -> dict[str, Any]:
     recovery = schedule_recovery(base, faults)
     t_recovery = time.perf_counter() - t0
     t0 = time.perf_counter()
+    reaches = sorted((reach(base, f) for f in faults), key=lambda r: -r.share)
+    t_reach = time.perf_counter() - t0
+    t0 = time.perf_counter()
     lte_cells = np.flatnonzero(base.state.technology == "LTE")
     with_faults = run_kpis(simulate_with_faults(base, faults, 0, 7 * WEEKS), lte_cells)
     t_run = time.perf_counter() - t0
@@ -491,6 +500,14 @@ def build() -> dict[str, Any]:
         "demonstrations": demos,
         "schedule": schedule_summary(faults),
         "schedule_recovery": recovery,
+        "locality": {
+            "affected_points": AFFECTED_POINTS,
+            "max_share": MAX_SHARE,
+            "reach": [
+                {"kind": r.kind, "cells": r.cells, "share_pct": round(100 * r.share, 2)}
+                for r in reaches
+            ],
+        },
         "twelve_weeks": {"clean": clean, "with_faults": with_faults},
         "daily_series": {
             kind: {
@@ -503,6 +520,7 @@ def build() -> dict[str, Any]:
             "demo network and fault plan": round(t_build, 1),
             "six demonstrations": round(t_demo, 1),
             "recovery of every planted fault": round(t_recovery, 1),
+            "reach of every planted fault": round(t_reach, 1),
             f"{WEEKS} weeks of counters with faults": round(t_run, 1),
         },
     }
@@ -732,6 +750,23 @@ def render_markdown(record: dict[str, Any]) -> str:
         "| Week | " + " | ".join(s["per_week"]) + " |",
         "|---|" + "---|" * len(s["per_week"]),
         "| Faults | " + " | ".join(str(v) for v in s["per_week"].values()) + " |",
+        "",
+        "## Reach of every planted fault (rule F1)",
+        "",
+        "Each fault's first whole day replayed with and without it (same random draws). A",
+        f"cell is affected when a KPI moves by more than {record['locality']['affected_points']:g}"
+        " point (RRC setup success, E-RAB accessibility or drop rate; GSM service access or",
+        "TCH blocking); the faulty cell always counts. Share: the affected cells' part of",
+        "their technology's access attempts that day, which may not exceed "
+        f"{100 * record['locality']['max_share']:g}% (START, tested). Faults are listed by",
+        "reach only; their cells and times are evaluation-only (rule A3).",
+        "",
+        "| Kind | Cells affected | Share of access attempts (%) |",
+        "|---|---|---|",
+        *[
+            f"| {r['kind']} | {r['cells']} | {r['share_pct']} |"
+            for r in record["locality"]["reach"]
+        ],
         "",
         "## Twelve weeks, network-wide LTE KPIs",
         "",
