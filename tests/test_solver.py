@@ -210,7 +210,8 @@ def test_each_card_behaves_as_its_difficulty_says(
         results = {b: solve_plan(data, card.constraints, b) for b in ("highs", "cpsat")}
         statuses = {r["status"] for r in results.values()}
         assert statuses == {"infeasible" if card.difficulty == "infeasible" else "optimal"}, (
-            card.scenario_id
+            card.scenario_id,
+            {b: (r["status"], r["solve_seconds"]) for b, r in results.items()},
         )
         assert len({r.get("objective") for r in results.values()}) == 1, card.scenario_id
 

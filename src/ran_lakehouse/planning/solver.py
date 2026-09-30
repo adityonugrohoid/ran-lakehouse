@@ -230,9 +230,16 @@ def solve_mathopt(model: Model, solver_type: Any) -> Solution:
         return Solution("optimal", float(result.objective_value()), values, seconds)
     if reason == mathopt.TerminationReason.INFEASIBLE:
         return Solution("infeasible", math.nan, np.zeros(0), seconds)
-    if reason in (mathopt.TerminationReason.FEASIBLE, mathopt.TerminationReason.NO_SOLUTION_FOUND):
+    limit = result.termination.limit
+    if (
+        reason in (mathopt.TerminationReason.FEASIBLE, mathopt.TerminationReason.NO_SOLUTION_FOUND)
+        and limit == mathopt.Limit.TIME
+    ):
         return Solution("time_limit", math.nan, np.zeros(0), seconds)
-    raise RuntimeError(f"{solver_type.name} ended with {reason.name}: {result.termination.detail}")
+    raise RuntimeError(
+        f"{solver_type.name} ended with {reason.name} after {seconds:.1f} s "
+        f"(limit {limit.name if limit is not None else None}): {result.termination.detail}"
+    )
 
 
 def check_rows(model: Model, values: np.ndarray, solver_name: str) -> None:
