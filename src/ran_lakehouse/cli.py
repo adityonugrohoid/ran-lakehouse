@@ -55,6 +55,15 @@ def build_parser() -> argparse.ArgumentParser:
         "gold", help="build gold KPIs from silver through dbt, one UTC day at a time"
     )
     build_gold.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    again = commands.add_parser(
+        "reprocess",
+        help="rebuild one KPI formula version's gold values over a UTC day range (rule D6)",
+    )
+    again.add_argument("--warehouse", required=True, help="Lakekeeper warehouse name")
+    again.add_argument("--kpi", required=True, help="KPI id, for example LTE_RRC_SSR")
+    again.add_argument("--version", type=int, required=True, help="formula version")
+    again.add_argument("--first", required=True, help="first UTC day, YYYY-MM-DD")
+    again.add_argument("--last", required=True, help="last UTC day (inclusive), YYYY-MM-DD")
     planning = commands.add_parser(
         "planning", help="generate the expansion area's planning data into gold tables"
     )
@@ -208,6 +217,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         load_id = f"gold-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
         build = GoldBuild(Target("lake", args.warehouse), load_id, KPI_REVISION)
         print(json.dumps(build.run(), indent=2))
+        return 0
+    if args.command == "reprocess":
+        from datetime import UTC, date, datetime
+
+        from ran_lakehouse.lake.gold import KPI_REVISION, GoldBuild, Target
+
+        load_id = f"reprocess-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
+        build = GoldBuild(Target("lake", args.warehouse), load_id, KPI_REVISION)
+        stats = build.reprocess_range(
+            args.kpi, args.version, date.fromisoformat(args.first), date.fromisoformat(args.last)
+        )
+        print(json.dumps(stats, indent=2))
         return 0
     if args.command == "backfill":
         stats = drive(

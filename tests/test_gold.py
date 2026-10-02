@@ -337,3 +337,33 @@ def test_lineage_follows_a_derived_value_to_both_counters(
         "L.ChMeas.PRB.DL.Avail",
     }
     assert all(r["derived"] for r in found)
+
+
+def test_reprocess_rebuilds_a_version_without_changing_it(
+    lake_file: Path, built: dict[str, Any]
+) -> None:
+    target = Target("file", str(lake_file))
+    query = (
+        "SELECT cell_name, period_start, value FROM lk.gold.lte_kpi_15m "
+        "WHERE kpi_id = 'LTE_RRC_SSR' AND formula_version = 2 ORDER BY 1, 2"
+    )
+    first = (RUN_START + timedelta(days=FIRST_DAY)).date()
+    last = first + timedelta(days=2)
+    before = Target("file", str(lake_file)).connect()
+    values = before.execute(query).fetchall()
+    loads = before.execute("SELECT count(*) FROM lk.gold.loads WHERE kind = 'reprocess'").fetchall()
+    before.close()
+    GoldBuild(target, "again", REVISION).reprocess_range("LTE_RRC_SSR", 2, first, last)
+    after = target.connect()
+    assert after.execute(query).fetchall() == values
+    assert after.execute(
+        "SELECT count(*) FROM lk.gold.loads WHERE kind = 'reprocess'"
+    ).fetchall() == [(loads[0][0] + 1,)]
+    after.close()
+    build = GoldBuild(target, "bad", REVISION)
+    with pytest.raises(ValueError, match="no formula"):
+        build.reprocess_range("LTE_RRC_SSR", 9, first, last)
+    with pytest.raises(ValueError, match="before"):
+        build.reprocess_range("LTE_RRC_SSR", 2, last, first)
+    with pytest.raises(ValueError, match="outside"):
+        build.reprocess_range("LTE_RRC_SSR", 2, first - timedelta(days=30), last)
