@@ -4,33 +4,58 @@ A mini telecom lakehouse and data generator for a synthetic Indonesian
 multi-vendor operator running 4G (LTE) and 2G (GSM). Simulated vendor
 systems drop 3GPP performance files every 15 minutes; a pipeline takes
 them through bronze, silver and gold; an API serves KPIs, configuration,
-alarms, topology and a what-if simulator. Every data-quality problem that
-breaks real operator pipelines is planted on purpose and guarded by a
-test. The network is synthetic, not a real place, operator or network.
+alarms, topology, network planning and a what-if simulator. Every
+data-quality problem that breaks real operator pipelines is planted on
+purpose and guarded by a test. The network, its traffic and its faults
+are synthetic, generated from seeds: not a real place, operator or
+network.
 
 ## Quickstart
-
-```bash
-git clone https://github.com/adityonugrohoid/ran-lakehouse.git
-cd ran-lakehouse
-```
 
 One command runs the demo from files to API: the stack starts, the app
 generates two weeks of synthetic history, delivers and collects the files,
 builds bronze, silver, gold and the planning tables, then serves the API on
-`http://127.0.0.1:8000` (`/status` for the pipeline page). From an empty
-warehouse this took 41 minutes on the build machine; a restart only builds
-what is missing.
+`http://127.0.0.1:8000` (`/status` for the pipeline page). The first start
+builds the lake; a restart only builds what is missing.
 
 ```bash
+git clone https://github.com/adityonugrohoid/ran-lakehouse.git
+cd ran-lakehouse
 docker compose up -d
 docker compose logs -f app   # "serving compose-demo on port 8000" when ready
 curl "http://127.0.0.1:8000/v1/kpis?cell=ENB0001_B3_1&kpi_id=LTE_ERAB_DROP&formula_version=1&granularity=day&start=2026-01-05&end=2026-01-12"
 ```
 
-To drive each step by hand instead, on the host: start the lake stack
-without the app, then load the synthetic history into bronze, or run days
-on a clock.
+## What the reports show
+
+Every number here is from a committed report in `results/`, written by
+code in this repository from one record (`.md` and `.json`), on synthetic
+data.
+
+- Gold agrees with the network model on every complete WIB day of the
+  12-week demo run (83 of 84 days compared): `results/gold_build.md`.
+- Every planted data-quality case is found where it was planted: 71 late
+  files, 48 same-content and 24 changed redeliveries, 24 missing files,
+  24 suspect cases and 92 network elements moved to a renamed counter
+  release; a KPI formula revision is reprocessed with both versions kept;
+  time travel and lineage are tested: `results/planted_cases.md`.
+- A one-step tilt or power change moves a neighbour's DL throughput by a
+  median of 1.34%, p99 12.61%: `results/whatif_sensitivity.md`.
+- Against live counters from a public data set, the daily load shape
+  agrees with Pearson r 0.9433 (LTE) and 0.7717 (GSM); the model's volume per
+  user does not rise with PRB use as the live network's does, a stated
+  gap: `results/real_data_crosscheck.md`.
+- The plan solver proves all 20 planning scenarios in 3.34 s:
+  `results/planning_scenarios.md`.
+- A 9,813-cell network runs two simulated days through every stage in
+  4,808.3 s on the build machine; silver is the bottleneck, extrapolated
+  to 9.22 hours per day at 250,000 cells on one machine:
+  `results/scale_test.md`.
+
+## Pipeline by hand
+
+Start the lake stack without the app, then load the synthetic history into
+bronze, or run days on a clock:
 
 ```bash
 uv sync
@@ -53,10 +78,12 @@ uv run ranlake silver --warehouse demo
 and gold: LTE and GSM KPIs per cell at 15 minutes, hour, day and week,
 each with its coverage and suspect share, plus the weekly worst cells,
 built by the dbt project in `transform/` one day at a time (formulas in
-`results/kpi_catalog.md`):
+`results/kpi_catalog.md`). Rebuild one KPI formula version over a range of
+UTC days from the gold cell counters with `reprocess`:
 
 ```bash
 uv run ranlake gold --warehouse demo
+uv run ranlake reprocess --warehouse demo --kpi LTE_RRC_SSR --version 2 --first 2026-02-10 --last 2026-02-16
 ```
 
 Trace any gold value back to its silver rows, bronze rows and source files
@@ -68,25 +95,26 @@ uv run ranlake lineage --warehouse demo --kpi LTE_ERAB_DROP --version 1 \
 ```
 
 Generate the planning data of the expansion area (terrain, villages,
-candidate sites, coverage, backhaul and power options) into gold:
+candidate sites, coverage, backhaul and power options) into gold, write the
+scenario cards to gold and their exact optima to the evaluation-only table
+with the solver report (`results/planning_scenarios.md`), then solve any
+constraint set that follows `contract/plan_constraints.schema.json`:
 
 ```bash
 uv run ranlake planning --warehouse demo
-```
-
-Write the scenario cards to gold, their exact optima to the
-evaluation-only table, and the solver report
-(`results/planning_scenarios.md`); then solve any constraint set that
-follows `contract/plan_constraints.schema.json`:
-
-```bash
 uv run python -m ran_lakehouse.planning.scenario_report --warehouse demo
 uv run ranlake plan --warehouse demo --constraints my_constraints.json
 ```
 
-Plans are solved by SCIP 10 (Apache-2.0) through OR-Tools 9.15 MathOpt
-(Apache-2.0), chosen by the measurement in
-`results/planning_scenarios.md`.
+Measure the pipeline at scale (one stage per process, peak memory and spill
+per stage), and fetch the public data set for the cross-check (it stays
+under `data/`, never committed):
+
+```bash
+uv run ranlake scale-test --profile scale --warehouse scale --days 2 --record runs/scale/full.json
+uv run python -m ran_lakehouse.crosscheck.fetch
+uv run python -m ran_lakehouse.crosscheck.report
+```
 
 ## API
 
@@ -143,6 +171,37 @@ bound). Nothing in it says which cells are faulty or what fixes them, and
 no plan-solve call uses a card's implied constraints; the export fails if
 either would. `manifest.json` lists every file with its rows, size and
 SHA-256.
+
+## Reports
+
+`docs/spec.md` is the rulebook; the reports cite its rules by id.
+
+| Report | What it holds |
+|---|---|
+| `results/world.md` | the synthetic map, population and network of the demo and tiny profiles |
+| `results/model.md` | the network model: coverage, load, counters and their relationship checks |
+| `results/faults.md` | the planted network faults, their signatures and the right fixes |
+| `results/whatif_sensitivity.md` | what one-step changes do to the changed cell and its neighbours |
+| `results/pm_files.md`, `results/config_alarms.md` | the vendor-style PM, CM and FM files |
+| `results/bronze_backfill.md`, `results/silver_build.md`, `results/gold_build.md` | the 12-week demo lake, layer by layer |
+| `results/kpi_catalog.md` | every KPI formula, its standard and its version (rule E4) |
+| `results/planted_cases.md` | every planted data-quality case and its guarding tests (rule E3) |
+| `results/time_travel_lineage.md` | reading gold as of a past moment, and tracing a value to its files |
+| `results/planning.md`, `results/planning_scenarios.md` | the expansion area, the scenario cards and the solver comparison |
+| `results/real_data_crosscheck.md` | the synthetic network against public live counters (rule E2) |
+| `results/scale_test.md` | a 10,000-cell day through every stage, and the extrapolation (rule E1) |
+| `results/stack_spike.md` | the stack choice: dbt on DuckDB and Iceberg |
+
+## Credits
+
+- Plans are solved by SCIP 10 (Apache-2.0) through OR-Tools 9.15 MathOpt
+  (Apache-2.0), chosen by the measurement in `results/planning_scenarios.md`.
+- The real-data cross-check uses "Performance Management Counters from Live
+  5G, 4G and 2G Radio Access Network" by Peter Lehoczký, Matúš Turcsány,
+  Laura Krajčovičová, Filip Zatroch, Marcel Kajan and Marek Galinski,
+  Zenodo, https://doi.org/10.5281/zenodo.17815388 (2026), CC BY 4.0. Only
+  aggregated statistics and figures derived from it are committed.
+- This project grew out of NetPulse AI.
 
 ## License
 
