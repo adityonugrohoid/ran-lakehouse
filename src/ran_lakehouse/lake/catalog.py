@@ -147,6 +147,9 @@ def connect(warehouse: str) -> duckdb.DuckDBPyConnection:
     con.execute("SET TimeZone = 'UTC'")
     # Keep a laptop-scale run well inside memory (ASSUMPTION: 1 GB for DuckDB).
     con.execute(f"SET memory_limit = '{DUCKDB_MEMORY_LIMIT}'")
+    # DuckDB creates the spill folder but not its parents (data/ is absent in
+    # the app image, which leaves generated data out).
+    SPILL_DIR.mkdir(parents=True, exist_ok=True)
     con.execute(f"SET temp_directory = '{SPILL_DIR}'")
     use_local_s3(con)
     # Bronze and silver rows carry their own keys; insertion order is not kept.

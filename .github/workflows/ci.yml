@@ -37,7 +37,8 @@ jobs:
         with:
           version: "0.12.20"
           python-version: "3.12"
-      - run: docker compose up -d --wait
+      # The lake stack only (Lakekeeper pulls in its dependencies), not the app.
+      - run: docker compose up -d --wait lakekeeper
       - run: uv sync --locked
       - run: uv run pytest -m lake
       - if: failure()
