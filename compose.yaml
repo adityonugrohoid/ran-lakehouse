@@ -4,12 +4,18 @@
 #
 # Local development only: the keys below and in compose/seaweedfs-iam.json
 # are placeholders, auth is off (allowall), and nothing is exposed beyond
-# localhost. The catalog is on host port 18181.
+# localhost. The catalog is on port 18181 and the API on port 8000.
 #
-# Lakekeeper shares the SeaweedFS network namespace so that one S3 endpoint,
-# http://localhost:8333, is valid both for Lakekeeper and for clients on the
-# host. Lakekeeper hands that endpoint to every client in the table config,
-# so it must resolve the same way everywhere.
+# Lakekeeper and the app share the SeaweedFS network namespace so that one S3
+# endpoint, http://localhost:8333, and one catalog URL,
+# http://127.0.0.1:18181, are valid for Lakekeeper, the app and clients on the
+# host alike. Lakekeeper hands the S3 endpoint to every client in the table
+# config, so it must resolve the same way everywhere.
+#
+# `docker compose up` brings the stack up and the app builds the demo lake
+# (RANLAKE_HISTORY_WEEKS of history from generated files through bronze,
+# silver and gold, plus the planning tables) and then serves the API; a
+# restart only builds what is missing.
 
 x-lakekeeper-env: &lakekeeper-env
   LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://postgres:postgres@db:5432/postgres
@@ -58,7 +64,8 @@ services:
       - s3data:/data
     ports:
       - "127.0.0.1:8333:8333"
-      - "127.0.0.1:18181:8282"
+      - "127.0.0.1:18181:18181"
+      - "127.0.0.1:8000:8000"
 
   lakekeeper:
     image: quay.io/lakekeeper/catalog:v0.13.6
@@ -66,7 +73,7 @@ services:
     # SeaweedFS mini already listens on 8181 in the shared namespace.
     environment:
       <<: *lakekeeper-env
-      LAKEKEEPER__LISTEN_PORT: "8282"
+      LAKEKEEPER__LISTEN_PORT: "18181"
     network_mode: "service:seaweedfs"
     healthcheck:
       test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
@@ -77,6 +84,23 @@ services:
       migrate:
         condition: service_completed_successfully
       seaweedfs:
+        condition: service_healthy
+
+  app:
+    build: .
+    image: ran-lakehouse-app
+    environment:
+      RANLAKE_WAREHOUSE: compose-demo
+      RANLAKE_PROFILE: demo
+      # Two weeks of history keep a first `up` to about half an hour on a
+      # laptop; the plans are drawn for the full run, as in the README's
+      # backfill.
+      RANLAKE_HISTORY_WEEKS: "2"
+      RANLAKE_RUN_WEEKS: "13"
+      RANLAKE_PORT: "8000"
+    network_mode: "service:seaweedfs"
+    depends_on:
+      lakekeeper:
         condition: service_healthy
 
 volumes:

@@ -15,12 +15,26 @@ git clone https://github.com/adityonugrohoid/ran-lakehouse.git
 cd ran-lakehouse
 ```
 
-The repo is being built. What runs today: start the local lake stack,
-then load the synthetic history into bronze, or run days on a clock.
+One command runs the demo from files to API: the stack starts, the app
+generates two weeks of synthetic history, delivers and collects the files,
+builds bronze, silver, gold and the planning tables, then serves the API on
+`http://127.0.0.1:8000` (`/status` for the pipeline page). From an empty
+warehouse this took 41 minutes on the build machine; a restart only builds
+what is missing.
+
+```bash
+docker compose up -d
+docker compose logs -f app   # "serving compose-demo on port 8000" when ready
+curl "http://127.0.0.1:8000/v1/kpis?cell=ENB0001_B3_1&kpi_id=LTE_ERAB_DROP&formula_version=1&granularity=day&start=2026-01-05&end=2026-01-12"
+```
+
+To drive each step by hand instead, on the host: start the lake stack
+without the app, then load the synthetic history into bronze, or run days
+on a clock.
 
 ```bash
 uv sync
-docker compose up -d --wait
+docker compose up -d --wait lakekeeper
 # 12 weeks of history, delivered and collected as fast as the machine allows
 uv run ranlake backfill --profile demo --warehouse demo --weeks 12 --run-weeks 13
 # then day 84 on a clock 96 times faster than real time (labelled accelerated)

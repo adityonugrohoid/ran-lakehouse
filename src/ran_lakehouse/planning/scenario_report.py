@@ -21,10 +21,12 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import duckdb
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import pyarrow as pa
 
 from ran_lakehouse.lake.catalog import connect, write
 from ran_lakehouse.model import default_model
@@ -211,6 +213,30 @@ def plot_plan(
     plt.close(fig)
 
 
+def write_tables(
+    con: duckdb.DuckDBPyConnection,
+    planning_tables: dict[str, pa.Table],
+    cards: list[Scenario],
+    answers: pa.Table,
+) -> None:
+    """Write the planning gold tables, the public cards and the evaluation answers.
+
+    Args:
+        con: DuckDB with the lake attached as "lk".
+        planning_tables: tables(build_plan(...)).
+        cards: The scenarios.
+        answers: answers_table()'s rows (evaluation-only, rule A3).
+    """
+    write_gold(con, planning_tables | {"planning_scenarios": cards_table(cards)})
+    con.execute("CREATE SCHEMA IF NOT EXISTS lk.evaluation")
+    con.register("answers", answers)
+    try:
+        write(con, f"DROP TABLE IF EXISTS {ANSWERS}")
+        write(con, f"CREATE TABLE {ANSWERS} AS SELECT * FROM answers")
+    finally:
+        con.unregister("answers")
+
+
 def build(warehouse: str) -> dict[str, Any]:
     """Solve the scenarios, write gold and evaluation, and make the record.
 
@@ -229,15 +255,8 @@ def build(warehouse: str) -> dict[str, Any]:
     backend = chosen(comparison, len(cards))
     answers, results = answers_table(data, cards, backend)
     con = connect(warehouse)
-    write_gold(con, planning_tables | {"planning_scenarios": cards_table(cards)})
-    con.execute("CREATE SCHEMA IF NOT EXISTS lk.evaluation")
-    con.register("answers", answers)
-    try:
-        write(con, f"DROP TABLE IF EXISTS {ANSWERS}")
-        write(con, f"CREATE TABLE {ANSWERS} AS SELECT * FROM answers")
-    finally:
-        con.unregister("answers")
-        con.close()
+    write_tables(con, planning_tables, cards, answers)
+    con.close()
     by_id = {c.scenario_id: (c, r) for c, r in zip(cards, results, strict=True)}
     card, worked = by_id[WORKED]
     plot_plan(plan, data, card, worked)
