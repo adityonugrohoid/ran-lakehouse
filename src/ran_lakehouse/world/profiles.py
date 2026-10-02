@@ -131,4 +131,25 @@ TINY = Profile(
     gsm_only_share_rural=0.0,
 )
 
-PROFILES = {p.name: p for p in (TINY, DEMO)}
+# The scale test (rule E1): the demo map scaled 2.5 times in x and y over the
+# served region (6.25 times the area and settlements), about 10,000 cells;
+# the expansion area keeps the demo's 20 km width (START).
+SCALE = Profile(
+    name="scale",
+    width_km=120.0,
+    height_km=100.0,
+    served_width_km=100.0,
+    city_zone_width_km=40.0,
+    served_settlements=(
+        SettlementClass("city", 19, 150_000.0, 0.4, 0.55),
+        SettlementClass("town", 100, 20_000.0, 0.5, 0.5),
+        SettlementClass("village", 375, 1_500.0, 0.6, 0.6),
+    ),
+    expansion_villages=SettlementClass("village", 375, 900.0, 0.6, 0.6),
+    rural_density_served=80.0,
+    rural_density_expansion=15.0,
+    vendor_split_x_km=31.25,
+    gsm_only_share_rural=0.08,
+)
+
+PROFILES = {p.name: p for p in (TINY, DEMO, SCALE)}

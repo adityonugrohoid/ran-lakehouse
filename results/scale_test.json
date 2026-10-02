@@ -1,0 +1,347 @@
+{
+  "runs": {
+    "slice": {
+      "profile": "demo",
+      "warehouse": "scale-slice-demo-2",
+      "days": 2,
+      "network": {
+        "cells": 1716,
+        "lte_cells": 1452,
+        "gsm_cells": 264,
+        "grid_points": 102400
+      },
+      "network_build": {
+        "wall_s": 27.0,
+        "peak_rss_mb": 698
+      },
+      "stages": {
+        "collect": {
+          "wall_s": 94.2,
+          "peak_rss_mb": 1973,
+          "peak_spill_mb": 0,
+          "output": {
+            "warehouse": "scale-slice-demo-2",
+            "profile": "demo",
+            "run_weeks": 1,
+            "first_day": 0,
+            "days": 2,
+            "clock": "none: as fast as possible",
+            "files_rendered": 382,
+            "collector": {
+              "deliveries": 395,
+              "loaded": 394,
+              "skipped_same_file": 1,
+              "pm_rows": 11282354
+            },
+            "anomalies_planted": {
+              "D1": 0,
+              "D2_same": 1,
+              "D2_conflict": 0,
+              "D3": 2,
+              "D4": 0,
+              "D5": 0
+            },
+            "timing_s": {
+              "simulate": 0.5,
+              "render": 20.3,
+              "collect": 44.8,
+              "total": 92.8
+            },
+            "peak_rss_mb": 1973
+          }
+        },
+        "silver": {
+          "wall_s": 137.2,
+          "peak_rss_mb": 1670,
+          "peak_spill_mb": 2755,
+          "output": {
+            "partitions": 4,
+            "catch_up_files": 0,
+            "silver_rows": 7497412
+          }
+        },
+        "gold": {
+          "wall_s": 23.0,
+          "peak_rss_mb": 926,
+          "peak_spill_mb": 0,
+          "output": {
+            "days": 2,
+            "dbt_runs": 2,
+            "dbt_retries": 0,
+            "reprocess_s": 0.0,
+            "days_s": 20.379869538002822
+          }
+        }
+      },
+      "layers": {
+        "bronze": {
+          "rows": 11302401,
+          "data_files": 28,
+          "bytes": 52445169
+        },
+        "silver": {
+          "rows": 7497868,
+          "data_files": 13,
+          "bytes": 25926145
+        },
+        "gold": {
+          "rows": 2265040,
+          "data_files": 29,
+          "bytes": 22001867
+        }
+      },
+      "wall_s": 282.5,
+      "finished": "2026-10-02T20:26:39+00:00"
+    },
+    "full": {
+      "profile": "scale",
+      "warehouse": "scale-full-2",
+      "days": 2,
+      "network": {
+        "cells": 9813,
+        "lte_cells": 8166,
+        "gsm_cells": 1647,
+        "grid_points": 640000
+      },
+      "network_build": {
+        "wall_s": 1228.9,
+        "peak_rss_mb": 3538
+      },
+      "stages": {
+        "collect": {
+          "wall_s": 1848.8,
+          "peak_rss_mb": 3660,
+          "output": {
+            "warehouse": "scale-full-2",
+            "profile": "scale",
+            "run_weeks": 1,
+            "first_day": 0,
+            "days": 2,
+            "clock": "none: as fast as possible",
+            "files_rendered": 382,
+            "collector": {
+              "deliveries": 395,
+              "loaded": 394,
+              "skipped_same_file": 1,
+              "pm_rows": 64776665
+            },
+            "anomalies_planted": {
+              "D1": 0,
+              "D2_same": 1,
+              "D2_conflict": 0,
+              "D3": 2,
+              "D4": 0,
+              "D5": 0
+            },
+            "timing_s": {
+              "simulate": 3.2,
+              "render": 195.4,
+              "collect": 373.2,
+              "total": 1847.5
+            },
+            "peak_rss_mb": 3660
+          }
+        },
+        "silver": {
+          "wall_s": 1683.7,
+          "peak_rss_mb": 2225,
+          "output": {
+            "partitions": 4,
+            "catch_up_files": 0,
+            "silver_rows": 43025458
+          }
+        },
+        "gold": {
+          "wall_s": 43.9,
+          "peak_rss_mb": 1711,
+          "output": {
+            "days": 2,
+            "dbt_runs": 2,
+            "dbt_retries": 0,
+            "reprocess_s": 0.0,
+            "days_s": 40.59219066500373
+          }
+        }
+      },
+      "layers": {
+        "bronze": {
+          "rows": 64893850,
+          "data_files": 124,
+          "bytes": 340271587
+        },
+        "silver": {
+          "rows": 43025914,
+          "data_files": 13,
+          "bytes": 217737728
+        },
+        "gold": {
+          "rows": 13034300,
+          "data_files": 39,
+          "bytes": 133507468
+        }
+      },
+      "wall_s": 4808.3,
+      "finished": "2026-10-02T20:20:49+00:00"
+    }
+  },
+  "lake": {
+    "slice": {
+      "periods": {
+        "bronze": 192,
+        "silver": 124,
+        "gold": 124
+      },
+      "files_by_kind": {
+        "CM": 4,
+        "CMLOG": 4,
+        "FM": 4,
+        "PM": 383
+      },
+      "silver_derived_rows": 180048,
+      "complete_utc_days": 1,
+      "files_on_complete_days": 192,
+      "wait_s": {
+        "min": 1411,
+        "median": 44603,
+        "p90": 78747,
+        "max": 87175
+      }
+    },
+    "full": {
+      "periods": {
+        "bronze": 192,
+        "silver": 124,
+        "gold": 124
+      },
+      "files_by_kind": {
+        "CM": 4,
+        "CMLOG": 4,
+        "FM": 4,
+        "PM": 383
+      },
+      "silver_derived_rows": 1012584,
+      "complete_utc_days": 1,
+      "files_on_complete_days": 192,
+      "wait_s": {
+        "min": 1411,
+        "median": 44603,
+        "p90": 78747,
+        "max": 87175
+      }
+    }
+  },
+  "derived": {
+    "slice": {
+      "cells": 1716,
+      "seconds_per_utc_day": {
+        "simulate": 0.2,
+        "render": 10.2,
+        "collect": 22.4,
+        "silver": 106.2,
+        "gold": 17.8
+      },
+      "seconds_per_period": {
+        "simulate": 0.003,
+        "render": 0.106,
+        "collect": 0.233,
+        "silver": 1.106,
+        "gold": 0.185
+      },
+      "files_per_utc_day": 198,
+      "files_per_s": 6.07,
+      "rows_per_utc_day": {
+        "bronze": 5651200,
+        "silver": 5804801,
+        "gold": 1753579
+      },
+      "rows_per_s": {
+        "bronze": 252286,
+        "silver": 54649,
+        "gold": 98480
+      },
+      "storage_bytes_per_cell_day": {
+        "bronze": 15281,
+        "silver": 11697,
+        "gold": 9926
+      },
+      "latency_min": {
+        "min": 25.6,
+        "median": 745.5,
+        "p90": 1314.5,
+        "max": 1455.0
+      },
+      "build_s_per_utc_day": 124.0
+    },
+    "full": {
+      "cells": 9813,
+      "seconds_per_utc_day": {
+        "simulate": 1.6,
+        "render": 97.7,
+        "collect": 186.6,
+        "silver": 1303.5,
+        "gold": 34.0
+      },
+      "seconds_per_period": {
+        "simulate": 0.017,
+        "render": 1.018,
+        "collect": 1.944,
+        "silver": 13.578,
+        "gold": 0.354
+      },
+      "files_per_utc_day": 198,
+      "files_per_s": 0.69,
+      "rows_per_utc_day": {
+        "bronze": 32446925,
+        "silver": 33310385,
+        "gold": 10091071
+      },
+      "rows_per_s": {
+        "bronze": 173885,
+        "silver": 25554,
+        "gold": 296909
+      },
+      "storage_bytes_per_cell_day": {
+        "bronze": 17338,
+        "silver": 17178,
+        "gold": 10533
+      },
+      "latency_min": {
+        "min": 45.8,
+        "median": 765.7,
+        "p90": 1334.7,
+        "max": 1475.2
+      },
+      "build_s_per_utc_day": 1337.5
+    }
+  },
+  "extrapolation": {
+    "target_cells": 250000,
+    "factor": 25.48,
+    "hours_per_utc_day": {
+      "simulate": 0.01,
+      "render": 0.69,
+      "collect": 1.32,
+      "silver": 9.22,
+      "gold": 0.24
+    },
+    "files_per_utc_day": 198,
+    "rows_per_utc_day": {
+      "bronze": 826631127,
+      "silver": 848628987,
+      "gold": 257084250
+    },
+    "storage_gb_per_utc_day": {
+      "bronze": 4.33,
+      "silver": 4.29,
+      "gold": 2.63
+    },
+    "network_build": {
+      "grid_points_exponent": 1.05,
+      "grid_points": 19230162,
+      "time_exponent": 2.19,
+      "hours": 409.4,
+      "memory_exponent": 0.93,
+      "peak_gb": 70.4
+    }
+  }
+}
