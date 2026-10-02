@@ -348,8 +348,11 @@ the property breaks:
   (S3-compatible object storage for the Iceberg warehouse; Lakekeeper
   supports no filesystem warehouse), plus Lakekeeper's one-shot migrate
   container.
-- S4 A `ranlake` CLI: generate, run (cadence or accelerated), backfill,
-  reprocess, scale-test, export-sample, serve.
+- S4 A `ranlake` CLI: backfill and run (cadence or accelerated) generate
+  and collect, so there is no separate generate step; silver and gold
+  build the layers; reprocess rebuilds one KPI formula version's gold
+  values over a UTC day range from the gold cell counters (rule D6);
+  scale-test, export-sample, serve.
 - S5 Conventions: uv, ruff, strict mypy, pinned CI actions and a scoped
   workflow token, tests over the core, reports written as .md plus .json
   from one record and checked byte for byte, README with an H1, an
