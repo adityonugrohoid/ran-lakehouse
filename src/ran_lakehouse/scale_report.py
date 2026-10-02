@@ -53,6 +53,10 @@ def lake_stats(warehouse: str) -> dict[str, Any]:
     for layer, sql in queries.items():
         found = con.execute(sql).fetchone()
         periods[layer] = 0 if found is None else int(found[0])
+    kinds = dict(
+        con.execute("SELECT kind, count(*) FROM lk.bronze.file_arrivals GROUP BY 1").fetchall()
+    )
+    derived = con.execute("SELECT count(*) FROM lk.silver.pm_measurements WHERE derived").fetchone()
     rows = con.execute(
         f"""WITH days AS (SELECT CAST(period_start AS DATE) AS d FROM lk.gold.lte_kpi_15m
                 GROUP BY 1 HAVING count(DISTINCT period_start) = {PERIODS_PER_DAY}),
@@ -69,6 +73,8 @@ def lake_stats(warehouse: str) -> dict[str, Any]:
     waits = sorted(int(r[1]) for r in rows)
     return {
         "periods": periods,
+        "files_by_kind": {str(k): int(v) for k, v in sorted(kinds.items())},
+        "silver_derived_rows": 0 if derived is None else int(derived[0]),
         "complete_utc_days": int(rows[0][0]),
         "files_on_complete_days": len(waits),
         "wait_s": {k: waits[round(q * (len(waits) - 1))] for k, q in PERCENTILES.items()},
@@ -389,12 +395,25 @@ def render_markdown(rec: dict[str, Any]) -> str:
             for layer in ("bronze", "silver", "gold")
         ],
         "",
+        "Files: per UTC day, 2 EMS times 96 periods of PM files (one type B file per EMS "
+        "and period) plus one CM snapshot, one CM change log and one FM export per EMS, "
+        "so 198 a day is 192 PM files and 6 others; "
+        "in the full run's two days, "
+        + ", ".join(f"{v} {k}" for k, v in lf["files_by_kind"].items())
+        + ". Silver holds more rows than bronze because it adds the 3GPP measurements "
+        "derived from vendor-style counters (PRB use and cell unavailable time, flagged "
+        f"derived): {lf['silver_derived_rows']:,} rows in the full run.",
+        "",
         "## Latency per period, file arrival to gold",
         "",
+        "Computed, not observed end to end: from the simulated arrival time of each file, "
+        "the cutoff rule and the measured silver and gold times; the run itself was a "
+        "batch, so no wall clock saw a file arrive and its KPIs appear. "
         "Silver builds a UTC day after its cutoff and gold builds it next, so a period's "
         "KPIs are available in gold at the cutoff plus the silver and gold time of the day "
         f"({df['build_s_per_utc_day']:,.1f} s in the full run). For each of the "
-        f"{lf['files_on_complete_days']:,} PM files of the complete UTC days, from its "
+        f"{lf['files_on_complete_days']:,} PM files of the complete UTC days (PM only; "
+        "CM and FM files do not feed gold KPIs), from its "
         "(simulated) arrival to gold:",
         "",
         "| Run | min | median | p90 | max |",
@@ -458,9 +477,9 @@ def render_markdown(rec: dict[str, Any]) -> str:
         ],
         f"| grid points | served area | {n['grid_points']:,} |",
         f"| network build, hours (exponent {n['time_exponent']:g}) | grid points and cells "
-        f"per band | {n['hours']:,.1f} |",
+        f"per band | {n['hours']:,.1f} (rough: two points) |",
         f"| network build, peak GB (exponent {n['memory_exponent']:g}) | grid points and "
-        f"cells per band | {n['peak_gb']:,.1f} |",
+        f"cells per band | {n['peak_gb']:,.1f} (rough: two points) |",
         "",
         "What would have to change at that size (not measured):",
         "",

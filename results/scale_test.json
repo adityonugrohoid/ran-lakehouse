@@ -191,6 +191,13 @@
         "silver": 124,
         "gold": 124
       },
+      "files_by_kind": {
+        "CM": 4,
+        "CMLOG": 4,
+        "FM": 4,
+        "PM": 383
+      },
+      "silver_derived_rows": 180048,
       "complete_utc_days": 1,
       "files_on_complete_days": 192,
       "wait_s": {
@@ -206,6 +213,13 @@
         "silver": 124,
         "gold": 124
       },
+      "files_by_kind": {
+        "CM": 4,
+        "CMLOG": 4,
+        "FM": 4,
+        "PM": 383
+      },
+      "silver_derived_rows": 1012584,
       "complete_utc_days": 1,
       "files_on_complete_days": 192,
       "wait_s": {

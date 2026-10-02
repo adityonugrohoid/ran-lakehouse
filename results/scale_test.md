@@ -56,9 +56,11 @@ Silver is the bottleneck at scale: 1,684 s for 43,025,914 rows, against 44 s for
 | silver storage per cell-day, bytes | 11,697 | 17,178 |
 | gold storage per cell-day, bytes | 9,926 | 10,533 |
 
+Files: per UTC day, 2 EMS times 96 periods of PM files (one type B file per EMS and period) plus one CM snapshot, one CM change log and one FM export per EMS, so 198 a day is 192 PM files and 6 others; in the full run's two days, 4 CM, 4 CMLOG, 4 FM, 383 PM. Silver holds more rows than bronze because it adds the 3GPP measurements derived from vendor-style counters (PRB use and cell unavailable time, flagged derived): 1,012,584 rows in the full run.
+
 ## Latency per period, file arrival to gold
 
-Silver builds a UTC day after its cutoff and gold builds it next, so a period's KPIs are available in gold at the cutoff plus the silver and gold time of the day (1,337.5 s in the full run). For each of the 192 PM files of the complete UTC days, from its (simulated) arrival to gold:
+Computed, not observed end to end: from the simulated arrival time of each file, the cutoff rule and the measured silver and gold times; the run itself was a batch, so no wall clock saw a file arrive and its KPIs appear. Silver builds a UTC day after its cutoff and gold builds it next, so a period's KPIs are available in gold at the cutoff plus the silver and gold time of the day (1,337.5 s in the full run). For each of the 192 PM files of the complete UTC days (PM only; CM and FM files do not feed gold KPIs), from its (simulated) arrival to gold:
 
 | Run | min | median | p90 | max |
 |---|---|---|---|---|
@@ -101,8 +103,8 @@ Assumptions: the scale profile's density and band mix, the same machine, no para
 | silver storage, GB per UTC day | cells | 4.29 |
 | gold storage, GB per UTC day | cells | 2.63 |
 | grid points | served area | 19,230,162 |
-| network build, hours (exponent 2.19) | grid points and cells per band | 409.4 |
-| network build, peak GB (exponent 0.93) | grid points and cells per band | 70.4 |
+| network build, hours (exponent 2.19) | grid points and cells per band | 409.4 (rough: two points) |
+| network build, peak GB (exponent 0.93) | grid points and cells per band | 70.4 (rough: two points) |
 
 What would have to change at that size (not measured):
 
