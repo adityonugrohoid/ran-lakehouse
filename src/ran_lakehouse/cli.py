@@ -77,6 +77,14 @@ def build_parser() -> argparse.ArgumentParser:
     add_api_arguments(serve)
     serve.add_argument("--host", required=True, help="address to listen on, e.g. 127.0.0.1")
     serve.add_argument("--port", type=int, required=True, help="port to listen on")
+    scale = commands.add_parser(
+        "scale-test",
+        help="run one simulated day through every stage, measured per stage (rule E1)",
+    )
+    scale.add_argument("--profile", required=True, help="world profile, e.g. scale")
+    scale.add_argument("--warehouse", required=True, help="a new Lakekeeper warehouse")
+    scale.add_argument("--days", type=int, required=True, help="days to simulate")
+    scale.add_argument("--record", type=Path, required=True, help="run record to write (JSON)")
     sample = commands.add_parser(
         "export-sample",
         help="write a small fixed dataset and recorded API responses (rule A4)",
@@ -185,6 +193,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         app = app_for(args.warehouse, args.profile, args.run_weeks, RUNS)
         uvicorn.run(app, host=args.host, port=args.port)
+        return 0
+    if args.command == "scale-test":
+        from ran_lakehouse.scale import scale_run
+
+        print(json.dumps(scale_run(args.profile, args.warehouse, args.days, args.record), indent=2))
         return 0
     if args.command == "export-sample":
         from ran_lakehouse.api.sample import export_sample
