@@ -39,7 +39,7 @@ from ran_lakehouse.lake.catalog import (
     connect,
     write,
 )
-from ran_lakehouse.lake.kpi_catalog import KPIS, Kpi, catalog_table, revised
+from ran_lakehouse.lake.kpi_catalog import INPUTS, KPIS, Kpi, catalog_table, revised
 from ran_lakehouse.lake.silver import LOADS as SILVER_LOADS
 from ran_lakehouse.lake.silver import scalar
 from ran_lakehouse.model import RUN_START
@@ -348,22 +348,70 @@ class GoldBuild:
             f"UTC day {day.isoformat()}')",
         )
         con.close()
-        models = [m for m in KPI_MODELS if m.startswith(r.kpi_id.split("_")[0].lower())]
-        # A week of UTC days per run keeps each MERGE within DuckDB's memory
-        # limit; WIB days and weeks at a chunk's edge are merged twice.
-        chunk = first
-        while chunk < day:
-            last = min(chunk + timedelta(days=REPROCESS_DAYS - 1), day - timedelta(days=1))
-            self.dbt(
-                window_vars(chunk, last),
-                {r.kpi_id: [r.version]},
-                r.kpi_id,
-                [*models, "worst_cells_week"],
-            )
-            chunk = last + timedelta(days=1)
+        self.rebuild_version(r.kpi_id, r.version, first, day - timedelta(days=1))
         seconds = time.perf_counter() - started
         self.stats["reprocess_s"] += seconds
         self.record("reprocess", day, [], seconds)
+
+    def rebuild_version(self, kpi_id: str, version: int, first: date, last: date) -> None:
+        """Rebuild one KPI formula version's gold values over UTC days first..last.
+
+        The values come from the gold cell counters through dbt; every model
+        merges, so a rebuild of values already there changes nothing.
+
+        Args:
+            kpi_id: KPI id.
+            version: Formula version.
+            first: First UTC day.
+            last: Last UTC day (inclusive).
+        """
+        models = [m for m in KPI_MODELS if m.startswith(kpi_id.split("_")[0].lower())]
+        # A week of UTC days per run keeps each MERGE within DuckDB's memory
+        # limit; WIB days and weeks at a chunk's edge are merged twice.
+        chunk = first
+        while chunk <= last:
+            end = min(chunk + timedelta(days=REPROCESS_DAYS - 1), last)
+            self.dbt(
+                window_vars(chunk, end),
+                {kpi_id: [version]},
+                kpi_id,
+                [*models, "worst_cells_week"],
+            )
+            chunk = end + timedelta(days=1)
+
+    def reprocess_range(self, kpi_id: str, version: int, first: date, last: date) -> dict[str, Any]:
+        """Reprocess a KPI formula version over a UTC day range (rule S4, D6).
+
+        Args:
+            kpi_id: KPI id.
+            version: Formula version.
+            first: First UTC day.
+            last: Last UTC day (inclusive).
+
+        Returns:
+            Counts and timings.
+
+        Raises:
+            ValueError: For an unknown KPI version, an empty range, or days
+                gold has not built.
+        """
+        if (kpi_id, version) not in INPUTS:
+            raise ValueError(f"no formula recorded for {kpi_id} version {version}")
+        if last < first:
+            raise ValueError(f"last day {last} is before first day {first}")
+        con = self.target.connect()
+        built = con.execute(
+            f"SELECT min(utc_day), max(utc_day) FROM {LOADS} WHERE kind = 'day'"
+        ).fetchone()
+        con.close()
+        if built is None or built[0] is None or first < built[0] or last > built[1]:
+            raise ValueError(f"gold has built UTC days {built}; {first}..{last} is outside")
+        started = time.perf_counter()
+        self.rebuild_version(kpi_id, version, first, last)
+        seconds = time.perf_counter() - started
+        self.stats["reprocess_s"] += seconds
+        self.record("reprocess", first, [], seconds)
+        return self.stats
 
     def dbt(
         self,
