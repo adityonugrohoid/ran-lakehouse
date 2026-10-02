@@ -16,7 +16,8 @@ One command runs the demo from files to API: the stack starts, the app
 generates two weeks of synthetic history, delivers and collects the files,
 builds bronze, silver, gold and the planning tables, then serves the API on
 `http://127.0.0.1:8000` (`/status` for the pipeline page). The first start
-builds the lake; a restart only builds what is missing.
+takes a while on a laptop, since it builds the whole lake before it serves;
+a restart only builds what is missing.
 
 ```bash
 git clone https://github.com/adityonugrohoid/ran-lakehouse.git
@@ -48,7 +49,9 @@ data.
 - The plan solver proves all 20 planning scenarios in 3.34 s:
   `results/planning_scenarios.md`.
 - A 9,813-cell network runs two simulated days through every stage in
-  4,808.3 s on the build machine; silver is the bottleneck, extrapolated
+  4,808.3 s on the build machine, about half of it building the network
+  twice (once per stage process that needs it); silver is the bottleneck,
+  extrapolated
   to 9.22 hours per day at 250,000 cells on one machine:
   `results/scale_test.md`.
 
@@ -201,7 +204,8 @@ SHA-256.
   Laura Krajčovičová, Filip Zatroch, Marcel Kajan and Marek Galinski,
   Zenodo, https://doi.org/10.5281/zenodo.17815388 (2026), CC BY 4.0. Only
   aggregated statistics and figures derived from it are committed.
-- This project grew out of NetPulse AI.
+- This project grew out of [NetPulse AI](https://github.com/adityonugrohoid/hackathon-telecom-ops),
+  a multi-agent telecom operations assistant.
 
 ## License
 
