@@ -29,6 +29,11 @@ docker compose logs -f app   # "serving compose-demo on port 8000" when ready
 curl "http://127.0.0.1:8000/v1/kpis?cell=ENB0001_B3_1&kpi_id=LTE_ERAB_DROP&formula_version=1&granularity=day&start=2026-01-05&end=2026-01-12"
 ```
 
+The keys and passwords in `compose.yaml` and `compose/seaweedfs-iam.json`
+are local placeholders: catalog auth is off and every port binds to
+127.0.0.1, as the header of `compose.yaml` says. Do not reuse them outside
+local runs.
+
 ## What the reports show
 
 Every number here is from a committed report in `results/`, written by
