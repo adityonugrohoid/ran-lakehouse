@@ -32,5 +32,6 @@ A mini telecom lakehouse and data generator for a synthetic 4G (LTE) and
 7. Code fails loudly: no silent fallbacks, no bare except.
 8. History and files carry no plan labels: no version, phase, stage or
    step labels and no pull request numbers in code, comments, docs,
-   commit messages or pull request text. Each change names itself.
+   commit messages or pull request text. Each change names itself. The
+   one exception is the "(#N)" suffix GitHub adds to a squash-merge subject.
 9. Personal repo: no employer or client name, branding or detail.
