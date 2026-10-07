@@ -343,5 +343,26 @@
       "memory_exponent": 0.93,
       "peak_gb": 70.4
     }
+  },
+  "machine": {
+    "recorded": "2026-10-08",
+    "source": "read from the same host after the runs, not captured by ranlake scale-test",
+    "cpu_model": "AMD Ryzen 7 7435HS",
+    "cores": 8,
+    "threads": 16,
+    "mem_total_kib": 8130748,
+    "wslconfig": {
+      "memory": "8GB",
+      "swap": "8GB",
+      "processors": "not set",
+      "last_changed": "2026-09-21"
+    },
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "disk": {
+      "filesystem": "ext4",
+      "size_kib": 1055762868,
+      "holds": "the repo, runs/ and the DuckDB spill folder"
+    },
+    "lake_disk": "the SeaweedFS Docker volume, not readable from this WSL distro: not recorded"
   }
 }

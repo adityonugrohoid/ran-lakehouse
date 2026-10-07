@@ -16,6 +16,30 @@ GRACE_MIN = 30  # silver builds a UTC day this long after its end (lake.silver.G
 PERCENTILES = {"min": 0.0, "median": 0.5, "p90": 0.9, "max": 1.0}
 # The full scale run predates the spill sampling in ranlake scale-test.
 SPILL_NOT_RECORDED = "not recorded in this run"
+# The host that ran both scale runs, read after the runs with lscpu,
+# /proc/meminfo, uname -r, the Windows .wslconfig and df on the repo's
+# filesystem. ranlake scale-test does not capture these.
+MACHINE = {
+    "recorded": "2026-10-08",
+    "source": "read from the same host after the runs, not captured by ranlake scale-test",
+    "cpu_model": "AMD Ryzen 7 7435HS",
+    "cores": 8,
+    "threads": 16,
+    "mem_total_kib": 8130748,
+    "wslconfig": {
+        "memory": "8GB",
+        "swap": "8GB",
+        "processors": "not set",
+        "last_changed": "2026-09-21",
+    },
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "disk": {
+        "filesystem": "ext4",
+        "size_kib": 1055762868,
+        "holds": "the repo, runs/ and the DuckDB spill folder",
+    },
+    "lake_disk": "the SeaweedFS Docker volume, not readable from this WSL distro: not recorded",
+}
 
 
 def lake_stats(warehouse: str) -> dict[str, Any]:
@@ -234,7 +258,8 @@ def record(
         full_lake: lake_stats() of the full warehouse.
 
     Returns:
-        Both runs, their lake statistics, derived figures and the extrapolation.
+        Both runs, their lake statistics, derived figures, the extrapolation
+        and the machine.
     """
     d_full = derive(full, full_lake)
     return {
@@ -242,7 +267,29 @@ def record(
         "lake": {"slice": slice_lake, "full": full_lake},
         "derived": {"slice": derive(slice_run, slice_lake), "full": d_full},
         "extrapolation": extrapolate(slice_run, full, d_full),
+        "machine": MACHINE,
     }
+
+
+def machine_line(m: dict[str, Any]) -> str:
+    """The machine both runs ran on, as one line of the report.
+
+    Args:
+        m: The machine block of the record.
+
+    Returns:
+        Markdown.
+    """
+    w, disk = m["wslconfig"], m["disk"]
+    return (
+        f"Machine, recorded on {m['recorded']} ({m['source']}): {m['cpu_model']}, "
+        f"{m['cores']} cores and {m['threads']} threads; WSL2 kernel {m['kernel']}, "
+        f"{m['mem_total_kib'] / 1024**2:.2f} GiB of memory visible under the .wslconfig "
+        f"limits memory={w['memory']} and swap={w['swap']} (processors {w['processors']}; "
+        f"file last changed {w['last_changed']}, before the runs); "
+        f"{disk['holds']} on {disk['filesystem']} of {disk['size_kib'] / 1024**2:,.0f} GiB; "
+        f"lake objects in {m['lake_disk']}."
+    )
 
 
 def spill(name: str, stage: dict[str, Any]) -> str:
@@ -309,6 +356,8 @@ def render_markdown(rec: dict[str, Any]) -> str:
         "`python -m ran_lakehouse.scale report` from `scale_test.json`; the runs come from "
         "`ranlake scale-test`. One run each, so every figure is one sample: no spread, and "
         "no memory target is claimed.",
+        "",
+        machine_line(rec["machine"]),
         "",
         "| Run | Profile | Cells | LTE / GSM | Grid points | Days simulated | Total wall (s) |",
         "|---|---|---|---|---|---|---|",

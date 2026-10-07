@@ -2,6 +2,8 @@
 
 A synthetic network of about 10,000 cells through the whole pipeline, measured stage by stage on the build machine (rule E1). Written by `python -m ran_lakehouse.scale report` from `scale_test.json`; the runs come from `ranlake scale-test`. One run each, so every figure is one sample: no spread, and no memory target is claimed.
 
+Machine, recorded on 2026-10-08 (read from the same host after the runs, not captured by ranlake scale-test): AMD Ryzen 7 7435HS, 8 cores and 16 threads; WSL2 kernel 6.6.87.2-microsoft-standard-WSL2, 7.75 GiB of memory visible under the .wslconfig limits memory=8GB and swap=8GB (processors not set; file last changed 2026-09-21, before the runs); the repo, runs/ and the DuckDB spill folder on ext4 of 1,007 GiB; lake objects in the SeaweedFS Docker volume, not readable from this WSL distro: not recorded.
+
 | Run | Profile | Cells | LTE / GSM | Grid points | Days simulated | Total wall (s) |
 |---|---|---|---|---|---|---|
 | slice | demo | 1,716 | 1,452 / 264 | 102,400 | 2 | 282.5 |
