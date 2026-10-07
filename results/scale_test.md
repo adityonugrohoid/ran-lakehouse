@@ -19,7 +19,7 @@ Each stage runs in a process of its own; peak resident set from os.wait4, peak D
 |---|---|---|---|
 | network build | 1,228.9 | 3,538 | |
 | collect | 1,848.8 | 3,660 | not recorded in this run |
-| silver | 1,683.7 | 2,225 | not recorded in this run; observed externally at about 8.3 GB during silver (control's sample, 03:19 WIB) |
+| silver | 1,683.7 | 2,225 | not recorded in this run |
 | gold | 43.9 | 1,711 | not recorded in this run |
 | of which collect's own work (simulate 3.2 s, render 195.4 s, deliver and collect 373.2 s) | 571.8 | | |
 
