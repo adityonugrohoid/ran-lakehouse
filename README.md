@@ -1,14 +1,16 @@
 # ran-lakehouse
 
-A mini telecom lakehouse and data generator for a synthetic Indonesian
-multi-vendor operator running 4G (LTE) and 2G (GSM). Simulated vendor
-systems drop 3GPP performance files every 15 minutes; a pipeline takes
-them through bronze, silver and gold; an API serves KPIs, configuration,
-alarms, topology, network planning and a what-if simulator. Every
-data-quality problem that breaks real operator pipelines is planted on
-purpose and guarded by a test. The network, its traffic and its faults
-are synthetic, generated from seeds: not a real place, operator or
-network.
+A medallion lakehouse for telecom performance data: a synthetic 4G (LTE)
+and 2G (GSM) multi-vendor operator generates 3GPP files, a
+bronze-silver-gold pipeline on Iceberg and DuckDB builds them into a
+versioned KPI catalog, and an HTTP API under a semver contract serves
+the result. The operator is modelled on public facts about Indonesian
+networks, and its vendor systems drop files every 15 minutes; the API
+serves KPIs, configuration, alarms, topology, network planning and a
+what-if simulator. Every data-quality problem that breaks real operator
+pipelines is planted on purpose and guarded by a test. The network, its
+traffic and its faults are synthetic, generated from seeds: not a real
+place, operator or network.
 
 ## Quickstart
 
@@ -205,7 +207,8 @@ SHA-256.
   Zenodo, https://doi.org/10.5281/zenodo.17815388 (2026), CC BY 4.0. Only
   aggregated statistics and figures derived from it are committed.
 - This project grew out of [NetPulse AI](https://github.com/adityonugrohoid/hackathon-telecom-ops),
-  a multi-agent telecom operations assistant.
+  a multi-agent telecom operations assistant. That project consumed a
+  bundled database; this one is the data platform it should have had.
 
 ## License
 
