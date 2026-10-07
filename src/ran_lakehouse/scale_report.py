@@ -14,12 +14,8 @@ from ran_lakehouse.scale import PERIODS_PER_DAY, RECORD_JSON, RECORD_MD, TARGET_
 
 GRACE_MIN = 30  # silver builds a UTC day this long after its end (lake.silver.GRACE)
 PERCENTILES = {"min": 0.0, "median": 0.5, "p90": 0.9, "max": 1.0}
-# The full scale run predates the spill sampling in ranlake scale-test; its
-# silver spill was seen from outside the run, by control.
-SPILL_NOT_RECORDED = (
-    "not recorded in this run; observed externally at about 8.3 GB during silver "
-    "(control's sample, 03:19 WIB)"
-)
+# The full scale run predates the spill sampling in ranlake scale-test.
+SPILL_NOT_RECORDED = "not recorded in this run"
 
 
 def lake_stats(warehouse: str) -> dict[str, Any]:
@@ -261,7 +257,7 @@ def spill(name: str, stage: dict[str, Any]) -> str:
     """
     if "peak_spill_mb" in stage:
         return f"{stage['peak_spill_mb']:,}"
-    return SPILL_NOT_RECORDED if name == "silver" else "not recorded in this run"
+    return SPILL_NOT_RECORDED
 
 
 def stage_rows(run: dict[str, Any]) -> list[str]:
