@@ -34,6 +34,35 @@ are local placeholders: catalog auth is off and every port binds to
 127.0.0.1, as the header of `compose.yaml` says. Do not reuse them outside
 local runs.
 
+## A look at the data
+
+Six of the nineteen figures the reports produce. Everything is synthetic,
+from one seed.
+
+<table>
+<tr>
+<td width="50%"><img src="results/world_population.png" alt="Population density per square kilometre on a log scale, with the 281 sites as dots"><br>
+<sub><b>Where the people are.</b> Persons per km2 and the 281 sites that serve them. From <a href="results/world.md">world.md</a>.</sub></td>
+<td width="50%"><img src="results/model_best_server.png" alt="Best-server RSRP on band 3 with every cell boundary drawn"><br>
+<sub><b>How the network covers them.</b> Best-server RSRP on band 3 with every cell boundary. From <a href="results/model.md">model.md</a>.</sub></td>
+</tr>
+<tr>
+<td><img src="results/model_prb_throughput.png" alt="Hexbin of DL IP throughput against PRB use over one week of cell-periods"><br>
+<sub><b>LTE under load.</b> One week of cell-periods: the busier the cell, the less each user gets. From <a href="results/model.md">model.md</a>.</sub></td>
+<td><img src="results/model_gsm_blocking.png" alt="TCH blocking share against offered traffic in Erlang for 6, 14 and 21 timeslot cells, with the Erlang B curve over each"><br>
+<sub><b>GSM under load.</b> TCH blocking against offered Erlangs, with the Erlang B curve. From <a href="results/model.md">model.md</a>.</sub></td>
+</tr>
+<tr>
+<td><img src="results/gold_network_trends.png" alt="Seven daily network KPIs over twelve weeks from gold, LTE and GSM, with RRC setup success in two formula versions"><br>
+<sub><b>Twelve weeks in gold.</b> Daily network KPIs by WIB day, both KPI formula versions kept. From <a href="results/gold_build.md">gold_build.md</a>.</sub></td>
+<td><img src="results/gold_faulted_cell.png" alt="Hourly RRC setup success and E-RAB drop rate of one cell before, during and after an 84-hour planted uplink-interference fault"><br>
+<sub><b>A planted fault as gold sees it.</b> Uplink interference for 84 hours, then recovery. Cell and date withheld; the planted schedule is evaluation-only. From <a href="results/gold_build.md">gold_build.md</a>.</sub></td>
+</tr>
+</table>
+
+Nineteen figures in all, one set per report; the Reports table below
+links them.
+
 ## What the reports show
 
 Every number here is from a committed report in `results/`, written by
